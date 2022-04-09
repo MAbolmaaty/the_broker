@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:scrollbars="none"
+    android:background="@drawable/splash_background"
+    tools:context=".ui.RegisterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
+            android:src="@drawable/ic_close"
+            android:tint="#F7CA31"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_image"
+            android:layout_width="@dimen/_108sdp"
+            android:layout_height="@dimen/_108sdp"
+            android:background="@drawable/bg_oval_gradient"
+            android:elevation="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/close" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_oval"
+            android:elevation="@dimen/_4sdp"
+            android:src="@drawable/ic_profile"
+            android:tint="@color/darkGrey"
+            android:layout_margin="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_image"
+            app:layout_constraintEnd_toEndOf="@+id/view_image"
+            app:layout_constraintStart_toStartOf="@+id/view_image"
+            app:layout_constraintTop_toTopOf="@+id/view_image" />
+
+        <ImageView
+            android:id="@+id/add"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:elevation="@dimen/_4sdp"
+            android:src="@drawable/ic_plus"
+            android:tint="#B8822A"
+            android:padding="@dimen/_6sdp"
+            android:background="@drawable/bg_oval"
+            android:backgroundTint="@color/darkGrey"
+            app:layout_constraintBottom_toBottomOf="@+id/userImage"
+            app:layout_constraintEnd_toEndOf="@+id/userImage"
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="279dp" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginTop="@dimen/_42sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:background="@drawable/bg_rectangle_corners"
+            android:ems="10"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:gravity="center_vertical|start"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/_12sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_image" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:background="@drawable/bg_rectangle_corners"
+            android:ems="10"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:gravity="center_vertical|start"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/_12sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/username" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_password"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:background="@drawable/bg_rectangle_corners"
+            android:hint="@string/password"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/darkGrey">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_rectangle_corners"
+                android:fontFamily="@font/cairo_semi_bold"
+                android:gravity="start|center_vertical"
+                android:hint="@string/password"
+                android:textAlignment="viewStart"
+                android:inputType="textPassword"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:textSize="@dimen/_12sdp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_passwordConfirmation"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:background="@drawable/bg_rectangle_corners"
+            android:hint="@string/password_confirm"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_password"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/darkGrey">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordConfirmation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_rectangle_corners"
+                android:fontFamily="@font/cairo_semi_bold"
+                android:gravity="start|center_vertical"
+                android:hint="@string/password_confirm"
+                android:textAlignment="viewStart"
+                android:inputType="textPassword"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:textSize="@dimen/_12sdp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/view_phoneNumber"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:layoutDirection="ltr"
+            android:background="@drawable/bg_rectangle_corners"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_passwordConfirmation" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/countryCodePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:ccp_textSize="@dimen/_12sdp"
+            android:layoutDirection="ltr"
+            app:layout_constraintBottom_toBottomOf="@+id/view_phoneNumber"
+            app:layout_constraintStart_toStartOf="@+id/view_phoneNumber"
+            app:layout_constraintTop_toTopOf="@+id/view_phoneNumber" />
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:background="@drawable/bg_rectangle_corners"
+            android:ems="10"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:gravity="center_vertical|start"
+            android:textAlignment="viewStart"
+            android:layoutDirection="ltr"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/_12sdp"
+            app:layout_constraintStart_toEndOf="@+id/countryCodePicker"
+            app:layout_constraintEnd_toEndOf="@id/view_phoneNumber"
+            app:layout_constraintTop_toTopOf="@id/view_phoneNumber"
+            app:layout_constraintBottom_toBottomOf="@id/view_phoneNumber"/>
+
+        <Button
+            android:id="@+id/create"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_18sdp"
+            android:background="@drawable/bg_rectangle_corners_18"
+            android:backgroundTint="@color/darkGrey"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="@string/create"
+            android:textAllCaps="false"
+            android:textColor="@color/yellow"
+            android:textSize="@dimen/_14sdp"
+            android:paddingStart="@dimen/_38sdp"
+            android:paddingEnd="@dimen/_38sdp"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/layout_password"
+            app:layout_constraintStart_toStartOf="@+id/layout_password"
+            app:layout_constraintTop_toBottomOf="@+id/view_phoneNumber" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/progressBar"
+            android:elevation="@dimen/_4sdp"
+            android:background="@drawable/bg_oval_gradient"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create"
+            app:layout_constraintBottom_toTopOf="@+id/createNewAccount"/>
+
+        <TextView
+            android:id="@+id/createNewAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10sdp"
+            android:text="@string/creating_new_account"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progress"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
