@@ -87,49 +87,6 @@ public class RealEstateFragment extends Fragment {
 
     private static final String TAG = RealEstateFragment.class.getSimpleName();
 
-
-
-    View mView1;
-    TextView mText1;
-    ImageView mImage1;
-    ImageView mIcon1;
-    View mView2;
-    TextView mText2;
-    ImageView mImage2;
-    ImageView mIcon2;
-    ImageView mFavoriteForHolder;
-    ImageView mShareForHolder;
-    ImageView mExpandForRequest;
-    ImageView mShare;
-    ImageView mReport;
-    ImageView mFavorite;
-    View mViewRequest;
-    TextView mRequest;
-    ImageView mImageViewRequest;
-    ImageView mRequestIcon;
-    ImageView mBack;
-    TextView mTitle;
-    TextView mAddressDetails;
-    TextView mAmount;
-    ProgressBar mProgress;
-    TextView mStatus;
-    TextView mMaxBid;
-    View mViewBid;
-    TextView mJoin;
-    TextView mExpirationDate;
-    TextView mBidsCount;
-    TextView mBids;
-    View mHideMaxBid;
-    TextView mTextViewExpirationDate;
-    ConstraintLayout mConstraintLayout;
-    View mShimmer1;
-    View mShimmer2;
-    View mShimmer3;
-    TextView mCategory;
-    View mViewExpirationDate;
-    AppBarLayout mAppBarLayout;
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
-
     private Toast mToast;
 
     //ViewModels
@@ -180,7 +137,7 @@ public class RealEstateFragment extends Fragment {
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
         if (mLocale.equals("ar")) {
             binding.viewPager.setRotation(180);
-            mBack.setImageResource(R.drawable.ic_arrow_ar);
+            binding.back.setImageResource(R.drawable.ic_arrow_ar);
         }
 
         //Initialize ViewModels
@@ -193,14 +150,14 @@ public class RealEstateFragment extends Fragment {
         mViewModelRealEstateCategories = ViewModelProviders.of(getActivity()).get(RealEstateCategoriesViewModel.class);
         mViewModelUserInfo = ViewModelProviders.of(getActivity()).get(InfoUserViewModel.class);
 
-        mFavorite.setTranslationX(264);
-        mFavorite.setTag(0);
-        mFavoriteForHolder.setTag(0);
+        binding.favorite.setTranslationX(264);
+        binding.favorite.setTag(0);
+        binding.favoriteForHolder.setTag(0);
 
         binding.sliderViewRealEstate.setIndicatorAnimation(IndicatorAnimations.FILL);
 
-        mShare.setTranslationX(196);
-        mReport.setTranslationX(232);
+        binding.share.setTranslationX(196);
+        binding.report.setTranslationX(232);
 
         RealEstateTabsAdapter realEstateTabsAdapter = new RealEstateTabsAdapter(getContext(), getChildFragmentManager(), 0);
         binding.viewPager.setAdapter(realEstateTabsAdapter);
@@ -253,90 +210,91 @@ public class RealEstateFragment extends Fragment {
         //Calculate Screen Width
         DisplayMetrics displayMetrics = new DisplayMetrics();
         RealEstateFragment.this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        mHideMaxBid.getLayoutParams().width = 2 * displayMetrics.widthPixels;
-        mExpandForRequest.setEnabled(false);
+        binding.hideMaxBid.getLayoutParams().width = 2 * displayMetrics.widthPixels;
+        binding.expandForRequest.setEnabled(false);
         //Close
         if (mAuctionable) {
-            mViewBid.setVisibility(View.VISIBLE);
-            mMaxBid.setVisibility(View.VISIBLE);
-            mHideMaxBid.setVisibility(View.VISIBLE);
-            mHideMaxBid.animate().translationX(0).setDuration(296);
-            mJoin.animate().translationX(0).setDuration(296);
-            mViewRequest.setVisibility(View.INVISIBLE);
-            mImageViewRequest.setVisibility(View.INVISIBLE);
+            binding.viewBid.setVisibility(View.VISIBLE);
+            binding.maxBid.setVisibility(View.VISIBLE);
+            binding.hideMaxBid.setVisibility(View.VISIBLE);
+            binding.hideMaxBid.animate().translationX(0).setDuration(296);
+            binding.join.animate().translationX(0).setDuration(296);
+            binding.viewRequest.setVisibility(View.INVISIBLE);
+            binding.imageViewRequest.setVisibility(View.INVISIBLE);
         }
-        if (mExpandForRequest.getTag().equals(1)) {
-            mShare.animate().translationX(196);
+        if (binding.expandForRequest.getTag().equals(1)) {
+            binding.share.animate().translationX(196);
             new Handler().postDelayed(() -> {
-                mShare.setVisibility(View.GONE);
-                mRequestIcon.setVisibility(View.GONE);
+                binding.share.setVisibility(View.GONE);
+                binding.requestIcon.setVisibility(View.GONE);
             }, 96);
             //
-            mReport.animate().translationX(232);
+            binding.report.animate().translationX(232);
             new Handler().postDelayed(() -> {
-                mReport.setVisibility(View.GONE);
+                binding.report.setVisibility(View.GONE);
             }, 132);
             //
-            mFavorite.animate().translationX(264);
+            binding.favorite.animate().translationX(264);
             new Handler().postDelayed(() -> {
-                mFavorite.setVisibility(View.GONE);
-                mViewRequest.setVisibility(View.VISIBLE);
-                mImageViewRequest.setVisibility(View.VISIBLE);
+                binding.favorite.setVisibility(View.GONE);
+                binding.viewRequest.setVisibility(View.VISIBLE);
+                binding.imageViewRequest.setVisibility(View.VISIBLE);
             }, 164);
-            mExpandForRequest.setTag(0);
+            binding.expandForRequest.setTag(0);
             new Handler().postDelayed(() -> {
-                mExpandForRequest.animate().translationX(mExpandForRequest.getWidth() / 2f);
+                binding.expandForRequest.animate().translationX(binding.expandForRequest.getWidth() / 2f);
             }, 196);
 
             new Handler().postDelayed(() -> {
-                mExpandForRequest.animate().translationX(0);
-                mExpandForRequest.setImageResource(R.drawable.ic_circular_dots);
-                mExpandForRequest.setEnabled(true);
+                binding.expandForRequest.animate().translationX(0);
+                binding.expandForRequest.setImageResource(R.drawable.ic_circular_dots);
+                binding.expandForRequest.setEnabled(true);
             }, 408);
 
         } else {
             //Open
             if (mAuctionable) {
-                mHideMaxBid.setVisibility(View.VISIBLE);
-                mHideMaxBid.animate().translationX(-displayMetrics.widthPixels).setDuration(496);
-                mJoin.animate().translationX(-displayMetrics.widthPixels).setDuration(496);
-                mViewRequest.setVisibility(View.INVISIBLE);
-                mImageViewRequest.setVisibility(View.INVISIBLE);
-                mRequestIcon.setImageResource(R.drawable.ic_auction);
+                binding.hideMaxBid.setVisibility(View.VISIBLE);
+                binding.hideMaxBid.animate().translationX(-displayMetrics.widthPixels).setDuration(496);
+                binding.join.animate().translationX(-displayMetrics.widthPixels).setDuration(496);
+                binding.viewRequest.setVisibility(View.INVISIBLE);
+                binding.imageViewRequest.setVisibility(View.INVISIBLE);
+                binding.requestIcon.setImageResource(R.drawable.ic_auction);
             }
-            mExpandForRequest.setTag(1);
-            mExpandForRequest.animate().translationX(-(mExpandForRequest.getWidth() / 2f));
+            binding.expandForRequest.setTag(1);
+            binding.expandForRequest.animate().
+                    translationX(-(binding.expandForRequest.getWidth() / 2f));
             new Handler().postDelayed(() -> {
-                mExpandForRequest.animate().translationX(0);
-                mExpandForRequest.setImageResource(R.drawable.ic_circular_close);
-                mExpandForRequest.setEnabled(true);
+                binding.expandForRequest.animate().translationX(0);
+                binding.expandForRequest.setImageResource(R.drawable.ic_circular_close);
+                binding.expandForRequest.setEnabled(true);
             }, 348);
 
-            mShare.animate().translationX(0);
+            binding.share.animate().translationX(0);
             new Handler().postDelayed(() -> {
-                mShare.setVisibility(View.VISIBLE);
-                mViewRequest.setVisibility(View.INVISIBLE);
-                mImageViewRequest.setVisibility(View.INVISIBLE);
+                binding.share.setVisibility(View.VISIBLE);
+                binding.viewRequest.setVisibility(View.INVISIBLE);
+                binding.imageViewRequest.setVisibility(View.INVISIBLE);
             }, 196);
             //
-            mReport.animate().translationX(0);
+            binding.report.animate().translationX(0);
             new Handler().postDelayed(() -> {
-                mReport.setVisibility(View.VISIBLE);
+                binding.report.setVisibility(View.VISIBLE);
             }, 232);
             //
-            mFavorite.animate().translationX(0);
+            binding.favorite.animate().translationX(0);
             new Handler().postDelayed(() -> {
-                mFavorite.setVisibility(View.VISIBLE);
-                mRequestIcon.setVisibility(View.VISIBLE);
-                mViewBid.setVisibility(View.INVISIBLE);
-                mMaxBid.setVisibility(View.INVISIBLE);
-                mHideMaxBid.setVisibility(View.INVISIBLE);
+                binding.favorite.setVisibility(View.VISIBLE);
+                binding.requestIcon.setVisibility(View.VISIBLE);
+                binding.viewBid.setVisibility(View.INVISIBLE);
+                binding.maxBid.setVisibility(View.INVISIBLE);
+                binding.hideMaxBid.setVisibility(View.INVISIBLE);
             }, 264);
         }
     }
 
     public void holderControls() {
-        mExpandForRequest.setEnabled(false);
+        binding.expandForRequest.setEnabled(false);
         if (binding.expandForHolder.getTag().equals(1)) {
             //Close
             binding.expandForHolder.animate().translationX(-binding.expandForHolder.getWidth() / 1.5f).setDuration(308);
@@ -345,11 +303,11 @@ public class RealEstateFragment extends Fragment {
                 binding.expandForHolder.setImageResource(R.drawable.ic_circular_dots);
                 animateAccounting(0, 308);
                 animateRentInfo(0, 308);
-                mIcon2.setVisibility(View.GONE);
-                mIcon1.setVisibility(View.GONE);
-                mFavoriteForHolder.setVisibility(View.GONE);
-                mShareForHolder.setVisibility(View.GONE);
-                mExpandForRequest.setEnabled(true);
+                binding.icon2.setVisibility(View.GONE);
+                binding.icon1.setVisibility(View.GONE);
+                binding.favoriteForHolder.setVisibility(View.GONE);
+                binding.shareForHolder.setVisibility(View.GONE);
+                binding.expandForRequest.setEnabled(true);
             }, 308);
             binding.expandForHolder.setTag(0);
         } else {
@@ -358,13 +316,13 @@ public class RealEstateFragment extends Fragment {
             new Handler().postDelayed(() -> {
                 binding.expandForHolder.animate().translationX(0).setDuration(308);
                 binding.expandForHolder.setImageResource(R.drawable.ic_circular_close);
-                animateAccounting(-mView2.getWidth() * 3, 308);
-                animateRentInfo(-mView2.getWidth() * 3, 308);
-                mIcon2.setVisibility(View.VISIBLE);
-                mIcon1.setVisibility(View.VISIBLE);
-                mFavoriteForHolder.setVisibility(View.VISIBLE);
-                mShareForHolder.setVisibility(View.VISIBLE);
-                mExpandForRequest.setEnabled(true);
+                animateAccounting(-binding.view2.getWidth() * 3, 308);
+                animateRentInfo(-binding.view2.getWidth() * 3, 308);
+                binding.icon2.setVisibility(View.VISIBLE);
+                binding.icon1.setVisibility(View.VISIBLE);
+                binding.favoriteForHolder.setVisibility(View.VISIBLE);
+                binding.shareForHolder.setVisibility(View.VISIBLE);
+                binding.expandForRequest.setEnabled(true);
             }, 308);
             binding.expandForHolder.setTag(1);
         }
@@ -479,9 +437,9 @@ public class RealEstateFragment extends Fragment {
             mToast.show();
             return;
         }
-        if (mViewRequest.getTag().equals(CONTACT_OWNER)) {
+        if (binding.viewRequest.getTag().equals(CONTACT_OWNER)) {
             contactOwner();
-        } else if (mViewRequest.getTag().equals(REQUEST_OWNERSHIP)) {
+        } else if (binding.viewRequest.getTag().equals(REQUEST_OWNERSHIP)) {
             mViewModelRealEstate.setTypeRequest(REQUEST_OWNERSHIP);
             if (inMyOrders) {
                 loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
@@ -490,7 +448,7 @@ public class RealEstateFragment extends Fragment {
                 loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
                         new RequestFragment(), true);
             }
-        } else if (mViewRequest.getTag().equals(REQUEST_RENT)) {
+        } else if (binding.viewRequest.getTag().equals(REQUEST_RENT)) {
             mViewModelRealEstate.setTypeRequest(REQUEST_RENT);
             if (inMyOrders) {
                 loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
@@ -499,7 +457,7 @@ public class RealEstateFragment extends Fragment {
                 loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
                         new RequestFragment(), true);
             }
-        } else if (mViewRequest.getTag().equals(TENANT)){
+        } else if (binding.viewRequest.getTag().equals(TENANT)){
             loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
                     new RealEstateRequestsUserFragment(), true);
         }
@@ -545,38 +503,38 @@ public class RealEstateFragment extends Fragment {
             return;
         }
 
-        if (mFavorite.getTag().equals(0)) {
+        if (binding.favorite.getTag().equals(0)) {
             mToast = Toast.makeText(getActivity(), R.string.added_to_favorites, Toast.LENGTH_SHORT);
             mToast.show();
             mViewModelFavorite.favorite(mRealEstateId, mUserId, mLocale);
             mViewModelFavorite.isLoading().observe(this, loading -> {
                 if (loading) {
-                    mFavorite.setEnabled(false);
+                    binding.favorite.setEnabled(false);
                 } else {
-                    mFavorite.setEnabled(true);
+                    binding.favorite.setEnabled(true);
                 }
             });
 
             new Handler().postDelayed(() -> {
-                mFavorite.setImageResource(R.drawable.ic_liked);
+                binding.favorite.setImageResource(R.drawable.ic_liked);
             }, 148);
-            mFavorite.setTag(1);
+            binding.favorite.setTag(1);
         } else {
             mToast = Toast.makeText(getActivity(), R.string.removed_from_favorites, Toast.LENGTH_SHORT);
             mToast.show();
             mViewModelUnFavorite.unFavorite(mRealEstateId, mUserId, mLocale);
             mViewModelUnFavorite.isLoading().observe(this, loading -> {
                 if (loading) {
-                    mFavorite.setEnabled(false);
+                    binding.favorite.setEnabled(false);
                 } else {
-                    mFavorite.setEnabled(true);
+                    binding.favorite.setEnabled(true);
                 }
             });
 
             new Handler().postDelayed(() -> {
-                mFavorite.setImageResource(R.drawable.ic_like);
+                binding.favorite.setImageResource(R.drawable.ic_like);
             }, 148);
-            mFavorite.setTag(0);
+            binding.favorite.setTag(0);
         }
     }
 
@@ -590,38 +548,38 @@ public class RealEstateFragment extends Fragment {
             return;
         }
 
-        if (mFavoriteForHolder.getTag().equals(0)) {
+        if (binding.favoriteForHolder.getTag().equals(0)) {
             mToast = Toast.makeText(getActivity(), R.string.added_to_favorites, Toast.LENGTH_SHORT);
             mToast.show();
             mViewModelFavorite.favorite(mRealEstateId, mUserId, mLocale);
             mViewModelFavorite.isLoading().observe(this, loading -> {
                 if (loading) {
-                    mFavoriteForHolder.setEnabled(false);
+                    binding.favoriteForHolder.setEnabled(false);
                 } else {
-                    mFavoriteForHolder.setEnabled(true);
+                    binding.favoriteForHolder.setEnabled(true);
                 }
             });
             new Handler().postDelayed(() -> {
-                mFavoriteForHolder.setImageResource(R.drawable.ic_liked);
+                binding.favoriteForHolder.setImageResource(R.drawable.ic_liked);
             }, 148);
             new Handler().postDelayed(() -> {
             }, 896);
-            mFavoriteForHolder.setTag(1);
+            binding.favoriteForHolder.setTag(1);
         } else {
             mToast = Toast.makeText(getActivity(), R.string.removed_from_favorites, Toast.LENGTH_SHORT);
             mToast.show();
             mViewModelUnFavorite.unFavorite(mRealEstateId, mUserId, mLocale);
             mViewModelUnFavorite.isLoading().observe(this, loading -> {
                 if (loading) {
-                    mFavoriteForHolder.setEnabled(false);
+                    binding.favoriteForHolder.setEnabled(false);
                 } else {
-                    mFavoriteForHolder.setEnabled(true);
+                    binding.favoriteForHolder.setEnabled(true);
                 }
             });
             new Handler().postDelayed(() -> {
-                mFavoriteForHolder.setImageResource(R.drawable.ic_like);
+                binding.favoriteForHolder.setImageResource(R.drawable.ic_like);
             }, 148);
-            mFavoriteForHolder.setTag(0);
+            binding.favoriteForHolder.setTag(0);
         }
     }
 
@@ -663,10 +621,10 @@ public class RealEstateFragment extends Fragment {
     public void view1() {
         if (mToast != null)
             mToast.cancel();
-        if (mText1.getTag().equals(AGENT)){
+        if (binding.text1.getTag().equals(AGENT)){
             loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
                     new RealEstateRequestsCurrentFragment(), true);
-        } else if (mText1.getTag().equals(HOLDER)){
+        } else if (binding.text1.getTag().equals(HOLDER)){
             mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
                 if (realEstateModelResponse.getRealEstate().getService().equals(REAL_ESTATE_RENT) &&
                 realEstateModelResponse.getRealEstate().getOwnership().getTenant_id() .equals("0") ||
@@ -686,10 +644,10 @@ public class RealEstateFragment extends Fragment {
     }
 
     public void view2() {
-        if (mText2.getTag().equals(AGENT)){
+        if (binding.text2.getTag().equals(AGENT)){
             loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
                     new AccountingAgentFragment(), true);
-        } else if(mText2.getTag().equals(HOLDER)){
+        } else if(binding.text2.getTag().equals(HOLDER)){
             loadFragment(RealEstateFragment.this.getActivity().getSupportFragmentManager(),
                     new AccountingHolderFragment(), true);
         }
@@ -701,15 +659,15 @@ public class RealEstateFragment extends Fragment {
         mViewModelRealEstate.realEstate(id);
         mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
             if (realEstateModelResponse.getKey().equals(SUCCESS)) {
-                mShimmer1.setVisibility(View.GONE);
-                mShimmer2.setVisibility(View.GONE);
-                mShimmer3.setVisibility(View.GONE);
+                binding.shimmer1.setVisibility(View.GONE);
+                binding.shimmer2.setVisibility(View.GONE);
+                binding.shimmer3.setVisibility(View.GONE);
                 RealEstate realEstate = realEstateModelResponse.getRealEstate();
                 mRealEstateId = realEstate.getId();
                 mOwnerId = realEstate.getOwnership().getOwner_id();
                 mRealEstateLink = realEstate.getLink();
-                mTitle.setText(realEstate.getTitle());
-                mAddressDetails.setText(realEstate.getFull_address());
+                binding.title.setText(realEstate.getTitle());
+                binding.addressDetails.setText(realEstate.getFull_address());
                 mPrice = realEstate.getTotal_amount();
                 mPriceForMonth = realEstate.getPrice_for_month();
                 mPriceFor3Months = realEstate.getPrice_for_3month();
@@ -739,17 +697,18 @@ public class RealEstateFragment extends Fragment {
 
                         mViewModelRealEstateCategories.getCategories().observe(this, realEstateCategoriesModelResponse -> {
                             if (realEstateCategoriesModelResponse.getKey().equals(SUCCESS)) {
-                                mCategory.setVisibility(View.VISIBLE);
-                                mCategory.setText(realEstateCategoriesModelResponse.
-                                        getCategories()[Integer.parseInt(realEstateModelResponse.getRealEstate().getCate())].getName());
+                                binding.category.setVisibility(View.VISIBLE);
+                                binding.category.setText(realEstateCategoriesModelResponse.
+                                        getCategories()[Integer.parseInt(realEstateModelResponse.
+                                        getRealEstate().getCate())].getName());
                             }
                         });
 
                         //Set Real Estate page depends on Type of the User and the Real Estate
                         if (realEstate.getService().equals(REAL_ESTATE_SALE)) {
-                            mStatus.setText(getString(R.string.sale));
+                            binding.status.setText(getString(R.string.sale));
                         } else if (realEstate.getService().equals(REAL_ESTATE_RENT)) {
-                            mStatus.setText(getString(R.string.rent));
+                            binding.status.setText(getString(R.string.rent));
                         }
 
                         if (mUserType.equals(AGENT)){
@@ -770,8 +729,8 @@ public class RealEstateFragment extends Fragment {
                                         }
                                     }
                                 }
-                                mBidsCount.setText(String.valueOf(bids.size()));
-                                mMaxBid.setText(getString(R.string.max_bid, String.valueOf(maxBid)));
+                                binding.bidsCount.setText(String.valueOf(bids.size()));
+                                binding.maxBid.setText(getString(R.string.max_bid, String.valueOf(maxBid)));
                             }
                             return;
                         }
@@ -799,8 +758,8 @@ public class RealEstateFragment extends Fragment {
                                         }
                                     }
                                 }
-                                mBidsCount.setText(String.valueOf(bids.size()));
-                                mMaxBid.setText(getString(R.string.max_bid, String.valueOf(maxBid)));
+                                binding.bidsCount.setText(String.valueOf(bids.size()));
+                                binding.maxBid.setText(getString(R.string.max_bid, String.valueOf(maxBid)));
                             }
                             return;
                         }
@@ -845,10 +804,10 @@ public class RealEstateFragment extends Fragment {
             if (favoritesModelResponse.getKey().equals(SUCCESS)) {
                 for (com.emupapps.the_broker.models.favorites.RealEstate favorite : favoritesModelResponse.getRealEstates()) {
                     if (favorite.getAkar_id().equals(mRealEstateId)) {
-                        mFavorite.setTag(1);
-                        mFavorite.setImageResource(R.drawable.ic_liked);
-                        mFavoriteForHolder.setTag(1);
-                        mFavoriteForHolder.setImageResource(R.drawable.ic_liked);
+                        binding.favorite.setTag(1);
+                        binding.favorite.setImageResource(R.drawable.ic_liked);
+                        binding.favoriteForHolder.setTag(1);
+                        binding.favoriteForHolder.setImageResource(R.drawable.ic_liked);
                     }
                 }
             }
@@ -857,7 +816,7 @@ public class RealEstateFragment extends Fragment {
 
     private void setRealEstateForAdministrator(String status){
         if (status.equals(REAL_ESTATE_SALE)) {
-            mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPrice));
+            binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPrice));
         } else if (status.equals(REAL_ESTATE_RENT)) {
             setRentPrice();
         }
@@ -866,41 +825,41 @@ public class RealEstateFragment extends Fragment {
 
     private void setRealEstateForHolder(String status) {
         if (status.equals(REAL_ESTATE_SALE)) {
-            mText1.setText(R.string.owner);
-            mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPrice));
+            binding.text1.setText(R.string.owner);
+            binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPrice));
         } else if (status.equals(REAL_ESTATE_RENT)) {
-            mText1.setText(R.string.tenant);
+            binding.text1.setText(R.string.tenant);
             setRentPrice();
         }
         expandForHolder();
     }
 
     private void setRealEstateForSale() {
-        mStatus.setText(getString(R.string.sale));
+        binding.status.setText(getString(R.string.sale));
         expandForRequest();
-        mViewRequest.setTag(REQUEST_OWNERSHIP);
+        binding.viewRequest.setTag(REQUEST_OWNERSHIP);
         if (inMyOrders) {
-            mRequest.setText(getString(R.string.show_your_request));
+            binding.request.setText(getString(R.string.show_your_request));
         } else {
-            mRequest.setText(getString(R.string.request_ownership));
+            binding.request.setText(getString(R.string.request_ownership));
         }
-        mImageViewRequest.setImageResource(R.drawable.ic_key);
-        mRequestIcon.setImageResource(R.drawable.ic_key);
-        mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPrice));
+        binding.imageViewRequest.setImageResource(R.drawable.ic_key);
+        binding.requestIcon.setImageResource(R.drawable.ic_key);
+        binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPrice));
     }
 
     private void setRealEstateForRent() {
-        mStatus.setText(getString(R.string.rent));
+        binding.status.setText(getString(R.string.rent));
         setRentPrice();
         expandForRequest();
-        mViewRequest.setTag(REQUEST_RENT);
+        binding.viewRequest.setTag(REQUEST_RENT);
         if (inMyOrders) {
-            mRequest.setText(getString(R.string.show_your_request));
+            binding.request.setText(getString(R.string.show_your_request));
         } else {
-            mRequest.setText(getString(R.string.request_rent));
+            binding.request.setText(getString(R.string.request_rent));
         }
-        mImageViewRequest.setImageResource(R.drawable.ic_clock);
-        mRequestIcon.setImageResource(R.drawable.ic_clock);
+        binding.imageViewRequest.setImageResource(R.drawable.ic_clock);
+        binding.requestIcon.setImageResource(R.drawable.ic_clock);
     }
 
     private void setRealEstateForAuction() {
@@ -911,8 +870,8 @@ public class RealEstateFragment extends Fragment {
     private void setRealEstateForAuctionHolder() {
         expandForRequest();
         showAuctionView();
-        mReport.setEnabled(false);
-        mJoin.setText(R.string.bids);
+        binding.report.setEnabled(false);
+        binding.join.setText(R.string.bids);
     }
 
     private void setRealEstateForIndividualOwner(String auction) {
@@ -921,19 +880,19 @@ public class RealEstateFragment extends Fragment {
             expandForRequest();
         } else {
             expandForRequest();
-            mViewRequest.setTag(CONTACT_OWNER);
-            mRequest.setText(getString(R.string.owner_contact));
-            mImageViewRequest.setImageResource(R.drawable.ic_contact);
-            mRequestIcon.setImageResource(R.drawable.ic_contact);
+            binding.viewRequest.setTag(CONTACT_OWNER);
+            binding.request.setText(getString(R.string.owner_contact));
+            binding.imageViewRequest.setImageResource(R.drawable.ic_contact);
+            binding.requestIcon.setImageResource(R.drawable.ic_contact);
         }
     }
 
     private void setRealEstateForTenant(){
         expandForRequest();
-        mImageViewRequest.setImageResource(R.drawable.ic_info);
-        mRequestIcon.setImageResource(R.drawable.ic_info);
-        mRequest.setText(getString(R.string.requests));
-        mViewRequest.setTag(TENANT);
+        binding.imageViewRequest.setImageResource(R.drawable.ic_info);
+        binding.requestIcon.setImageResource(R.drawable.ic_info);
+        binding.request.setText(getString(R.string.requests));
+        binding.viewRequest.setTag(TENANT);
     }
 
     private void contactOwner() {
@@ -988,91 +947,91 @@ public class RealEstateFragment extends Fragment {
     }
 
     private void expandForRequest() {
-        mExpandForRequest.setVisibility(View.VISIBLE);
-        mViewRequest.setVisibility(View.VISIBLE);
-        mRequest.setVisibility(View.VISIBLE);
-        mImageViewRequest.setVisibility(View.VISIBLE);
-        mExpandForRequest.setTag(0);
+        binding.expandForRequest.setVisibility(View.VISIBLE);
+        binding.viewRequest.setVisibility(View.VISIBLE);
+        binding.request.setVisibility(View.VISIBLE);
+        binding.imageViewRequest.setVisibility(View.VISIBLE);
+        binding.expandForRequest.setTag(0);
     }
 
     private void expandForHolder() {
         binding.expandForHolder.setVisibility(View.VISIBLE);
-        mView2.setVisibility(View.VISIBLE);
-        mView1.setVisibility(View.VISIBLE);
-        mText2.setVisibility(View.VISIBLE);
-        mImage2.setVisibility(View.VISIBLE);
-        mText1.setVisibility(View.VISIBLE);
-        mImage1.setVisibility(View.VISIBLE);
-        mText1.setTag(HOLDER);
-        mText2.setTag(HOLDER);
+        binding.view2.setVisibility(View.VISIBLE);
+        binding.view1.setVisibility(View.VISIBLE);
+        binding.text2.setVisibility(View.VISIBLE);
+        binding.image2.setVisibility(View.VISIBLE);
+        binding.text1.setVisibility(View.VISIBLE);
+        binding.image1.setVisibility(View.VISIBLE);
+        binding.text1.setTag(HOLDER);
+        binding.text2.setTag(HOLDER);
         binding.expandForHolder.setTag(0);
     }
 
     private void expandForAgent(){
-        mView2.setVisibility(View.VISIBLE);
-        mView1.setVisibility(View.VISIBLE);
-        mText2.setVisibility(View.VISIBLE);
-        mImage2.setVisibility(View.VISIBLE);
-        mText1.setVisibility(View.VISIBLE);
-        mImage1.setVisibility(View.VISIBLE);
-        mText1.setText(R.string.requests);
-        mText1.setTag(AGENT);
-        mText2.setTag(AGENT);
+        binding.view2.setVisibility(View.VISIBLE);
+        binding.view1.setVisibility(View.VISIBLE);
+        binding.text2.setVisibility(View.VISIBLE);
+        binding.image2.setVisibility(View.VISIBLE);
+        binding.text1.setVisibility(View.VISIBLE);
+        binding.image1.setVisibility(View.VISIBLE);
+        binding.text1.setText(R.string.requests);
+        binding.text1.setTag(AGENT);
+        binding.text2.setTag(AGENT);
     }
 
     private void showAuctionView() {
-        mMaxBid.setVisibility(View.VISIBLE);
-        mViewBid.setVisibility(View.VISIBLE);
-        mJoin.setVisibility(View.VISIBLE);
-        mTextViewExpirationDate.setVisibility(View.VISIBLE);
-        mViewExpirationDate.setVisibility(View.VISIBLE);
-        mExpirationDate.setVisibility(View.VISIBLE);
-        mBidsCount.setVisibility(View.VISIBLE);
-        mBids.setVisibility(View.VISIBLE);
+        binding.maxBid.setVisibility(View.VISIBLE);
+        binding.viewBid.setVisibility(View.VISIBLE);
+        binding.join.setVisibility(View.VISIBLE);
+        binding.textViewExpirationDate.setVisibility(View.VISIBLE);
+        binding.viewExpirationDate.setVisibility(View.VISIBLE);
+        binding.expirationDate.setVisibility(View.VISIBLE);
+        binding.bidsCount.setVisibility(View.VISIBLE);
+        binding.bids.setVisibility(View.VISIBLE);
         mAuctionable = true;
     }
 
     private void animateAccounting(float translation, long duration) {
-        mView2.animate().translationX(translation).setDuration(duration);
-        mText2.animate().translationX(translation).setDuration(duration);
-        mImage2.animate().translationX(translation).setDuration(duration);
+        binding.view2.animate().translationX(translation).setDuration(duration);
+        binding.text2.animate().translationX(translation).setDuration(duration);
+        binding.image2.animate().translationX(translation).setDuration(duration);
     }
 
     private void animateRentInfo(float translation, long duration) {
-        mView1.animate().translationX(translation).setDuration(duration);
-        mText1.animate().translationX(translation).setDuration(duration);
-        mImage1.animate().translationX(translation).setDuration(duration);
+        binding.view1.animate().translationX(translation).setDuration(duration);
+        binding.text1.animate().translationX(translation).setDuration(duration);
+        binding.image1.animate().translationX(translation).setDuration(duration);
     }
 
     private void setRentPrice() {
         if (mPriceForMonth != null) {
-            mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPriceForMonth));
+            binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPriceForMonth));
         } else if (mPriceFor3Months != null) {
-            mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPriceFor3Months));
+            binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPriceFor3Months));
         } else if (mPriceFor6Months != null) {
-            mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPriceFor6Months));
+            binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPriceFor6Months));
         } else if (mPriceFor12Months != null) {
-            mAmount.setText(String.format(getResources().getString(R.string.price_amount), mPriceFor12Months));
+            binding.amount.setText(String.format(getResources().getString(R.string.price_amount), mPriceFor12Months));
         }
     }
 
     private void offsetAnimation(){
-        if (mTitle.getLineCount() + mAddressDetails.getLineCount() > 6) {
-            int originalRange = mAppBarLayout.getTotalScrollRange();
-            int infoHeight = ((mTitle.getLineCount() * mTitle.getLineHeight()) +
-                    (mAddressDetails.getLineCount() * mAddressDetails.getLineHeight())) -
-                    ((int)(mView2.getLayoutParams().height * 1.5f));
+        if (binding.title.getLineCount() + binding.addressDetails.getLineCount() > 6) {
+            int originalRange = binding.appBarLayout.getTotalScrollRange();
+            int infoHeight = ((binding.title.getLineCount() * binding.title.getLineHeight()) +
+                    (binding.addressDetails.getLineCount() * binding.addressDetails.getLineHeight())) -
+                    ((int)(binding.view2.getLayoutParams().height * 1.5f));
 
-            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
                     int offset = (originalRange + i) / 100;
                     if (-i > 100) {
-                        mTitle.animate().alpha(offset / 10f);
-                        mAddressDetails.animate().alpha(offset / 10f);
+                        binding.title.animate().alpha(offset / 10f);
+                        binding.addressDetails.animate().alpha(offset / 10f);
                     } else {
-                        mTitle.animate().alpha(1);
-                        mAddressDetails.animate().alpha(1);
+                        binding.title.animate().alpha(1);
+                        binding.addressDetails.animate().alpha(1);
                     }
 
                     if (originalRange + i < 100) {
@@ -1093,7 +1052,7 @@ public class RealEstateFragment extends Fragment {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mConstraintLayout.setVisibility(View.GONE);
+                                binding.constraintLayout.setVisibility(View.GONE);
                             }
                         }, 296);
                     }
@@ -1102,7 +1061,7 @@ public class RealEstateFragment extends Fragment {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mConstraintLayout.setVisibility(View.VISIBLE);
+                                binding.constraintLayout.setVisibility(View.VISIBLE);
                             }
                         }, 296);
                     }
@@ -1113,90 +1072,90 @@ public class RealEstateFragment extends Fragment {
 
     private void translateViewAccounting(int value, boolean animation){
         if (animation){
-            mView2.animate().translationY(value);
-            mText2.animate().translationY(value);
-            mImage2.animate().translationY(value);
+            binding.view2.animate().translationY(value);
+            binding.text2.animate().translationY(value);
+            binding.image2.animate().translationY(value);
 
         } else {
-            mView2.setTranslationY(value);
-            mText2.setTranslationY(value);
-            mImage2.setTranslationY(value);
+            binding.view2.setTranslationY(value);
+            binding.text2.setTranslationY(value);
+            binding.image2.setTranslationY(value);
         }
     }
 
     private void translateViewClientInfo(int value, boolean animation){
         if (animation){
-            mView1.animate().translationY(value);
-            mText1.animate().translationY(value);
-            mImage1.animate().translationY(value);
+            binding.view1.animate().translationY(value);
+            binding.text1.animate().translationY(value);
+            binding.image1.animate().translationY(value);
         } else {
-            mView1.setTranslationY(value);
-            mText1.setTranslationY(value);
-            mImage1.setTranslationY(value);
+            binding.view1.setTranslationY(value);
+            binding.text1.setTranslationY(value);
+            binding.image1.setTranslationY(value);
         }
     }
 
     private void translateExpandForRequest(int value, boolean animation){
         if (animation){
-            mExpandForRequest.animate().translationY(value);
-            mViewRequest.animate().translationY(value);
-            mRequest.animate().translationY(value);
-            mImageViewRequest.animate().translationY(value);
-            mFavorite.animate().translationY(value);
-            mReport.animate().translationY(value);
-            mShare.animate().translationY(value);
-            mViewRequest.animate().translationY(value);
-            mRequestIcon.animate().translationY(value);
+            binding.expandForRequest.animate().translationY(value);
+            binding.viewRequest.animate().translationY(value);
+            binding.request.animate().translationY(value);
+            binding.imageViewRequest.animate().translationY(value);
+            binding.favorite.animate().translationY(value);
+            binding.report.animate().translationY(value);
+            binding.share.animate().translationY(value);
+            binding.viewRequest.animate().translationY(value);
+            binding.requestIcon.animate().translationY(value);
         } else {
-            mExpandForRequest.setTranslationY(value);
-            mViewRequest.setTranslationY(value);
-            mRequest.setTranslationY(value);
-            mImageViewRequest.setTranslationY(value);
-            mFavorite.setTranslationY(value);
-            mReport.setTranslationY(value);
-            mShare.setTranslationY(value);
-            mViewRequest.setTranslationY(value);
-            mRequestIcon.setTranslationY(value);
+            binding.expandForRequest.setTranslationY(value);
+            binding.viewRequest.setTranslationY(value);
+            binding.request.setTranslationY(value);
+            binding.imageViewRequest.setTranslationY(value);
+            binding.favorite.setTranslationY(value);
+            binding.report.setTranslationY(value);
+            binding.share.setTranslationY(value);
+            binding.viewRequest.setTranslationY(value);
+            binding.requestIcon.setTranslationY(value);
         }
     }
 
     private void translateExpandForHolder(int value, boolean animation){
         if (animation){
             binding.expandForHolder.animate().translationY(value);
-            mFavoriteForHolder.animate().translationY(value);
-            mShareForHolder.animate().translationY(value);
-            mIcon1.animate().translationY(value);
-            mIcon2.animate().translationY(value);
+            binding.favoriteForHolder.animate().translationY(value);
+            binding.shareForHolder.animate().translationY(value);
+            binding.icon1.animate().translationY(value);
+            binding.icon2.animate().translationY(value);
         } else {
             binding.expandForHolder.setTranslationY(value);
-            mFavoriteForHolder.setTranslationY(value);
-            mShareForHolder.setTranslationY(value);
-            mIcon1.setTranslationY(value);
-            mIcon2.setTranslationY(value);
+            binding.favoriteForHolder.setTranslationY(value);
+            binding.shareForHolder.setTranslationY(value);
+            binding.icon1.setTranslationY(value);
+            binding.icon2.setTranslationY(value);
         }
     }
 
     private void translateViewsAuction(int value, boolean animation){
         if (animation){
-            mHideMaxBid.animate().translationY(value);
-            mMaxBid.animate().translationY(value);
-            mViewBid.animate().translationY(value);
-            mJoin.animate().translationY(value);
-            mBids.animate().translationY(value);
-            mBidsCount.animate().translationY(value);
-            mTextViewExpirationDate.animate().translationY(value);
-            mExpirationDate.animate().translationY(value);
-            mViewExpirationDate.animate().translationY(value);
+            binding.hideMaxBid.animate().translationY(value);
+            binding.maxBid.animate().translationY(value);
+            binding.viewBid.animate().translationY(value);
+            binding.join.animate().translationY(value);
+            binding.bids.animate().translationY(value);
+            binding.bidsCount.animate().translationY(value);
+            binding.textViewExpirationDate.animate().translationY(value);
+            binding.expirationDate.animate().translationY(value);
+            binding.viewExpirationDate.animate().translationY(value);
         } else {
-            mJoin.setTranslationY(value);
-            mHideMaxBid.setTranslationY(value);
-            mBids.setTranslationY(value);
-            mBidsCount.setTranslationY(value);
-            mTextViewExpirationDate.setTranslationY(value);
-            mExpirationDate.setTranslationY(value);
-            mViewExpirationDate.setTranslationY(value);
-            mMaxBid.setTranslationY(value);
-            mViewBid.setTranslationY(value);
+            binding.join.setTranslationY(value);
+            binding.hideMaxBid.setTranslationY(value);
+            binding.bids.setTranslationY(value);
+            binding.bidsCount.setTranslationY(value);
+            binding.textViewExpirationDate.setTranslationY(value);
+            binding.expirationDate.setTranslationY(value);
+            binding.viewExpirationDate.setTranslationY(value);
+            binding.maxBid.setTranslationY(value);
+            binding.viewBid.setTranslationY(value);
         }
     }
 }

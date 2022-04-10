@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 import com.emupapps.the_broker.R;
+import com.emupapps.the_broker.databinding.FragmentRegisterBinding;
 import com.emupapps.the_broker.utils.FilePath;
 import com.emupapps.the_broker.utils.FileUtils;
 import com.emupapps.the_broker.utils.ProgressRequestBody;
@@ -58,19 +61,9 @@ import okhttp3.RequestBody;
  * A simple {@link Fragment} subclass.
  */
 public class RegisterFragment extends Fragment {
+    private FragmentRegisterBinding binding;
 
     private static final String TAG = RegisterFragment.class.getSimpleName();
-
-    ImageView mClose;
-    View mViewImage;
-    CircleImageView mUserImage;
-    ImageView mAdd;
-    Button mCreate;
-    EditText mUsername;
-    EditText mPhoneNumber;
-    TextInputEditText mPassword;
-    ProgressBar mProgress;
-    CountryCodePicker mCountryCodePicker;
 
     private static final int REQUEST_PHOTO_CAMERA = 7007;
     private static final int REQUEST_PHOTO_GALLERY = 7008;
@@ -78,8 +71,6 @@ public class RegisterFragment extends Fragment {
     private File mFile;
     private Uri mUri;
     private BottomSheetDialog mDialogSelectImage;
-    private String mCountryCode;
-    private String mNumber;
     private Toast mToast;
     private RegisterViewModel mViewModelRegister;
     private LoginViewModel mViewModelLogin;
@@ -94,13 +85,29 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        binding = FragmentRegisterBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
-        mCountryCodePicker.setCountryForPhoneCode(+966);
+        binding.countryCodePicker.setCountryForPhoneCode(+966);
         mViewModelRegister = ViewModelProviders.of(this).get(RegisterViewModel.class);
         mViewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
         mDialogSelectImage = new BottomSheetDialog(getActivity());
         mDialogSelectImage.setContentView(R.layout.dialog_select_image);
+
+        binding.create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAccount();
+            }
+        });
+
+        binding.viewProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProfilePicture();
+            }
+        });
+
         return view;
     }
 
@@ -127,32 +134,40 @@ public class RegisterFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PHOTO_CAMERA && getContext() != null && resultCode == RESULT_OK) {
-            Glide.with(getContext()).load(mFile).into(mUserImage);
-            mAdd.setVisibility(View.INVISIBLE);
+            Glide.with(getContext()).load(mFile).into(binding.userImage);
+            binding.add.setVisibility(View.INVISIBLE);
         } else if (requestCode == REQUEST_PHOTO_GALLERY && getContext() != null && resultCode == RESULT_OK) {
             mUri = data.getData();
             String selectedFilePath = FilePath.getPath(getActivity(), mUri);
             if (selectedFilePath != null) {
                 mFile = new File(selectedFilePath);
-                Glide.with(getContext()).load(mUri).into(mUserImage);
-                mAdd.setVisibility(View.INVISIBLE);
+                Glide.with(getContext()).load(mUri).into(binding.userImage);
+                binding.add.setVisibility(View.INVISIBLE);
             }
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     public void close() {
         getActivity().onBackPressed();
-
     }
 
 
-    public void addProfilePhoto() {
+    public void addProfilePicture() {
         if (getContext() != null) {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    ContextCompat.checkSelfPermission(getContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_GRANTED) {
                 takePhoto();
             } else {
-                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, TAKE_PHOTO_REQUEST_PERMISSION);
+                requestPermissions(new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, TAKE_PHOTO_REQUEST_PERMISSION);
             }
         }
     }
@@ -161,40 +176,45 @@ public class RegisterFragment extends Fragment {
         if (mToast != null)
             mToast.cancel();
 
-        String username = mUsername.getText().toString();
-        mCountryCode = "+" + mCountryCodePicker.getSelectedCountryCode();
-        mNumber = mPhoneNumber.getText().toString();
-        String password = mPassword.getText().toString();
+        String username = binding.username.getText().toString();
+        String email = binding.email.getText().toString();
+        String password = binding.password.getText().toString();
+        String passwordConfirmation =
+                binding.passwordConfirmation.getText().toString();
+        String phoneNumber = "+" + binding.countryCodePicker.getSelectedCountryCode() +
+                binding.phoneNumber.getText().toString();
 
-//        if (TextUtils.isEmpty(username)) {
-//            Toast.makeText(getContext(), getString(R.string.enter_username), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if (TextUtils.isEmpty(mNumber)) {
-//            Toast.makeText(getContext(), getString(R.string.enter_phone_number), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if (TextUtils.isEmpty(password)) {
-//            Toast.makeText(getContext(), getString(R.string.enter_password), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if (hasEmptyFields(username, email, password, passwordConfirmation, phoneNumber)){
+            return;
+        }
 
-        register(username, "email", password, mCountryCode, mNumber, mLocale, mFile);
+        if(passwordsDoNotMatch(password, passwordConfirmation)){
+            return;
+        }
+
+        register(username, email, password, phoneNumber);
     }
 
-    private void register(String username, String email, String password,
-                          String countryCode, String phoneNumber, String locale, File photoFile) {
+    private void register(String username, String email, String password, String phoneNumber) {
 
         RequestBody data;
-        String newUser = "{\"username\":\"em12\",\"email\":\"em12@emupapps.com\"," +
-                "\"password\":\"1234567\",\"passwordConfirmation\":\"1234567\"," +
-                "\"phoneNumber\":\"1234567\"}";
+        String userData;
 
-        data = RequestBody.create(MultipartBody.FORM, newUser);
+        if(TextUtils.isEmpty(binding.phoneNumber.getText())){
+            Log.d(TAG, "no phone number");
+            userData = String.format("{\"username\":\"%s\",\"email\":\"%s\"," +
+                    "\"password\":\"%s\",\"passwordConfirmation\":\"%s\"" +
+                    "}", username, email, password, password);
+        } else {
+            Log.d(TAG, "phone number");
+            userData = String.format("{\"username\":\"%s\",\"email\":\"%s\"," +
+                    "\"password\":\"%s\",\"passwordConfirmation\":\"%s\"," +
+                    "\"phoneNumber\":\"%s\"}", username, email, password, password, phoneNumber);
+        }
 
-        mProgress.setVisibility(View.VISIBLE);
+        data = RequestBody.create(MultipartBody.FORM, userData);
+
+        binding.progress.setVisibility(View.VISIBLE);
         SoftKeyboard.dismissKeyboardInActivity(getContext());
         AsyncTask.execute(() -> {
             if (mFile != null) {
@@ -205,7 +225,7 @@ public class RegisterFragment extends Fragment {
                     fileOutputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    mProgress.setVisibility(View.INVISIBLE);
+                    binding.progress.setVisibility(View.INVISIBLE);
                 }
                 mUri = FileUtils.getUri(mFile);
 
@@ -216,7 +236,8 @@ public class RegisterFragment extends Fragment {
             getActivity().runOnUiThread(() -> {
                 mViewModelRegister.register(data, mPartFile);
 
-                mViewModelRegister.getResult().observe(RegisterFragment.this, registerModelResponse -> {
+                mViewModelRegister.getResult().observe(RegisterFragment.this,
+                        registerModelResponse -> {
 
                 });
                 mViewModelRegister.failure().observe(this, failure -> {
@@ -225,11 +246,49 @@ public class RegisterFragment extends Fragment {
                             mToast.cancel();
                         mToast = Toast.makeText(getActivity(), R.string.connection_to_server_lost, Toast.LENGTH_SHORT);
                         mToast.show();
-                        mProgress.setVisibility(View.INVISIBLE);
+                        binding.progress.setVisibility(View.INVISIBLE);
                     }
                 });
             });
         });
+    }
+
+    private boolean hasEmptyFields(String username, String email, String password,
+                                   String passwordConfirmation, String phoneNumber){
+        Toast toast = null;
+
+        if (TextUtils.isEmpty(username)) {
+            toast = Toast.makeText(getContext(), getString(R.string.enter_username),
+                    Toast.LENGTH_SHORT);
+        } else if (TextUtils.isEmpty(email)){
+            toast = Toast.makeText(getContext(), getString(R.string.enter_email),
+                    Toast.LENGTH_SHORT);
+        } else if (TextUtils.isEmpty(password)){
+            toast = Toast.makeText(getContext(), getString(R.string.enter_password),
+                    Toast.LENGTH_SHORT);
+        } else if (TextUtils.isEmpty(passwordConfirmation)){
+            toast = Toast.makeText(getContext(), getString(R.string.enter_confirm_password),
+                    Toast.LENGTH_SHORT);
+        }
+
+        if (toast != null){
+            toast.show();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean passwordsDoNotMatch(String password, String passwordConfirmation){
+        Toast toast = null;
+
+        if(!password.equals(passwordConfirmation)){
+            toast = Toast.makeText(getContext(), getString(R.string.password_not_match),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return true;
+        }
+        return false;
     }
 
     private void takePhoto() {
@@ -297,7 +356,7 @@ public class RegisterFragment extends Fragment {
                         -> getActivity().runOnUiThread(() -> {
 
                     if (progressInPercent == 100) {
-                        mProgress.setVisibility(View.VISIBLE);
+                        binding.progress.setVisibility(View.VISIBLE);
                     } else {
 
                     }

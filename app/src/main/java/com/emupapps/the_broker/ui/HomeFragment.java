@@ -86,8 +86,6 @@ import java.util.Locale;
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private FragmentHomeBinding binding;
 
-    ImageView mMenu;
-
     private static final String TAG = HomeFragment.class.getSimpleName();
 
     private GoogleMap mMap;
@@ -163,6 +161,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             binding.searchView.findViewById(androidx.appcompat.R.id.search_mag_icon).setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
 
+        binding.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
+
         return view;
     }
 
@@ -211,7 +216,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void menu() {
+    public void openMenu() {
         sDrawerLayout.openDrawer(GravityCompat.START);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
     }
