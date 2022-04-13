@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.models.login.response.LoginModelResponse;
@@ -115,21 +115,22 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
             mBack.setImageResource(R.drawable.ic_arrow);
         }
 
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-        mViewModelUserRequests = ViewModelProviders.of(getActivity()).get(RequestsUserViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+        mViewModelUserRequests =
+                new ViewModelProvider(getActivity()).get(RequestsUserViewModel.class);
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, new Observer<LoginModelResponse>() {
-                @Override
-                public void onChanged(LoginModelResponse loginModelResponse) {
-                    mUserId = loginModelResponse.getUser().getId();
-                    mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
-                        mRealEstateId = realEstateModelResponse.getRealEstate().getId();
-                        mSend.setEnabled(true);
-                    });
-                }
-            });
+//            viewModelLogin.getUser().observe(this, new Observer<LoginModelResponse>() {
+//                @Override
+//                public void onChanged(LoginModelResponse loginModelResponse) {
+//                    mUserId = loginModelResponse.getUser().getId();
+//                    mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
+//                        mRealEstateId = realEstateModelResponse.getRealEstate().getId();
+//                        mSend.setEnabled(true);
+//                    });
+//                }
+//            });
         } else {
             mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
                 mRealEstateId = realEstateModelResponse.getRealEstate().getId();
@@ -209,7 +210,7 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
         }
 
         RequestOwnershipViewModel viewModelRequestOwnership =
-                ViewModelProviders.of(this).get(RequestOwnershipViewModel.class);
+                new ViewModelProvider(this).get(RequestOwnershipViewModel.class);
         viewModelRequestOwnership.ownershipRequest(realEstateId, userId, startDate, paymentMethod, locale);
         viewModelRequestOwnership.getResult().observe(this, new Observer<RequestOwnershipModelResponse>() {
             @Override
@@ -285,7 +286,7 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
         }
 
         RequestRentViewModel viewModelRequestRent =
-                ViewModelProviders.of(this).get(RequestRentViewModel.class);
+                new ViewModelProvider(this).get(RequestRentViewModel.class);
         viewModelRequestRent.rentRequest(realEstateId, userId, startDate, duration, paymentMethod, locale);
         viewModelRequestRent.getResult().observe(this, new Observer<RequestRentModelResponse>() {
             @Override
@@ -397,7 +398,7 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
         mTypeMaintenance = "1";
         mDescriptionMaintenance = mValue6.getText().toString();
         RequestMaintenanceViewModel viewModelRequestMaintenance =
-                ViewModelProviders.of(this).get(RequestMaintenanceViewModel.class);
+                new ViewModelProvider(this).get(RequestMaintenanceViewModel.class);
         viewModelRequestMaintenance.maintenance(realEstateId, userId, mTypeMaintenance, mDescriptionMaintenance, locale);
         viewModelRequestMaintenance.getResult().observe(this, new Observer<RequestMaintenanceModelResponse>() {
             @Override
@@ -454,7 +455,7 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
 
         RequestTerminationViewModel viewModelRequestTermination =
-                ViewModelProviders.of(this).get(RequestTerminationViewModel.class);
+                new ViewModelProvider(this).get(RequestTerminationViewModel.class);
         viewModelRequestTermination.terminateContract(realEstateId, userId, dateExit, methodRefund, locale);
         viewModelRequestTermination.getResult().observe(this, new Observer<RequestTerminationModelResponse>() {
             @Override

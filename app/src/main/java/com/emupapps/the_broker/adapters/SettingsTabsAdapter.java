@@ -10,9 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.emupapps.the_broker.R;
-import com.emupapps.the_broker.ui.DocumentsAddFragment;
-import com.emupapps.the_broker.ui.InfoUserFragment;
-import com.emupapps.the_broker.ui.SettingsAdvancedFragment;
+import com.emupapps.the_broker.ui.DocumentsFragment;
+import com.emupapps.the_broker.ui.EditProfileFragment;
+import com.emupapps.the_broker.ui.AdvancedSettingsFragment;
 import com.emupapps.the_broker.ui.PaymentCardsFragment;
 
 public class SettingsTabsAdapter extends FragmentStatePagerAdapter {
@@ -33,13 +33,13 @@ public class SettingsTabsAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return InfoUserFragment.newInstance();
+                return EditProfileFragment.newInstance();
             case 1:
-                return DocumentsAddFragment.newInstance();
+                return DocumentsFragment.newInstance();
             case 2:
                 return PaymentCardsFragment.newInstance();
             case 3:
-                return SettingsAdvancedFragment.newInstance();
+                return AdvancedSettingsFragment.newInstance();
         }
         return null;
     }

@@ -1,5 +1,6 @@
 package com.emupapps.the_broker.utils.web_service;
 
+import com.emupapps.the_broker.models.ProfileModelResponse;
 import com.emupapps.the_broker.models.RealEstate;
 import com.emupapps.the_broker.models.account_bank.BankAccountModelResponse;
 import com.emupapps.the_broker.models.auction_bid.request.AuctionBidModelRequest;
@@ -38,12 +39,10 @@ import com.emupapps.the_broker.models.real_estate.RealEstateModelResponse;
 import com.emupapps.the_broker.models.real_estate_categories.RealEstateCategoriesModelResponse;
 import com.emupapps.the_broker.models.real_estate_requests_user.RealEstateRequestsUserModelResponse;
 import com.emupapps.the_broker.models.real_estate_statuses.RealEstateStatusesModelResponse;
-import com.emupapps.the_broker.models.real_estates.request.RealEstatesModelRequest;
-import com.emupapps.the_broker.models.real_estates.response.RealEstatesModelResponse;
 import com.emupapps.the_broker.models.real_estates_owned.RealEstatesOwnedModelResponse;
 import com.emupapps.the_broker.models.real_estates_rented.RentedRealEstatesModelResponse;
 import com.emupapps.the_broker.models.regions.RegionsModelResponse;
-import com.emupapps.the_broker.models.register.RegisterModelResponse;
+import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
 import com.emupapps.the_broker.models.report.request.ReportModelRequest;
 import com.emupapps.the_broker.models.report.response.ReportModelResponse;
 import com.emupapps.the_broker.models.request_maintenance.request.RequestMaintenanceModelRequest;
@@ -72,16 +71,28 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
-public interface AeqaratApi {
+public interface TheBrokerApi {
 
-    @POST("api/Login")
-    Call<LoginModelResponse> login(@Body LoginModelRequest body);
+    @Multipart
+    @POST("auth/local/register")
+    Call<AuthenticationModelResponse> register(@Part("data") RequestBody data,
+                                               @Part MultipartBody.Part profilePicture);
+
+    @FormUrlEncoded
+    @POST("auth/local")
+    Call<AuthenticationModelResponse> login(@Field("identifier") String identifier,
+                                   @Field("password") String password);
+
+    @GET("users/me")
+    Call<ProfileModelResponse> profile(@Header("Authorization") String authorization);
 
     @GET("api/GetServices")
     Call<SlidesModelResponse> getSlides();
@@ -154,11 +165,6 @@ public interface AeqaratApi {
     @POST("api/EmailCode")
     Call<ConfirmEmailModelResponse> confirmEmail(@Body ConfirmEmailModelRequest body);
 
-    @Multipart
-    @POST("auth/local/register")
-    Call<RegisterModelResponse> register(@Part("data") RequestBody data,
-                                         @Part MultipartBody.Part profilePicture);
-
     @POST("api/ForgetPassword")
     Call<ForgetPasswordModelResponse> forgetPassword(@Body ForgetPasswordModelRequest body);
 
@@ -192,10 +198,6 @@ public interface AeqaratApi {
     @POST("api/UserDoc")
     Call<AddDocumentModelResponse> addDocumentation(@Part MultipartBody.Part document,
                                                     @Part("user_id") RequestBody userId);
-
-    @FormUrlEncoded
-    @POST("api/GetOneUser")
-    Call<UserInfoModelResponse> getUserInfo(@Field("user_id") String userId);
 
     @FormUrlEncoded
     @POST("api/DeleteDoc")

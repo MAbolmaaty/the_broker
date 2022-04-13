@@ -91,10 +91,11 @@
     <style name="progressBar">
         <item name="android:layout_width">25dp</item>
         <item name="android:layout_height">25dp</item>
+        <item name="elevation">@dimen/_4sdp</item>
         <item name="android:visibility">invisible</item>
         <item name="android:indeterminate">true</item>
         <item name="android:indeterminateTintMode">src_atop</item>
-        <item name="android:indeterminateTint">@color/darkGrey</item>
+        <item name="android:indeterminateTint">#F7CA31</item>
     </style>
 
     <style name="back_arrow">

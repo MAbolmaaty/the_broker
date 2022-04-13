@@ -15,14 +15,13 @@ import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.emupapps.the_broker.viewmodels.ContactUsViewModel;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 import com.hbb20.CountryCodePicker;
 
 import java.util.Locale;
@@ -53,7 +52,7 @@ public class ContactUsFragment extends Fragment {
     private ContactUsViewModel mViewModelContactUs;
     private Toast mToast;
     private String mLocale;
-    private InfoUserViewModel mViewModelInfoUser;
+    private ProfileViewModel mViewModelInfoUser;
 
     public ContactUsFragment() {
         // Required empty public constructor
@@ -65,17 +64,16 @@ public class ContactUsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_us, container, false);
-        mViewModelContactUs = ViewModelProviders.of(this).get(ContactUsViewModel.class);
-        mViewModelInfoUser = ViewModelProviders.of(getActivity()).get(InfoUserViewModel.class);
+        mViewModelContactUs = new ViewModelProvider(this).get(ContactUsViewModel.class);
+        mViewModelInfoUser = new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
         String userId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (userId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.isLoggedIn().observe(this, loggedIn -> {
-                if (loggedIn) {
-                    viewModelLogin.getUser().observe(ContactUsFragment.this, loginModelResponse ->
-                            loadUserInfo(loginModelResponse.getUser().getId()));
-                }
-            });
+//            viewModelLogin.isLoggedIn().observe(this, loggedIn -> {
+//                if (loggedIn) {
+//                    viewModelLogin.getUser().observe(ContactUsFragment.this, loginModelResponse ->
+//                            loadUserInfo(loginModelResponse.getUser().getId()));
+//                }
+//            });
 
         } else {
             loadUserInfo(userId);
@@ -173,22 +171,22 @@ public class ContactUsFragment extends Fragment {
     }
 
     private void loadUserInfo(String userId) {
-        mViewModelInfoUser.userInfo(userId);
-        mViewModelInfoUser.getUserInfo().observe(ContactUsFragment.this, userInfoModelResponse -> {
-            if (userInfoModelResponse.getKey().equals(SUCCESS)) {
-                mUsername.setText(userInfoModelResponse.getUser().getName());
-                if (userInfoModelResponse.getUser().getCode() != null)
-                    mCountryCodePicker.setCountryForPhoneCode(Integer.parseInt(userInfoModelResponse.getUser().getCode()));
-                mPhoneNumber.setText(userInfoModelResponse.getUser().getPhone());
-                mEmail.setText(userInfoModelResponse.getUser().getEmail());
-            }
-        });
-        mViewModelInfoUser.isLoading().observe(ContactUsFragment.this, loading -> {
-            if (loading) {
-                mProgressBar.setVisibility(View.VISIBLE);
-            } else {
-                mProgressBar.setVisibility(View.INVISIBLE);
-            }
-        });
+//        mViewModelInfoUser.userInfo(userId);
+//        mViewModelInfoUser.getUserInfo().observe(ContactUsFragment.this, userInfoModelResponse -> {
+//            if (userInfoModelResponse.getKey().equals(SUCCESS)) {
+//                mUsername.setText(userInfoModelResponse.getUser().getName());
+//                if (userInfoModelResponse.getUser().getCode() != null)
+//                    mCountryCodePicker.setCountryForPhoneCode(Integer.parseInt(userInfoModelResponse.getUser().getCode()));
+//                mPhoneNumber.setText(userInfoModelResponse.getUser().getPhone());
+//                mEmail.setText(userInfoModelResponse.getUser().getEmail());
+//            }
+//        });
+//        mViewModelInfoUser.isLoading().observe(ContactUsFragment.this, loading -> {
+//            if (loading) {
+//                mProgressBar.setVisibility(View.VISIBLE);
+//            } else {
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//            }
+//        });
     }
 }

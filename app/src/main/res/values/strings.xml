@@ -290,4 +290,6 @@
     <string name="no_debentures">No Debentures&#8230;</string>
     <string name="default_name">Mu Abolmaaty</string>
     <string name="default_type">Real estate holder</string>
+    <string name="could_not_upload_picture">couldn\'t upload your picture</string>
+    <string name="enter_email_or_username">Enter email or username</string>
 </resources>

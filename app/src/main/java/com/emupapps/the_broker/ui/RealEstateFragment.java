@@ -19,12 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.RealEstateTabsAdapter;
@@ -38,8 +36,7 @@ import com.emupapps.the_broker.models.slides.Slide;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.viewmodels.FavoriteViewModel;
 import com.emupapps.the_broker.viewmodels.FavoritesViewModel;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 import com.emupapps.the_broker.viewmodels.OwnerContactViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateCategoriesViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateStatusesViewModel;
@@ -49,11 +46,8 @@ import com.emupapps.the_broker.viewmodels.RequestSubmittedViewModel;
 import com.emupapps.the_broker.viewmodels.RequestsUserViewModel;
 import com.emupapps.the_broker.viewmodels.UnFavoriteViewModel;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.tabs.TabLayout;
 import com.smarteist.autoimageslider.IndicatorAnimations;
-import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,7 +94,7 @@ public class RealEstateFragment extends Fragment {
     private OwnerContactViewModel mViewModelContactOwner;
     private RequestsUserViewModel mViewModelUserRequests;
     private RealEstateCategoriesViewModel mViewModelRealEstateCategories;
-    private InfoUserViewModel mViewModelUserInfo;
+    private ProfileViewModel mViewModelUserInfo;
 
     //RealEstate Info
     private String mOwnerId;
@@ -141,14 +135,22 @@ public class RealEstateFragment extends Fragment {
         }
 
         //Initialize ViewModels
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-        mViewModelFavorite = ViewModelProviders.of(this).get(FavoriteViewModel.class);
-        mViewModelUnFavorite = ViewModelProviders.of(this).get(UnFavoriteViewModel.class);
-        mViewModelRealEstateStatuses = ViewModelProviders.of(getActivity()).get(RealEstateStatusesViewModel.class);
-        mViewModelSubmittedRequest = ViewModelProviders.of(getActivity()).get(RequestSubmittedViewModel.class);
-        mViewModelFavorites = ViewModelProviders.of(getActivity()).get(FavoritesViewModel.class);
-        mViewModelRealEstateCategories = ViewModelProviders.of(getActivity()).get(RealEstateCategoriesViewModel.class);
-        mViewModelUserInfo = ViewModelProviders.of(getActivity()).get(InfoUserViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+        mViewModelFavorite =
+                new ViewModelProvider(this).get(FavoriteViewModel.class);
+        mViewModelUnFavorite =
+                new ViewModelProvider(this).get(UnFavoriteViewModel.class);
+        mViewModelRealEstateStatuses =
+                new ViewModelProvider(getActivity()).get(RealEstateStatusesViewModel.class);
+        mViewModelSubmittedRequest =
+                new ViewModelProvider(getActivity()).get(RequestSubmittedViewModel.class);
+        mViewModelFavorites =
+                new ViewModelProvider(getActivity()).get(FavoritesViewModel.class);
+        mViewModelRealEstateCategories =
+                new ViewModelProvider(getActivity()).get(RealEstateCategoriesViewModel.class);
+        mViewModelUserInfo =
+                new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
 
         binding.favorite.setTranslationX(264);
         binding.favorite.setTag(0);
@@ -164,23 +166,22 @@ public class RealEstateFragment extends Fragment {
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         binding.tabLayout.getTabAt(1).select();
 
-        LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         mUserType = "-1";
         if (mUserId == null) {
-            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-                mUserId = loginModelResponse.getUser().getId();
-                //mUserType = loginModelResponse.getUser().getType();
-            });
+//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
+//                mUserId = loginModelResponse.getUser().getId();
+//                //mUserType = loginModelResponse.getUser().getType();
+//            });
         } else {
             mUserType = SharedPrefUtil.getInstance(getContext()).read(USER_TYPE, "-1");
         }
-        viewModelLogin.isLoggedIn().observe(this, loggedIn -> {
-            if (!loggedIn) {
-                mUserId = null;
-                mUserType = "-1";
-            }
-        });
+//        viewModelLogin.isLoggedIn().observe(this, loggedIn -> {
+//            if (!loggedIn) {
+//                mUserId = null;
+//                mUserType = "-1";
+//            }
+//        });
 
         mViewModelRealEstate.getRealEstateId().observe(this, RealEstateFragment.this::getRealEstate);
 
@@ -404,7 +405,8 @@ public class RealEstateFragment extends Fragment {
                 mToast.show();
                 return;
             }
-            mViewModelReport = ViewModelProviders.of(this).get(ReportViewModel.class);
+            mViewModelReport =
+                    new ViewModelProvider(this).get(ReportViewModel.class);
             mViewModelReport.report(mReportMessage, mUserId, mRealEstateId, mLocale, mReportStatus);
             mViewModelReport.getResult().observe(this, reportModelResponse -> {
                 if (reportModelResponse.getMessage() != null) {
@@ -674,7 +676,8 @@ public class RealEstateFragment extends Fragment {
                 mPriceFor6Months = realEstate.getPrice_for_6month();
                 mPriceFor12Months = realEstate.getPrice_for_12month();
 
-                mViewModelUserRequests = ViewModelProviders.of(getActivity()).get(RequestsUserViewModel.class);
+                mViewModelUserRequests =
+                        new ViewModelProvider(getActivity()).get(RequestsUserViewModel.class);
                 mViewModelUserRequests.userRequests(mUserId);
                 getFavorites(mUserId);
                 mViewModelUserRequests.getUserRequests().observe(this, userRequestsModelResponse ->
@@ -914,7 +917,8 @@ public class RealEstateFragment extends Fragment {
             phoneNumber.setText(mOwnerPhoneNumber);
         }
 
-        mViewModelContactOwner = ViewModelProviders.of(this).get(OwnerContactViewModel.class);
+        mViewModelContactOwner =
+                new ViewModelProvider(this).get(OwnerContactViewModel.class);
         send.setOnClickListener(v -> {
             String text = message.getText().toString();
             if (TextUtils.isEmpty(text)) {

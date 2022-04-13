@@ -14,11 +14,12 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/close"
-            android:layout_width="@dimen/_38sdp"
-            android:layout_height="@dimen/_38sdp"
-            android:src="@drawable/ic_close"
-            android:tint="#F7CA31"
+            android:id="@+id/back"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_back"
+            android:layout_margin="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +32,7 @@
             android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/close" />
+            app:layout_constraintTop_toBottomOf="@+id/back" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userImage"
@@ -41,7 +42,7 @@
             android:elevation="@dimen/_4sdp"
             android:src="@drawable/ic_profile"
             android:tint="@color/darkGrey"
-            android:layout_margin="@dimen/_8sdp"
+            android:layout_margin="@dimen/_4sdp"
             app:layout_constraintBottom_toBottomOf="@+id/viewProfilePicture"
             app:layout_constraintEnd_toEndOf="@+id/viewProfilePicture"
             app:layout_constraintStart_toStartOf="@+id/viewProfilePicture"
@@ -227,7 +228,6 @@
             android:paddingStart="@dimen/_38sdp"
             android:paddingEnd="@dimen/_38sdp"
             app:layout_constraintVertical_bias="0"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/layout_password"
             app:layout_constraintStart_toStartOf="@+id/layout_password"
             app:layout_constraintTop_toBottomOf="@+id/view_phoneNumber" />
@@ -235,27 +235,24 @@
         <ProgressBar
             android:id="@+id/progress"
             style="@style/progressBar"
-            android:elevation="@dimen/_4sdp"
-            android:background="@drawable/bg_oval_gradient"
-            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create"
-            app:layout_constraintBottom_toTopOf="@+id/createNewAccount"/>
+            app:layout_constraintTop_toBottomOf="@+id/create" />
 
         <TextView
             android:id="@+id/createNewAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/cairo_semi_bold"
-            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/_10sdp"
             android:text="@string/creating_new_account"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progress"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

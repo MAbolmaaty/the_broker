@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -59,8 +59,9 @@ public class AuctionJoinFragment extends Fragment {
             mBack.setImageResource(R.drawable.ic_arrow);
         }
         mTitle.setText(R.string.auction_join);
-        mViewModelBankAccount = ViewModelProviders.of(this).get(AccountBankViewModel.class);
-        RealEstateViewModel viewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        mViewModelBankAccount = new ViewModelProvider(this).get(AccountBankViewModel.class);
+        RealEstateViewModel viewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
         viewModelRealEstate.getRealEstateId().observe(this, realEstateId -> {
             mViewModelBankAccount.bankAccount(realEstateId);
             mViewModelBankAccount.getBankAccount().observe(AuctionJoinFragment.this, bankAccountModelResponse -> {

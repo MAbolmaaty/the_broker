@@ -1,9 +1,18 @@
 package com.emupapps.the_broker.ui;
 
+import static com.emupapps.the_broker.utils.Constants.EMAIL_ADDRESS;
+import static com.emupapps.the_broker.utils.Constants.JWT;
+import static com.emupapps.the_broker.utils.Constants.LOCALE;
+import static com.emupapps.the_broker.utils.Constants.PHONE_NUMBER;
+import static com.emupapps.the_broker.utils.Constants.Profile_Picture;
+import static com.emupapps.the_broker.utils.Constants.USERNAME;
+import static com.emupapps.the_broker.utils.Constants.USER_ID;
+
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -20,49 +29,35 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.databinding.ActivityMainBinding;
-import com.emupapps.the_broker.models.info_user.UserInfoModelResponse;
+import com.emupapps.the_broker.models.ProfileModelResponse;
+import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
 import com.emupapps.the_broker.models.search.request.SearchModelRequest;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
+import com.emupapps.the_broker.viewmodels.AuthenticationViewModel;
 import com.emupapps.the_broker.viewmodels.DistrictsViewModel;
-import com.emupapps.the_broker.viewmodels.InfoUpdateViewModel;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateCategoriesViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateStatusesViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstatesViewModel;
 import com.emupapps.the_broker.viewmodels.RegionsViewModel;
 import com.emupapps.the_broker.viewmodels.SearchViewModel;
 import com.emupapps.the_broker.viewmodels.SlidesViewModel;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.material.internal.NavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.emupapps.the_broker.utils.Constants.ADDRESS;
-import static com.emupapps.the_broker.utils.Constants.AGENT;
-import static com.emupapps.the_broker.utils.Constants.BASE_URL;
-import static com.emupapps.the_broker.utils.Constants.BIRTH_DATE;
-import static com.emupapps.the_broker.utils.Constants.EMAIL;
-import static com.emupapps.the_broker.utils.Constants.LOCALE;
-import static com.emupapps.the_broker.utils.Constants.PHONE_CODE;
-import static com.emupapps.the_broker.utils.Constants.PHONE_NUMBER;
-import static com.emupapps.the_broker.utils.Constants.REGISTER;
-import static com.emupapps.the_broker.utils.Constants.REMEMBER_ME;
-import static com.emupapps.the_broker.utils.Constants.USERNAME;
-import static com.emupapps.the_broker.utils.Constants.USER_ID;
-import static com.emupapps.the_broker.utils.Constants.USER_IMAGE;
-import static com.emupapps.the_broker.utils.Constants.USER_TYPE;
-
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+    private ActivityMainBinding mBinding;
+    private AuthenticationViewModel mAuthenticationViewModel;
 
     NavigationView mNavView;
 
@@ -73,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
     public static DrawerLayout sDrawerLayout;
 
     private SearchViewModel mViewModelSearch;
-    private LoginViewModel mViewModelLogin;
-    private Toast mToast;
-    private boolean mLoggedIn;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         String language = SharedPrefUtil.getInstance(newBase).read(LOCALE, Locale.getDefault().getLanguage());
@@ -101,109 +94,101 @@ public class MainActivity extends AppCompatActivity {
         createConfigurationContext(configuration);
 
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = mBinding.getRoot();
         setContentView(view);
-        mNavView = binding.navView;
-
+        mNavView = mBinding.navView;
         getSupportActionBar().hide();
-        String locale1 = SharedPrefUtil.getInstance(this).read(LOCALE, Locale.getDefault().getLanguage());
 
-        LoginViewModel viewModelLogin = ViewModelProviders.of(this).get(LoginViewModel.class);
-        viewModelLogin.isLoggedIn().observe(this, loggedIn -> {
-            mLoggedIn = loggedIn;
-            mNavView.getMenu().getItem(11).setVisible(loggedIn);
-            mNavView.getMenu().getItem(0).setChecked(true);
-            mNavView.getMenu().getItem(1).setChecked(true);
-            mNavView.getMenu().getItem(3).setVisible(true);
-            mNavView.getMenu().getItem(4).setVisible(false);
-            mNavView.getMenu().getItem(1).setVisible(false);
-            mNavView.getMenu().getItem(0).setVisible(true);
-            mNavView.getMenu().getItem(2).setVisible(true);
-            mNavView.getMenu().getItem(5).setVisible(true);
-            mNavView.getMenu().getItem(10).setVisible(true);
-            ((NavigationMenuView)mNavView.getChildAt(0)).scrollToPosition(0);
-            setNavHeader(loggedIn);
-            if (loggedIn){
-                String userId = SharedPrefUtil.getInstance(this).read(USER_ID, null);
-                String userType;
-                if (userId != null){
-                    userType = SharedPrefUtil.getInstance(this).read(USER_TYPE, "");
-                    if (userType.equals(AGENT)){
-                        mNavView.getMenu().getItem(4).setVisible(true);
-                        mNavView.getMenu().getItem(1).setVisible(true);
-                        mNavView.getMenu().getItem(2).setVisible(false);
-                        mNavView.getMenu().getItem(0).setVisible(false);
-                        mNavView.getMenu().getItem(3).setVisible(false);
-                        mNavView.getMenu().getItem(5).setVisible(false);
-                        mNavView.getMenu().getItem(10).setVisible(false);
-                        loadFragment(getSupportFragmentManager(), new RealEstatesAgentFragment(),
-                                false);
-                    } else {
-                        loadFragment(getSupportFragmentManager(),
-                                new HomeFragment(), false);
-                    }
-                } else {
-                    mViewModelLogin.getUser().observe(this, loginModelResponse -> {
-                        if (false){
-                            mNavView.getMenu().getItem(4).setVisible(true);
-                            mNavView.getMenu().getItem(3).setVisible(false);
-                            mNavView.getMenu().getItem(1).setVisible(true);
-                            mNavView.getMenu().getItem(2).setVisible(false);
-                            mNavView.getMenu().getItem(0).setVisible(false);
-                            mNavView.getMenu().getItem(5).setVisible(false);
-                            mNavView.getMenu().getItem(10).setVisible(false);
-                            loadFragment(getSupportFragmentManager(), new RealEstatesAgentFragment(),
-                                    false);
-                        }else {
-                            loadFragment(getSupportFragmentManager(),
-                                    new HomeFragment(), false);
-                        }
-                    });
-                }
-            }
-        });
-
-        //Update navigation header due to settings updated
-        navHeaderUpdated();
+//        viewModelLogin.isLoggedIn().observe(this, loggedIn -> {
+//            mLoggedIn = loggedIn;
+//            mNavView.getMenu().getItem(11).setVisible(loggedIn);
+//            mNavView.getMenu().getItem(0).setChecked(true);
+//            mNavView.getMenu().getItem(1).setChecked(true);
+//            mNavView.getMenu().getItem(3).setVisible(true);
+//            mNavView.getMenu().getItem(4).setVisible(false);
+//            mNavView.getMenu().getItem(1).setVisible(false);
+//            mNavView.getMenu().getItem(0).setVisible(true);
+//            mNavView.getMenu().getItem(2).setVisible(true);
+//            mNavView.getMenu().getItem(5).setVisible(true);
+//            mNavView.getMenu().getItem(10).setVisible(true);
+//            ((NavigationMenuView)mNavView.getChildAt(0)).scrollToPosition(0);
+//            setNavHeader(loggedIn);
+//            if (loggedIn){
+//                String userId = SharedPrefUtil.getInstance(this).read(USER_ID, null);
+//                String userType;
+//                if (userId != null){
+//                    userType = SharedPrefUtil.getInstance(this).read(USER_TYPE, "");
+//                    if (userType.equals(AGENT)){
+//                        mNavView.getMenu().getItem(4).setVisible(true);
+//                        mNavView.getMenu().getItem(1).setVisible(true);
+//                        mNavView.getMenu().getItem(2).setVisible(false);
+//                        mNavView.getMenu().getItem(0).setVisible(false);
+//                        mNavView.getMenu().getItem(3).setVisible(false);
+//                        mNavView.getMenu().getItem(5).setVisible(false);
+//                        mNavView.getMenu().getItem(10).setVisible(false);
+//                        loadFragment(getSupportFragmentManager(), new RealEstatesAgentFragment(),
+//                                false);
+//                    } else {
+//                        loadFragment(getSupportFragmentManager(),
+//                                new HomeFragment(), false);
+//                    }
+//                } else {
+//                    mViewModelLogin.getUser().observe(this, loginModelResponse -> {
+//                        if (false){
+//                            mNavView.getMenu().getItem(4).setVisible(true);
+//                            mNavView.getMenu().getItem(3).setVisible(false);
+//                            mNavView.getMenu().getItem(1).setVisible(true);
+//                            mNavView.getMenu().getItem(2).setVisible(false);
+//                            mNavView.getMenu().getItem(0).setVisible(false);
+//                            mNavView.getMenu().getItem(5).setVisible(false);
+//                            mNavView.getMenu().getItem(10).setVisible(false);
+//                            loadFragment(getSupportFragmentManager(), new RealEstatesAgentFragment(),
+//                                    false);
+//                        }else {
+//                            loadFragment(getSupportFragmentManager(),
+//                                    new HomeFragment(), false);
+//                        }
+//                    });
+//                }
+//            }
+//        });
 
         sDrawerLayout = findViewById(R.id.drawer_layout);
 
         mNavView.getChildAt(0).setVerticalScrollBarEnabled(false);
-        mNavView.getMenu().getItem(11).setVisible(false);
 
-        mViewModelLogin = ViewModelProviders.of(this).get(LoginViewModel.class);
-        mViewModelSearch = ViewModelProviders.of(this).get(SearchViewModel.class);
+        mAuthenticationViewModel =
+                new ViewModelProvider(MainActivity.this).get(AuthenticationViewModel.class);
+        fetchUser();
+        setNavHeader();
+        mViewModelSearch = new ViewModelProvider(this).get(SearchViewModel.class);
 
         //Get RealEstates
-        RealEstatesViewModel viewModelRealEstates = ViewModelProviders.of(this).get(RealEstatesViewModel.class);
+        RealEstatesViewModel viewModelRealEstates =
+                new ViewModelProvider(this).get(RealEstatesViewModel.class);
         viewModelRealEstates.realEstates("1", "1", "0");
         //Get Slides
-        SlidesViewModel viewModelSlides = ViewModelProviders.of(this).get(SlidesViewModel.class);
+        SlidesViewModel viewModelSlides =
+                new ViewModelProvider(this).get(SlidesViewModel.class);
         viewModelSlides.slides();
         //Get Real Estate Statuses, Ex : sale, rent
-        RealEstateStatusesViewModel viewModelRealEstateStatuses = ViewModelProviders.of(this).get(RealEstateStatusesViewModel.class);
-        viewModelRealEstateStatuses.statuses(locale1);
+        RealEstateStatusesViewModel viewModelRealEstateStatuses =
+                new ViewModelProvider(this).get(RealEstateStatusesViewModel.class);
         //Get Real Estate Categories, Ex : apartment, office
-        RealEstateCategoriesViewModel viewModelRealEstateCategories = ViewModelProviders.of(this).get(RealEstateCategoriesViewModel.class);
-        viewModelRealEstateCategories.categories(locale1);
+        RealEstateCategoriesViewModel viewModelRealEstateCategories =
+                new ViewModelProvider(this).get(RealEstateCategoriesViewModel.class);
         //Get Regions
-        RegionsViewModel viewModelRegions = ViewModelProviders.of(this).get(RegionsViewModel.class);
-        viewModelRegions.regions(locale1);
+        RegionsViewModel viewModelRegions =
+                new ViewModelProvider(this).get(RegionsViewModel.class);
         //Get Districts
-        DistrictsViewModel viewModelDistricts = ViewModelProviders.of(this).get(DistrictsViewModel.class);
-        viewModelDistricts.districts(locale1);
+        DistrictsViewModel viewModelDistricts =
+                new ViewModelProvider(this).get(DistrictsViewModel.class);
 
-        //Splash
-        //viewSplash();
         home();
 
-        // Checking for Google play services availability
-        if (isGooglePlayServicesAvailable()) {
-
-        }
-
         setNavigationItemSelected();
+
     }
 
     @Override
@@ -221,79 +206,61 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNavigationItemSelected() {
         mNavView.setNavigationItemSelectedListener(menuItem -> {
-            if (mToast != null)
-                mToast.cancel();
-            mToast = Toast.makeText(this, R.string.login_first, Toast.LENGTH_SHORT);
             sDrawerLayout.closeDrawer(GravityCompat.START, false);
-
             int itemId = menuItem.getItemId();
             switch (itemId) {
                 case R.id.nav_home:
                     loadFragment(getSupportFragmentManager(), new HomeFragment(), false);
                     return true;
-                case R.id.nav_adminRealEstates:
-                    loadFragment(getSupportFragmentManager(), new RealEstatesAgentFragment(), false);
-                    return true;
                 case R.id.nav_realEstates:
-                    if (mLoggedIn) {
-                        loadFragment(getSupportFragmentManager(), new RealEstatesFragment(), false);
-                        return true;
+                    if (mAuthenticationViewModel.getResult().getValue() != null){
+                        loadFragment(getSupportFragmentManager(), new RealEstatesFragment(),
+                                false);
                     } else {
-                        mToast.show();
-                        return false;
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                false);
                     }
                 case R.id.nav_requests:
-                    if (mLoggedIn) {
-                        loadFragment(getSupportFragmentManager(), new RequestsFragment(), false);
-                        return true;
+                    if (mAuthenticationViewModel.getResult().getValue() != null){
+                        loadFragment(getSupportFragmentManager(), new RequestsFragment(),
+                                false);
                     } else {
-                        mToast.show();
-                        return false;
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                false);
                     }
-                case R.id.nav_requests_admin:
-                    loadFragment(getSupportFragmentManager(), new RequestsAgentFragment(), false);
-                    return true;
                 case R.id.nav_messages:
-                    if (mLoggedIn) {
-                        loadFragment(getSupportFragmentManager(), new MessagesFragment(), false);
-                        return true;
+                    if (mAuthenticationViewModel.getResult().getValue() != null){
+                        loadFragment(getSupportFragmentManager(), new MessagesFragment(),
+                                false);
                     } else {
-                        mToast.show();
-                        return false;
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                false);
                     }
                 case R.id.nav_notifications:
-                    if (mLoggedIn) {
-                        loadFragment(getSupportFragmentManager(), new NotificationsFragment(), false);
-                        return true;
+                    if (mAuthenticationViewModel.getResult().getValue() != null){
+                        loadFragment(getSupportFragmentManager(), new NotificationsFragment(),
+                                false);
                     } else {
-                        mToast.show();
-                        return false;
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                false);
                     }
                 case R.id.nav_favorites:
-                    if (mLoggedIn) {
-                        loadFragment(getSupportFragmentManager(), new FavoritesFragment(), false);
-                        return true;
+                    if (mAuthenticationViewModel.getResult().getValue() != null){
+                        loadFragment(getSupportFragmentManager(), new FavoritesFragment(),
+                                false);
                     } else {
-                        mToast.show();
-                        return false;
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                false);
                     }
-                case R.id.nav_privacyPolicy:
-                    loadFragment(getSupportFragmentManager(), new PrivacyPolicyFragment(), false);
+                case R.id.nav_termsAndConditions:
+                    loadFragment(getSupportFragmentManager(), new TermsAndConditionsFragment(),
+                            false);
                     return true;
                 case R.id.nav_contactUs:
                     loadFragment(getSupportFragmentManager(), new ContactUsFragment(), false);
                     return true;
                 case R.id.nav_settings:
-                    if (mLoggedIn) {
-                        loadFragment(getSupportFragmentManager(), new SettingsFragment(), false);
-                        return true;
-                    } else {
-                        mToast.show();
-                        return false;
-                    }
-                case R.id.nav_logout:
-                    logout();
-                    loadFragment(getSupportFragmentManager(), new LoginFragment(), false);
+                    loadFragment(getSupportFragmentManager(), new SettingsFragment(), false);
                     return true;
             }
             return false;
@@ -315,21 +282,21 @@ public class MainActivity extends AppCompatActivity {
         loadFragment(getSupportFragmentManager(), new SplashFragment(), false);
     }
 
-    private void home(){
+    private void home() {
         loadFragment(getSupportFragmentManager(),
                 new HomeFragment(), false);
-        LoginViewModel viewModelLogin = ViewModelProviders.of(this).get(LoginViewModel.class);
         String userId = SharedPrefUtil.getInstance(this).read(USER_ID, null);
-        if (userId != null) {
-            viewModelLogin.loggedIn(true);
-        }else {
-            viewModelLogin.loggedIn(false);
-        }
+//        if (userId != null) {
+//            viewModelLogin.loggedIn(true);
+//        }else {
+//            viewModelLogin.loggedIn(false);
+//        }
     }
 
     public boolean isGooglePlayServicesAvailable() {
 
-        int isAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        int isAvailable =
+                GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
 
         if (isAvailable == ConnectionResult.SUCCESS) {
             return true;
@@ -344,63 +311,86 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        mViewModelLogin.loggedIn(false);
-        SharedPrefUtil.getInstance(this).write(REMEMBER_ME, false);
-        SharedPrefUtil.getInstance(this).write(USER_ID, null);
-        SharedPrefUtil.getInstance(this).write(USER_IMAGE, null);
-        SharedPrefUtil.getInstance(this).write(USERNAME, null);
-        SharedPrefUtil.getInstance(this).write(USER_TYPE, null);
-        SharedPrefUtil.getInstance(this).write(BIRTH_DATE, null);
-        SharedPrefUtil.getInstance(this).write(ADDRESS, null);
-        SharedPrefUtil.getInstance(this).write(EMAIL, null);
-        SharedPrefUtil.getInstance(this).write(PHONE_NUMBER, null);
-        SharedPrefUtil.getInstance(this).write(PHONE_CODE, null);
+        //mViewModelLogin.loggedIn(false);
+//        SharedPrefUtil.getInstance(this).write(REMEMBER_ME, false);
+//        SharedPrefUtil.getInstance(this).write(USER_ID, null);
+//        SharedPrefUtil.getInstance(this).write(USER_IMAGE, null);
+//        SharedPrefUtil.getInstance(this).write(USERNAME, null);
+//        SharedPrefUtil.getInstance(this).write(USER_TYPE, null);
+//        SharedPrefUtil.getInstance(this).write(BIRTH_DATE, null);
+//        SharedPrefUtil.getInstance(this).write(ADDRESS, null);
+//        SharedPrefUtil.getInstance(this).write(EMAIL, null);
+//        SharedPrefUtil.getInstance(this).write(PHONE_NUMBER, null);
+//        SharedPrefUtil.getInstance(this).write(PHONE_CODE, null);
     }
 
-    private void setNavHeader(boolean loggedIn) {
+    private void setNavHeader() {
         View header = mNavView.getHeaderView(0);
         ImageView closeMenu = header.findViewById(R.id.close);
         Button login = header.findViewById(R.id.login);
         Button register = header.findViewById(R.id.register);
         CircleImageView userImage = header.findViewById(R.id.userImage);
         TextView username = header.findViewById(R.id.userName);
-        TextView userType = header.findViewById(R.id.userType);
-        closeMenu.setOnClickListener(v -> sDrawerLayout.closeDrawer(GravityCompat.START, false));
-        if (loggedIn) {
-            login.setVisibility(View.INVISIBLE);
-            register.setVisibility(View.INVISIBLE);
-            userImage.setVisibility(View.VISIBLE);
-            username.setVisibility(View.VISIBLE);
-            userType.setVisibility(View.VISIBLE);
-            String userId = SharedPrefUtil.getInstance(this).read(USER_ID, null);
-            if (userId == null) {
-                mViewModelLogin.getUser().observe(this, loginModelResponse -> {
-//                    String image = loginModelResponse.getUser().getPhoto();
-//                    String name = loginModelResponse.getUser().getName();
-//                    String type = loginModelResponse.getUser().getType();
+        TextView userEmail = header.findViewById(R.id.userEmail);
+        closeMenu.setOnClickListener(v ->
+                sDrawerLayout.closeDrawer(GravityCompat.START, false));
 
-//                    Glide.with(MainActivity.this)
-//                            .load(BASE_URL + image)
-//                            .into(userImage);
-//
-//                    username.setText(name);
-//
-//                    setUserType(Integer.parseInt(type), userType);
-                });
-            } else {
-                String image = SharedPrefUtil.getInstance(this).read(USER_IMAGE, null);
-                String name = SharedPrefUtil.getInstance(this).read(USERNAME, null);
-                String type = SharedPrefUtil.getInstance(this).read(USER_TYPE, null);
-
-                Glide.with(MainActivity.this)
-                        .load(BASE_URL + image)
-                        .into(userImage);
-                username.setText(name);
-                if (type != null)
-                    setUserType(Integer.parseInt(type), userType);
-                else
-                    userType.setText("");
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(MainActivity.this.getSupportFragmentManager(), new LoginFragment(),
+                        true);
+                sDrawerLayout.closeDrawer(GravityCompat.START, false);
             }
+        });
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(MainActivity.this.getSupportFragmentManager(),
+                        new RegisterFragment(),
+                        true);
+                sDrawerLayout.closeDrawer(GravityCompat.START, false);
+            }
+        });
+
+        mAuthenticationViewModel.getResult().observe(this,
+                new Observer<AuthenticationModelResponse>() {
+                    @Override
+                    public void onChanged(AuthenticationModelResponse authenticationModelResponse) {
+                        if (authenticationModelResponse != null) {
+                            login.setVisibility(View.INVISIBLE);
+                            register.setVisibility(View.INVISIBLE);
+                            userImage.setVisibility(View.VISIBLE);
+                            username.setVisibility(View.VISIBLE);
+                            userEmail.setVisibility(View.VISIBLE);
+
+                            ProfileViewModel profileViewModel =
+                                    new ViewModelProvider(MainActivity.this).
+                                            get(ProfileViewModel.class);
+
+                            profileViewModel.userInfo(authenticationModelResponse.getJwt());
+                            profileViewModel.getResult().observe(MainActivity.this,
+                                    new Observer<ProfileModelResponse>() {
+                                @Override
+                                public void onChanged(ProfileModelResponse profileModelResponse) {
+                                    username.setText(profileModelResponse.getUsername());
+                                    userEmail.setText(profileModelResponse.getEmail());
+                                    Glide.with(MainActivity.this)
+                                    .load(profileModelResponse.getProfilePicture().getUrl())
+                                    .into(userImage);
+                                    saveUser(authenticationModelResponse.getJwt(),
+                                            profileModelResponse.getId(),
+                                            profileModelResponse.getUsername(),
+                                            profileModelResponse.getEmail(),
+                                            profileModelResponse.getPhoneNumber(),
+                                            profileModelResponse.getProfilePicture().getUrl());
+                                }
+                            });
+
+                        }
+                    }
+                });
 
             userImage.setOnClickListener(v -> {
                 loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
@@ -411,79 +401,6 @@ public class MainActivity extends AppCompatActivity {
                 loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
                 sDrawerLayout.closeDrawer(GravityCompat.START, false);
             });
-
-            userType.setOnClickListener(v -> {
-                loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
-                sDrawerLayout.closeDrawer(GravityCompat.START, false);
-            });
-        } else {
-            login.setVisibility(View.VISIBLE);
-            register.setVisibility(View.VISIBLE);
-            userImage.setVisibility(View.INVISIBLE);
-            username.setVisibility(View.INVISIBLE);
-            userType.setVisibility(View.INVISIBLE);
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadFragment(MainActivity.this.getSupportFragmentManager(), new LoginFragment(),
-                            false);
-                    sDrawerLayout.closeDrawer(GravityCompat.START, false);
-                }
-            });
-            register.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewModelLogin.confirmEmailFor(REGISTER);
-                    loadFragment(MainActivity.this.getSupportFragmentManager(), new RegisterFragment(),
-                            true);
-                    sDrawerLayout.closeDrawer(GravityCompat.START, false);
-                }
-            });
-        }
-    }
-
-    private void navHeaderUpdated() {
-        View header = mNavView.getHeaderView(0);
-        CircleImageView userImage = header.findViewById(R.id.userImage);
-        TextView username = header.findViewById(R.id.userName);
-        TextView userType = header.findViewById(R.id.userType);
-        InfoUpdateViewModel viewModelInfoUpdate = ViewModelProviders.of(this).get(InfoUpdateViewModel.class);
-        viewModelInfoUpdate.isInfoUpdated().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean updated) {
-                if (updated) {
-                    String userId = SharedPrefUtil.getInstance(MainActivity.this).read(USER_ID, null);
-                    if (userId == null) {
-                        InfoUserViewModel viewModelInfoUser = ViewModelProviders.of(MainActivity.this).get(InfoUserViewModel.class);
-                        viewModelInfoUser.getUserInfo().observe(MainActivity.this, new Observer<UserInfoModelResponse>() {
-                            @Override
-                            public void onChanged(UserInfoModelResponse userInfoModelResponse) {
-                                String image = userInfoModelResponse.getUser().getPhoto();
-                                String name = userInfoModelResponse.getUser().getName();
-                                String type = userInfoModelResponse.getUser().getType();
-
-                                Glide.with(MainActivity.this)
-                                        .load(BASE_URL + image)
-                                        .into(userImage);
-                                username.setText(name);
-                                if (type != null)
-                                    setUserType(Integer.parseInt(type), userType);
-                            }
-                        });
-                    } else {
-                        String image = SharedPrefUtil.getInstance(MainActivity.this).read(USER_IMAGE, null);
-                        String name = SharedPrefUtil.getInstance(MainActivity.this).read(USERNAME, null);
-                        String type = SharedPrefUtil.getInstance(MainActivity.this).read(USER_TYPE, null);
-
-                        Glide.with(MainActivity.this)
-                                .load(BASE_URL + image)
-                                .into(userImage);
-                        username.setText(name);
-                        setUserType(Integer.parseInt(type), userType);
-                    }
-                }
-            }
-        });
     }
 
     private void setUserType(int type, TextView textView) {
@@ -538,6 +455,31 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             view.setEnabled(true);
 
+        }
+    }
+
+    private void saveUser(String jwt, String id, String username, String emailAddress,
+                          String phoneNumber, String profilePicture) {
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getPackageName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(JWT, jwt);
+        editor.putString(USER_ID, id);
+        editor.putString(USERNAME, username);
+        editor.putString(EMAIL_ADDRESS, emailAddress);
+        editor.putString(PHONE_NUMBER, phoneNumber);
+        editor.putString(Profile_Picture, profilePicture);
+
+        editor.apply();
+    }
+
+    private void fetchUser(){
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getPackageName(), Context.MODE_PRIVATE);
+        String jwt = sharedPreferences.getString(JWT, null);
+        if(jwt != null){
+            mAuthenticationViewModel.setResult(jwt);
         }
     }
 }

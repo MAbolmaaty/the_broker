@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,8 +86,10 @@ public class RequestSubmittedFragment extends Fragment {
             mBack.setImageResource(R.drawable.ic_arrow);
         }
         mDebenture.setVisibility(View.VISIBLE);
-        mViewModelSubmittedRequest = ViewModelProviders.of(getActivity()).get(RequestSubmittedViewModel.class);
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        mViewModelSubmittedRequest =
+                new ViewModelProvider(getActivity()).get(RequestSubmittedViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
         mViewModelRealEstate.getTypeRequest().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer type) {

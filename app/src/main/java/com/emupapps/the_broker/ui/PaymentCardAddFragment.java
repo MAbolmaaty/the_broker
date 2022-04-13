@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -70,12 +70,11 @@ public class PaymentCardAddFragment extends Fragment implements DatePickerDialog
             mBack.setImageResource(R.drawable.ic_arrow);
         }
         mTitle.setText(R.string.add_new_card);
-        mViewModelAddCard = ViewModelProviders.of(this).get(PaymentCardAddViewModel.class);
+        mViewModelAddCard = new ViewModelProvider(this).get(PaymentCardAddViewModel.class);
         mUserId = SharedPrefUtil.getInstance(getActivity()).read(USER_ID, null);
         if (mUserId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse ->
-                    mUserId = loginModelResponse.getUser().getId());
+//            viewModelLogin.getUser().observe(this, loginModelResponse ->
+//                    mUserId = loginModelResponse.getUser().getId());
         }
         mIsDefault = NOT_DEFAULT;
         return view;

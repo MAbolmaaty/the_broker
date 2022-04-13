@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -46,7 +46,8 @@ public class TermsOfUseFragment extends Fragment {
                 Locale.getDefault().getLanguage());
         if (locale.equals("ar"))
             view.setRotation(-180);
-        PrivacyPolicyViewModel viewModelPrivacyPolicy = ViewModelProviders.of(this).get(PrivacyPolicyViewModel.class);
+        PrivacyPolicyViewModel viewModelPrivacyPolicy =
+                new ViewModelProvider(this).get(PrivacyPolicyViewModel.class);
         viewModelPrivacyPolicy.privacyPolicy();
         viewModelPrivacyPolicy.getPrivacyPolicy().observe(this, privacyPolicyModelResponse -> {
             if (privacyPolicyModelResponse.getKey().equals(SUCCESS)) {

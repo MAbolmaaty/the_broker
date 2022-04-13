@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.models.real_estate.RealEstateModelResponse;
@@ -50,7 +50,8 @@ public class AccountingHolderFragment extends Fragment {
             mBack.setImageResource(R.drawable.ic_arrow);
         }
         mTitle.setText(R.string.accounting);
-        RealEstateViewModel viewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        RealEstateViewModel viewModelRealEstate = new ViewModelProvider(getActivity()).
+                get(RealEstateViewModel.class);
         viewModelRealEstate.getRealEstate().observe(this, new Observer<RealEstateModelResponse>() {
             @Override
             public void onChanged(RealEstateModelResponse realEstateModelResponse) {

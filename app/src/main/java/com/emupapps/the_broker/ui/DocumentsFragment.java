@@ -16,17 +16,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.DocumentsAdapter;
+import com.emupapps.the_broker.databinding.FragmentDocumentsBinding;
 import com.emupapps.the_broker.models.info_user.Documents;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.viewmodels.DocumentDeleteViewModel;
 import com.emupapps.the_broker.viewmodels.DownloadViewModel;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,11 +48,7 @@ import static com.emupapps.the_broker.utils.Constants.SUCCESS;
  */
 public class DocumentsFragment extends Fragment {
 
-    ProgressBar mProgress;
-
-    RecyclerView mRecyclerView;
-
-    TextView mNoDocuments;
+    private FragmentDocumentsBinding mBinding;
 
     private DocumentsAdapter mAdapter;
     private ArrayList<Documents> mListDocuments = new ArrayList<>();
@@ -69,17 +66,15 @@ public class DocumentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_documents, container, false);
+        mBinding = FragmentDocumentsBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
-
-        String locale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
-        if (locale.equals("ar"))
-            view.setRotation(-180);
-
-        InfoUserViewModel viewModelUserInfo = ViewModelProviders.of(getActivity()).get(InfoUserViewModel.class);
-        mViewModelDeleteDocument = ViewModelProviders.of(this).get(DocumentDeleteViewModel.class);
-        mViewModelDownload = ViewModelProviders.of(this).get(DownloadViewModel.class);
+        ProfileViewModel viewModelUserInfo =
+                new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
+        mViewModelDeleteDocument =
+                new ViewModelProvider(this).get(DocumentDeleteViewModel.class);
+        mViewModelDownload =
+                new ViewModelProvider(this).get(DownloadViewModel.class);
 
         mAdapter = new DocumentsAdapter(getContext(), mListDocuments, position -> {
             mViewModelDeleteDocument.deleteDocument(mListDocuments.get(position).getId());
@@ -91,9 +86,9 @@ public class DocumentsFragment extends Fragment {
             });
             mViewModelDeleteDocument.isLoading().observe(DocumentsFragment.this, loading -> {
                 if (loading) {
-                    mProgress.setVisibility(View.VISIBLE);
+                    //mProgress.setVisibility(View.VISIBLE);
                 } else {
-                    mProgress.setVisibility(View.GONE);
+                    //mProgress.setVisibility(View.GONE);
                 }
             });
         }, position -> {
@@ -109,9 +104,9 @@ public class DocumentsFragment extends Fragment {
                 }.execute());
                 mViewModelDownload.isLoading().observe(DocumentsFragment.this, loading -> {
                     if (loading) {
-                        mProgress.setVisibility(View.VISIBLE);
+                        //mProgress.setVisibility(View.VISIBLE);
                     } else {
-                        mProgress.setVisibility(View.GONE);
+                        //mProgress.setVisibility(View.GONE);
                     }
                 });
 
@@ -122,28 +117,21 @@ public class DocumentsFragment extends Fragment {
 
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        viewModelUserInfo.getUserInfo().observe(this, userInfoModelResponse -> {
-            if (userInfoModelResponse.getKey().equals(SUCCESS)) {
-                mListDocuments.addAll(Arrays.asList(userInfoModelResponse.getUser().getDocuments()));
-                mAdapter.swapData(mListDocuments);
-                mRecyclerView.setAdapter(mAdapter);
-                if (mListDocuments.size() < 1) {
-                    mNoDocuments.setVisibility(View.VISIBLE);
-                } else {
-                    mNoDocuments.setVisibility(View.GONE);
-                }
-            }
-        });
+        //mRecyclerView.setLayoutManager(layoutManager);
+        //mRecyclerView.setHasFixedSize(true);
+//        viewModelUserInfo.getUserInfo().observe(this, userInfoModelResponse -> {
+//            if (userInfoModelResponse.getKey().equals(SUCCESS)) {
+//                mListDocuments.addAll(Arrays.asList(userInfoModelResponse.getUser().getDocuments()));
+//                mAdapter.swapData(mListDocuments);
+//                mRecyclerView.setAdapter(mAdapter);
+//                if (mListDocuments.size() < 1) {
+//                    mNoDocuments.setVisibility(View.VISIBLE);
+//                } else {
+//                    mNoDocuments.setVisibility(View.GONE);
+//                }
+//            }
+//        });
 
-        viewModelUserInfo.isLoading().observe(this, loading -> {
-            if (loading) {
-                mProgress.setVisibility(View.VISIBLE);
-            } else {
-                mProgress.setVisibility(View.GONE);
-            }
-        });
         return view;
     }
 
@@ -162,9 +150,9 @@ public class DocumentsFragment extends Fragment {
                 }.execute());
                 mViewModelDownload.isLoading().observe(DocumentsFragment.this, loading -> {
                     if (loading) {
-                        mProgress.setVisibility(View.VISIBLE);
+                      //  mProgress.setVisibility(View.VISIBLE);
                     } else {
-                        mProgress.setVisibility(View.GONE);
+                      //  mProgress.setVisibility(View.GONE);
                     }
                 });
             }

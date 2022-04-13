@@ -13,12 +13,13 @@ import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.FavoritesAdapter;
+import com.emupapps.the_broker.databinding.FragmentFavoritesBinding;
 import com.emupapps.the_broker.models.favorites.RealEstate;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
@@ -44,17 +45,7 @@ import static com.emupapps.the_broker.utils.Constants.USER_ID;
 public class FavoritesFragment extends Fragment {
 
     private static final String TAG = FavoritesFragment.class.getSimpleName();
-
-
-    ImageView mMenu;
-
-    TextView mTitle;
-
-    RecyclerView mRecyclerView;
-
-    TextView mNoRealEstates;
-
-    ProgressBar mProgressBar;
+    private FragmentFavoritesBinding mBinding;
 
     private FavoritesViewModel mViewModelFavorites;
     private RealEstateViewModel mViewModelRealEstate;
@@ -73,22 +64,25 @@ public class FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_favorites, container, false);
+        mBinding = FragmentFavoritesBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
-        mMenu.setImageResource(R.drawable.ic_menu);
-        mTitle.setText(R.string.favorites);
+//        mMenu.setImageResource(R.drawable.ic_menu);
+//        mTitle.setText(R.string.favorites);
 
-        mViewModelFavorites = ViewModelProviders.of(this).get(FavoritesViewModel.class);
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-        mViewModelUnFavorite = ViewModelProviders.of(this).get(UnFavoriteViewModel.class);
+        mViewModelFavorites =
+                new ViewModelProvider(this).get(FavoritesViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+        mViewModelUnFavorite =
+                new ViewModelProvider(this).get(UnFavoriteViewModel.class);
 
         mListFavorites = new ArrayList<>();
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
+        mBinding.recyclerView.setLayoutManager(layoutManager);
+        mBinding.recyclerView.setHasFixedSize(true);
         mAdapter = new FavoritesAdapter(getContext(), mListFavorites, position -> {
             mViewModelRealEstate.setRealEstateId(mListFavorites.get(position).getAkar_id());
             loadFragment(FavoritesFragment.this.getActivity().getSupportFragmentManager(),
@@ -99,28 +93,24 @@ public class FavoritesFragment extends Fragment {
                 if (unFavoriteModelResponse.getKey().equals(SUCCESS)) {
                     mListFavorites.remove(position);
                     if (mListFavorites.size() < 1) {
-                        mNoRealEstates.setVisibility(View.VISIBLE);
+                        //mNoRealEstates.setVisibility(View.VISIBLE);
                     }
                     mAdapter.notifyDataSetChanged();
                 }
             });
             mViewModelUnFavorite.isLoading().observe(FavoritesFragment.this, loading -> {
                 if (loading) {
-                    mProgressBar.setVisibility(View.VISIBLE);
+                    //mProgressBar.setVisibility(View.VISIBLE);
                 } else {
-                    mProgressBar.setVisibility(View.GONE);
+                   // mProgressBar.setVisibility(View.GONE);
                 }
             });
         });
-        mRecyclerView.setAdapter(mAdapter);
+        mBinding.recyclerView.setAdapter(mAdapter);
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null){
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-                mUserId = loginModelResponse.getUser().getId();
-                getFavorites();
-            });
+
         } else {
             getFavorites();
         }
@@ -141,9 +131,9 @@ public class FavoritesFragment extends Fragment {
                 mListFavorites.clear();
                 mListFavorites.addAll(Arrays.asList(favoritesModelResponse.getRealEstates()));
                 if (mListFavorites.size() < 1){
-                    mNoRealEstates.setVisibility(View.VISIBLE);
+                    //mNoRealEstates.setVisibility(View.VISIBLE);
                 } else {
-                    mNoRealEstates.setVisibility(View.GONE);
+                    //mNoRealEstates.setVisibility(View.GONE);
                     mAdapter.notifyDataSetChanged();
                 }
 
@@ -155,9 +145,9 @@ public class FavoritesFragment extends Fragment {
         });
         mViewModelFavorites.isLoading().observe(this, loading -> {
             if (loading){
-                mProgressBar.setVisibility(View.VISIBLE);
+                //mProgressBar.setVisibility(View.VISIBLE);
             }else {
-                mProgressBar.setVisibility(View.GONE);
+                //mProgressBar.setVisibility(View.GONE);
             }
         });
         mViewModelFavorites.failure().observe(this, failure -> {

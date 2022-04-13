@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -53,8 +53,10 @@ public class PasswordResetFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_reset_password, container, false);
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
 
-        mViewModelResetPassword = ViewModelProviders.of(this).get(PasswordResetViewModel.class);
-        mViewModelForgetPassword = ViewModelProviders.of(getActivity()).get(PasswordForgetViewModel.class);
+        mViewModelResetPassword =
+                new ViewModelProvider(this).get(PasswordResetViewModel.class);
+        mViewModelForgetPassword =
+                new ViewModelProvider(getActivity()).get(PasswordForgetViewModel.class);
 
         return view;
     }

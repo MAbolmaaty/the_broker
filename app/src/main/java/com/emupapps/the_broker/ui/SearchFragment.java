@@ -25,7 +25,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +33,6 @@ import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.SearchAdapter;
 import com.emupapps.the_broker.models.real_estate_categories.Category;
 import com.emupapps.the_broker.models.real_estate_statuses.Status;
-import com.emupapps.the_broker.models.search.request.SearchModelRequest;
 import com.emupapps.the_broker.models.search.response.RealEstate;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
@@ -94,9 +93,12 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
-        mViewModelSearch = ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-        mViewModelRealEstates = ViewModelProviders.of(getActivity()).get(RealEstatesViewModel.class);
+        mViewModelSearch =
+                new ViewModelProvider(getActivity()).get(SearchViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+        mViewModelRealEstates =
+                new ViewModelProvider(getActivity()).get(RealEstatesViewModel.class);
 
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
@@ -406,7 +408,8 @@ public class SearchFragment extends Fragment {
 
     private void setRealEstateStatuses(AppCompatSpinner spinner) {
         List<String> listStatuses = new ArrayList<>();
-        RealEstateStatusesViewModel viewModelStatuses = ViewModelProviders.of(getActivity()).get(RealEstateStatusesViewModel.class);
+        RealEstateStatusesViewModel viewModelStatuses =
+                new ViewModelProvider(getActivity()).get(RealEstateStatusesViewModel.class);
         viewModelStatuses.getStatuses().observe(this, realEstateStatusesModelResponse -> {
             if (realEstateStatusesModelResponse.getKey().equals(SUCCESS)) {
                 listStatuses.clear();
@@ -423,7 +426,8 @@ public class SearchFragment extends Fragment {
 
     private void setRealEstateCategories(AppCompatSpinner spinner) {
         List<String> listCategories = new ArrayList<>();
-        RealEstateCategoriesViewModel viewModelCategories = ViewModelProviders.of(getActivity()).get(RealEstateCategoriesViewModel.class);
+        RealEstateCategoriesViewModel viewModelCategories =
+                new ViewModelProvider(getActivity()).get(RealEstateCategoriesViewModel.class);
         viewModelCategories.getCategories().observe(this, realEstateCategoriesModelResponse -> {
             if (realEstateCategoriesModelResponse.getKey().equals(SUCCESS)) {
                 listCategories.clear();
@@ -440,7 +444,8 @@ public class SearchFragment extends Fragment {
 
     private void setRegions(AppCompatSpinner spinner) {
         List<String> listRegions = new ArrayList<>();
-        RegionsViewModel viewModelRegions = ViewModelProviders.of(getActivity()).get(RegionsViewModel.class);
+        RegionsViewModel viewModelRegions =
+                new ViewModelProvider(getActivity()).get(RegionsViewModel.class);
         viewModelRegions.getRegions().observe(this, regionsModelResponse -> {
             if (regionsModelResponse.getKey().equals(SUCCESS)) {
                 listRegions.clear();
@@ -455,7 +460,8 @@ public class SearchFragment extends Fragment {
 
     private void setDistricts(AppCompatSpinner spinner) {
         List<String> listDistricts = new ArrayList<>();
-        DistrictsViewModel viewModelDistricts = ViewModelProviders.of(getActivity()).get(DistrictsViewModel.class);
+        DistrictsViewModel viewModelDistricts =
+                new ViewModelProvider(getActivity()).get(DistrictsViewModel.class);
         viewModelDistricts.getDistricts().observe(this, districtsModelResponse -> {
             if (districtsModelResponse.getKey().equals(SUCCESS)) {
                 listDistricts.clear();

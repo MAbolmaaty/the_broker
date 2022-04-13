@@ -26,5 +26,4 @@
         app:headerLayout="@layout/nav_header"
         app:itemIconTint="@color/yellow"
         app:itemTextColor="@color/yellow"/>
-
 </androidx.drawerlayout.widget.DrawerLayout>

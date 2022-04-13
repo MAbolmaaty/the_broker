@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -103,8 +103,8 @@ public class AuctionFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         mAnimateBy = (int)(displayMetrics.widthPixels / 1.5);
 
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-        mViewModelAuctionBid = ViewModelProviders.of(this).get(AuctionBidViewModel.class);
+        mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+        mViewModelAuctionBid = new ViewModelProvider(this).get(AuctionBidViewModel.class);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mBidsAdapter = new BidsAdapter(getContext(), mBidsList);
@@ -114,11 +114,11 @@ public class AuctionFragment extends Fragment {
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-                mUserId = loginModelResponse.getUser().getId();
-                bids(mUserId);
-            });
+
+//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
+//                mUserId = loginModelResponse.getUser().getId();
+//                bids(mUserId);
+//            });
         } else {
             bids(mUserId);
         }

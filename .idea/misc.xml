@@ -22,8 +22,24 @@
         <entry key="..\:/Em/TheBroker/app/src/main/res/layout/fragment_occupant.xml" value="0.1" />
         <entry key="..\:/Em/TheBroker/app/src/main/res/layout/fragment_register.xml" value="0.17074275362318841" />
         <entry key="..\:/Em/TheBroker/app/src/main/res/layout/nav_header.xml" value="0.17074275362318841" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/drawable/bg_oval.xml" value="0.1505" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/drawable/bg_oval_gradient.xml" value="0.1505" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/drawable/ic_launcher_background.xml" value="0.127" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/drawable/ic_the_broker_full.xml" value="0.1505" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/drawable/ic_the_broker_logo.xml" value="0.127" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/drawable/logo_aeqarat.xml" value="0.1505" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/activity_main.xml" value="0.259375" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_debenture.xml" value="0.11614583333333334" />
         <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_home.xml" value="0.259375" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_login.xml" value="0.259375" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_privacy_policy.xml" value="0.259375" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_real_estate_request_details.xml" value="0.11614583333333334" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_real_estates.xml" value="0.259375" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_real_estates_agent.xml" value="0.259375" />
         <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_register.xml" value="0.2" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/fragment_user_info.xml" value="0.11614583333333334" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/layout/nav_header.xml" value="0.259375" />
+        <entry key="..\:/MU/the_broker/app/src/main/res/menu/drawer_view.xml" value="0.259375" />
       </map>
     </option>
   </component>

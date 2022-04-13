@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -59,12 +59,18 @@ public class SplashFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
 
-        mViewModelRealEstates = ViewModelProviders.of(getActivity()).get(RealEstatesViewModel.class);
-        mViewModelSlides = ViewModelProviders.of(getActivity()).get(SlidesViewModel.class);
-        mViewModelStatuses = ViewModelProviders.of(getActivity()).get(RealEstateStatusesViewModel.class);
-        mViewModelCategories = ViewModelProviders.of(getActivity()).get(RealEstateCategoriesViewModel.class);
-        mViewModelRegions = ViewModelProviders.of(getActivity()).get(RegionsViewModel.class);
-        mViewModelDistricts = ViewModelProviders.of(getActivity()).get(DistrictsViewModel.class);
+        mViewModelRealEstates =
+                new ViewModelProvider(getActivity()).get(RealEstatesViewModel.class);
+        mViewModelSlides =
+                new ViewModelProvider(getActivity()).get(SlidesViewModel.class);
+        mViewModelStatuses =
+                new ViewModelProvider(getActivity()).get(RealEstateStatusesViewModel.class);
+        mViewModelCategories =
+                new ViewModelProvider(getActivity()).get(RealEstateCategoriesViewModel.class);
+        mViewModelRegions =
+                new ViewModelProvider(getActivity()).get(RegionsViewModel.class);
+        mViewModelDistricts =
+                new ViewModelProvider(getActivity()).get(DistrictsViewModel.class);
 
         //Waiting in splash for loading critical data
         new Handler().postDelayed(() -> loadCriticalData(), 1296);
@@ -133,12 +139,11 @@ public class SplashFragment extends Fragment {
         mProgressBar3.setProgress(100);
         loadFragment(SplashFragment.this.getActivity().getSupportFragmentManager(),
                 new HomeFragment(), false);
-        LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
         String userId = SharedPrefUtil.getInstance(getActivity()).read(USER_ID, null);
         if (userId != null) {
-            viewModelLogin.loggedIn(true);
+            //viewModelLogin.loggedIn(true);
         }else {
-            viewModelLogin.loggedIn(false);
+            //viewModelLogin.loggedIn(false);
         }
     }
 }

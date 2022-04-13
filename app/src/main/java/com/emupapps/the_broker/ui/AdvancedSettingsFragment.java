@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.emupapps.the_broker.R;
+import com.emupapps.the_broker.databinding.FragmentAdvancedSettingsBinding;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -23,31 +24,30 @@ import static com.emupapps.the_broker.utils.Constants.LOCALE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsAdvancedFragment extends Fragment {
+public class AdvancedSettingsFragment extends Fragment {
 
-    private static final String TAG = SettingsAdvancedFragment.class.getSimpleName();
+    private static final String TAG = AdvancedSettingsFragment.class.getSimpleName();
 
-    TextView mLanguage;
-    TextView mSelectedLanguage;
+    private FragmentAdvancedSettingsBinding mBinding;
 
     private BottomSheetDialog mDialogLanguage;
 
-    public SettingsAdvancedFragment() {
+    public AdvancedSettingsFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings_advanced, container, false);
+        mBinding = FragmentAdvancedSettingsBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
         String locale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE,
                 Locale.getDefault().getLanguage());
         if (locale.equals("ar")) {
             view.setRotation(-180);
-            mSelectedLanguage.setText(R.string.arabic);
+            //mSelectedLanguage.setText(R.string.arabic);
         } else {
-            mSelectedLanguage.setText(R.string.english);
+           // mSelectedLanguage.setText(R.string.english);
         }
         mDialogLanguage = new BottomSheetDialog(getActivity());
         mDialogLanguage.setContentView(R.layout.dialog_select_language);
@@ -71,18 +71,18 @@ public class SettingsAdvancedFragment extends Fragment {
         english.setOnClickListener(v -> {
             mDialogLanguage.cancel();
             SharedPrefUtil.getInstance(getActivity()).write(LOCALE, "en");
-            mSelectedLanguage.setText(R.string.english);
+            //mSelectedLanguage.setText(R.string.english);
             getActivity().recreate();
         });
         arabic.setOnClickListener(v -> {
             mDialogLanguage.cancel();
             SharedPrefUtil.getInstance(getActivity()).write(LOCALE, "ar");
-            mSelectedLanguage.setText(R.string.arabic);
+            //mSelectedLanguage.setText(R.string.arabic);
             getActivity().recreate();
         });
     }
 
-    public static SettingsAdvancedFragment newInstance(){
-        return new SettingsAdvancedFragment();
+    public static AdvancedSettingsFragment newInstance(){
+        return new AdvancedSettingsFragment();
     }
 }

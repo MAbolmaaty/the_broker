@@ -13,14 +13,13 @@ import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.ProfileTabsAdapter;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 
@@ -50,7 +49,7 @@ public class ProfileFragment extends Fragment {
     ImageView mBack;
     TextView mTitle;
 
-    private InfoUserViewModel mViewModelUserInfo;
+    private ProfileViewModel mViewModelUserInfo;
     private String mUserId;
     private Toast mToast;
 
@@ -73,7 +72,8 @@ public class ProfileFragment extends Fragment {
             mBack.setImageResource(R.drawable.ic_arrow);
         }
 
-        mViewModelUserInfo = ViewModelProviders.of(getActivity()).get(InfoUserViewModel.class);
+        mViewModelUserInfo =
+                new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
 
         ProfileTabsAdapter profileTabsAdapter = new ProfileTabsAdapter(getContext(),
                 getChildFragmentManager(),
@@ -83,11 +83,10 @@ public class ProfileFragment extends Fragment {
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-                mUserId = loginModelResponse.getUser().getId();
-                loadUser(mUserId);
-            });
+//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
+//                mUserId = loginModelResponse.getUser().getId();
+//                loadUser(mUserId);
+//            });
         } else {
             loadUser(mUserId);
         }
@@ -145,16 +144,16 @@ public class ProfileFragment extends Fragment {
 
     private void loadUser(String userId){
         mViewModelUserInfo.userInfo(userId);
-        mViewModelUserInfo.getUserInfo().observe(ProfileFragment.this, userInfoModelResponse -> {
-            if (userInfoModelResponse.getKey().equals(SUCCESS)) {
-                if (userInfoModelResponse.getUser().getStar() != null)
-                    mRatingBar.setRating(Float.parseFloat(userInfoModelResponse.getUser().getStar()));
-                Glide.with(getActivity()).load(BASE_URL + userInfoModelResponse.getUser().getPhoto()).into(mUserImage);
-                mUsername.setText(userInfoModelResponse.getUser().getName());
-            } else {
-                mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
-                mToast.show();
-            }
-        });
+//        mViewModelUserInfo.getUserInfo().observe(ProfileFragment.this, userInfoModelResponse -> {
+//            if (userInfoModelResponse.getKey().equals(SUCCESS)) {
+//                if (userInfoModelResponse.getUser().getStar() != null)
+//                    mRatingBar.setRating(Float.parseFloat(userInfoModelResponse.getUser().getStar()));
+//                Glide.with(getActivity()).load(BASE_URL + userInfoModelResponse.getUser().getPhoto()).into(mUserImage);
+//                mUsername.setText(userInfoModelResponse.getUser().getName());
+//            } else {
+//                mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
+//                mToast.show();
+//            }
+//        });
     }
 }

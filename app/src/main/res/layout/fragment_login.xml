@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@drawable/splash_background"
     android:fillViewport="true"
     android:scrollbars="none"
     tools:context=".ui.LoginFragment">
@@ -14,38 +14,24 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/back"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_back"
+            android:layout_margin="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/bg_login" />
-
-        <TextView
-            android:id="@+id/skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cairo_semi_bold"
-            android:text="@string/skip"
-            android:textColor="@color/darkGrey"
-            android:textSize="@dimen/_12sdp"
-            android:padding="@dimen/_8sdp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_the_broker_full"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/skip"
-            app:srcCompat="@drawable/logo_aeqarat_v3"
-            android:tint="@color/darkGrey"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -59,12 +45,14 @@
             style="@style/textView"
             android:layout_marginTop="@dimen/_24sdp"
             android:text="@string/login"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/identifier"
             style="@style/editText"
             android:layout_marginTop="@dimen/_28sdp"
             android:hint="@string/email"
@@ -80,7 +68,7 @@
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email"
+            app:layout_constraintTop_toBottomOf="@+id/identifier"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/darkGrey">
 
@@ -97,8 +85,8 @@
             style="@style/checkbox"
             android:layout_marginTop="@dimen/_16sdp"
             android:text="@string/remember"
-            android:textColor="@color/darkGrey"
-            android:buttonTint="@color/darkGrey"
+            android:textColor="@android:color/white"
+            android:buttonTint="#F7CA31"
             android:textSize="@dimen/_12sdp"
             android:checked="true"
             android:fontFamily="@font/cairo_semi_bold"
@@ -111,6 +99,7 @@
             style="@style/button"
             android:layout_marginTop="@dimen/_18sdp"
             android:text="@string/login"
+            android:textColor="#F7CA31"
             android:layout_height="@dimen/_32sdp"
             android:layout_width="wrap_content"
             android:paddingStart="@dimen/_28sdp"
@@ -119,17 +108,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/remember" />
 
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/progressBar"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_login" />
+
         <TextView
             android:id="@+id/forgetPassword"
             style="@style/textView"
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_16sdp"
             android:text="@string/password_forget"
+            android:textColor="@android:color/white"
             app:layout_constraintVertical_bias="1"
             app:layout_constraintBottom_toTopOf="@+id/register"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_login" />
+            app:layout_constraintTop_toBottomOf="@+id/progress" />
 
         <TextView
             android:id="@+id/register"
@@ -140,28 +138,11 @@
             android:backgroundTint="@color/darkGrey"
             android:gravity="center"
             android:text="@string/create_new_account"
-            android:textColor="@color/yellow"
+            android:textColor="#F7CA31"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="1" />
-
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@style/progressBar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ProgressBar
-            android:id="@+id/progressSkip"
-            style="@style/progressBar"
-            android:layout_width="@dimen/_12sdp"
-            android:layout_height="@dimen/_12sdp"
-            app:layout_constraintEnd_toStartOf="@+id/skip"
-            app:layout_constraintTop_toTopOf="@id/skip"
-            app:layout_constraintBottom_toBottomOf="@id/skip"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

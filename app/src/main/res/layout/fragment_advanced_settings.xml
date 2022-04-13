@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context=".ui.SettingsAdvancedFragment">
+    tools:context=".ui.AdvancedSettingsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

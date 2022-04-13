@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.SlidesAdapter;
@@ -57,7 +57,8 @@ public class SlidesShowFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_slides_show, container, false);
 
         mSliderView.setIndicatorAnimation(IndicatorAnimations.FILL);
-        mViewModelSlides = ViewModelProviders.of(getActivity()).get(SlidesViewModel.class);
+        mViewModelSlides =
+                new ViewModelProvider(getActivity()).get(SlidesViewModel.class);
         SharedPrefUtil.getInstance(getContext()).write(FIRST_INSTALL, false);
         mSliderView.setCurrentPageListener(currentPosition -> {
             if (currentPosition == 2) {
@@ -105,7 +106,6 @@ public class SlidesShowFragment extends Fragment {
     private void home(){
         loadFragment(SlidesShowFragment.this.getActivity().getSupportFragmentManager(),
                 new HomeFragment(), false);
-        LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-        viewModelLogin.loggedIn(false);
+//        viewModelLogin.loggedIn(false);
     }
 }

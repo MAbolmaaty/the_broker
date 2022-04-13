@@ -12,14 +12,14 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.models.info_user.UserInfoModelResponse;
 import com.emupapps.the_broker.models.real_estate.Owner;
 import com.emupapps.the_broker.models.real_estate.RealEstateModelResponse;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.bumptech.glide.Glide;
 
@@ -72,7 +72,7 @@ public class OccupantFragment extends Fragment {
         }
 
         RealEstateViewModel viewModelRealEstate =
-                ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
         viewModelRealEstate.getRealEstate().observe(this, new Observer<RealEstateModelResponse>() {
             @Override
             public void onChanged(RealEstateModelResponse realEstateModelResponse) {
@@ -97,35 +97,27 @@ public class OccupantFragment extends Fragment {
             mToast.cancel();
         }
         mTitle.setText(R.string.tenant);
-        InfoUserViewModel viewModelInfoUser =
-                ViewModelProviders.of(this).get(InfoUserViewModel.class);
+        ProfileViewModel viewModelInfoUser =
+                new ViewModelProvider(this).get(ProfileViewModel.class);
         viewModelInfoUser.userInfo(id);
-        viewModelInfoUser.getUserInfo().observe(this, new Observer<UserInfoModelResponse>() {
-            @Override
-            public void onChanged(UserInfoModelResponse userInfoModelResponse) {
-                if (userInfoModelResponse.getKey().equals(SUCCESS)) {
-                    Glide.with(OccupantFragment.this).load(BASE_URL +
-                            userInfoModelResponse.getUser().getPhoto()).into(mImage);
-                    mName.setText(userInfoModelResponse.getUser().getName());
-                    mEmail.setText(userInfoModelResponse.getUser().getEmail());
-                    if (userInfoModelResponse.getUser().getCode() != null)
-                        mPhoneNumber.setText(getString(R.string.space, userInfoModelResponse.getUser().getCode(),
-                                userInfoModelResponse.getUser().getPhone()));
-                } else {
-                    mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
-                    mToast.show();
-                }
-            }
-        });
-        viewModelInfoUser.isLoading().observe(this, loading -> {
-            mProgress.setVisibility(loading ? View.VISIBLE : View.GONE);
-        });
-        viewModelInfoUser.failure().observe(this, failed -> {
-            if (failed) {
-                mToast = Toast.makeText(getActivity(), R.string.connection_to_server_lost, Toast.LENGTH_SHORT);
-                mToast.show();
-            }
-        });
+//        viewModelInfoUser.getUserInfo().observe(this, new Observer<UserInfoModelResponse>() {
+//            @Override
+//            public void onChanged(UserInfoModelResponse userInfoModelResponse) {
+//                if (userInfoModelResponse.getKey().equals(SUCCESS)) {
+//                    Glide.with(OccupantFragment.this).load(BASE_URL +
+//                            userInfoModelResponse.getUser().getPhoto()).into(mImage);
+//                    mName.setText(userInfoModelResponse.getUser().getName());
+//                    mEmail.setText(userInfoModelResponse.getUser().getEmail());
+//                    if (userInfoModelResponse.getUser().getCode() != null)
+//                        mPhoneNumber.setText(getString(R.string.space, userInfoModelResponse.getUser().getCode(),
+//                                userInfoModelResponse.getUser().getPhone()));
+//                } else {
+//                    mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
+//                    mToast.show();
+//                }
+//            }
+//        });
+
     }
 
     private void loadOwner(Owner owner) {

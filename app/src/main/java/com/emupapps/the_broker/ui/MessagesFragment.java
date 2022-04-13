@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.emupapps.the_broker.R;
+import com.emupapps.the_broker.databinding.FragmentMessagesBinding;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 
 import static com.emupapps.the_broker.ui.MainActivity.sDrawerLayout;
@@ -21,8 +22,7 @@ import static com.emupapps.the_broker.ui.MainActivity.sDrawerLayout;
  */
 public class MessagesFragment extends Fragment {
 
-    ImageView mMenu;
-    TextView mTitle;
+    private FragmentMessagesBinding mBinding;
 
     public MessagesFragment() {
         // Required empty public constructor
@@ -32,10 +32,10 @@ public class MessagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_messages, container, false);
-        mMenu.setImageResource(R.drawable.ic_menu);
-        mTitle.setText(R.string.messages);
+        mBinding = FragmentMessagesBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
+//        mMenu.setImageResource(R.drawable.ic_menu);
+//        mTitle.setText(R.string.messages);
         return view;
     }
 

@@ -26,7 +26,6 @@ import com.google.firebase.messaging.RemoteMessage;
         String channelId = "Default";
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.logo_aeqarat_v2)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setAutoCancel(true)

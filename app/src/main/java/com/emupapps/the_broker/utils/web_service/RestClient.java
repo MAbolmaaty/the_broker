@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestClient {
 
     private static RestClient instance;
-    private static AeqaratApi apiService;
+    private static TheBrokerApi apiService;
 
     public RestClient() {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -23,7 +23,7 @@ public class RestClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        apiService = retrofit.create(AeqaratApi.class);
+        apiService = retrofit.create(TheBrokerApi.class);
     }
 
     public static RestClient getInstance() {
@@ -34,7 +34,7 @@ public class RestClient {
         return instance;
     }
 
-    public AeqaratApi getApiClient() {
+    public TheBrokerApi getApiClient() {
         return apiService;
     }
 }

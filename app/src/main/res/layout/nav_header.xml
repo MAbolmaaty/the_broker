@@ -96,11 +96,11 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/userImage"
         app:layout_constraintTop_toTopOf="@+id/userImage"
-        app:layout_constraintBottom_toTopOf="@id/userType"
+        app:layout_constraintBottom_toTopOf="@id/userEmail"
         app:layout_constraintVertical_chainStyle="packed"/>
 
     <TextView
-        android:id="@+id/userType"
+        android:id="@+id/userEmail"
         style="@style/textView"
         android:layout_width="0dp"
         android:layout_marginStart="@dimen/_8sdp"

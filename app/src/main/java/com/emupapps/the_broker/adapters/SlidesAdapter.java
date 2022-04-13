@@ -39,7 +39,6 @@ public class SlidesAdapter extends SliderViewAdapter<SlidesAdapter.AdapterViewHo
         if (position == 2) {
             viewHolder.mTitle.setTextColor(Color.BLACK);
             viewHolder.mDescription.setTextColor(Color.BLACK);
-            Glide.with(mContext).load(R.drawable.logo_aeqarat_v4).into(viewHolder.mLogo);
         } else {
             viewHolder.mTitle.setTextColor(mContext.getResources().getColor(R.color.yellow));
             viewHolder.mDescription.setTextColor(mContext.getResources().getColor(R.color.yellow));

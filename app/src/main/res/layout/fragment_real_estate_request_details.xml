@@ -37,7 +37,6 @@
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:elevation="@dimen/_2sdp"
-                android:src="@drawable/logo_aeqarat_v2"
                 android:tint="@color/darkGrey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

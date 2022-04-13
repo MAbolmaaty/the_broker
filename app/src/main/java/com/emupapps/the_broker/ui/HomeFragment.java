@@ -21,6 +21,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +39,16 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.databinding.FragmentHomeBinding;
 import com.emupapps.the_broker.models.real_estate_categories.Category;
 import com.emupapps.the_broker.models.real_estate_statuses.Status;
+import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
+import com.emupapps.the_broker.viewmodels.AuthenticationViewModel;
 import com.emupapps.the_broker.viewmodels.DistrictsViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateCategoriesViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateStatusesViewModel;
@@ -104,6 +107,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private Toast mToast;
     private String mLocale;
     private String mUserId;
+    private AuthenticationViewModel mAuthenticationViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -117,17 +121,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId != null) {
-            RequestsUserViewModel viewModelUserRequests = ViewModelProviders.of(getActivity()).get(RequestsUserViewModel.class);
+            RequestsUserViewModel viewModelUserRequests =
+                    new ViewModelProvider(getActivity()).get(RequestsUserViewModel.class);
             viewModelUserRequests.userRequests(mUserId);
         }
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
-        mViewModelRealEstates = ViewModelProviders.of(getActivity()).get(RealEstatesViewModel.class);
-        mViewModelSearch = ViewModelProviders.of(getActivity()).get(SearchViewModel.class);
+        mViewModelRealEstates =
+                new ViewModelProvider(getActivity()).get(RealEstatesViewModel.class);
+        mViewModelSearch =
+                new ViewModelProvider(getActivity()).get(SearchViewModel.class);
         mViewModelRealEstates.realEstates("1", "1", "0");
         mViewModelRealEstates.startMapFragment(true);
 
         //Real Estate Details
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
         mapFragment.getMapAsync(this);
@@ -167,6 +175,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 openMenu();
             }
         });
+
+        mAuthenticationViewModel = new ViewModelProvider(requireActivity()).
+                get(AuthenticationViewModel.class);
 
         return view;
     }
@@ -227,14 +238,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     public void controlSaleRealEstates() {
         if (binding.imageViewSale.getTag().equals(1)) {
-            binding.imageViewSale.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+//            binding.imageViewSale.setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+//                    R.color.white));
             binding.sale.setTextColor(getResources().getColor(R.color.darkGrey));
             saleMarkersVisibility(false);
             binding.imageViewSale.setTag(0);
         } else {
-            binding.imageViewSale.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.darkGrey));
-            binding.sale.setTextColor(getResources().getColor(R.color.white));
-            binding.imageViewAuctions.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+            binding.imageViewSale.
+                    setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+                            R.color.darkGrey));
+            //binding.sale.setTextColor(getResources().getColor(R.color.white));
+//            binding.imageViewAuctions.
+//                    setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+//                            R.color.white));
             binding.auctions.setTextColor(getResources().getColor(R.color.darkGrey));
             saleMarkersVisibility(true);
             binding.imageViewSale.setTag(1);
@@ -245,17 +261,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     public void controlRentRealEstates() {
         if (binding.imageViewRent.getTag().equals(1)) {
-            binding.imageViewRent.setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
-                    R.color.white));
+//            binding.imageViewRent.setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+//                    R.color.white));
             binding.rent.setTextColor(getResources().getColor(R.color.darkGrey));
             rentMarkersVisibility(false);
             binding.imageViewRent.setTag(0);
         } else {
             binding.imageViewRent.setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
                     R.color.darkGrey));
-            binding.rent.setTextColor(getResources().getColor(R.color.white));
+//            binding.rent.setTextColor(getResources().getColor(R.color.white));
             rentMarkersVisibility(true);
-            binding.imageViewAuctions.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+//            binding.imageViewAuctions.
+//                    setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+//                            R.color.white));
             binding.auctions.setTextColor(getResources().getColor(R.color.darkGrey));
             binding.imageViewRent.setTag(1);
             binding.imageViewAuctions.setTag(0);
@@ -265,20 +283,25 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     public void controlAuctionRealEstates() {
         if (binding.imageViewAuctions.getTag().equals(1)) {
-            binding.imageViewAuctions.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+//            binding.imageViewAuctions.
+//                    setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
             binding.auctions.setTextColor(getResources().getColor(R.color.darkGrey));
             binding.imageViewAuctions.setTag(0);
             auctionMarkersVisibility(false);
         } else {
             binding.imageViewAuctions.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.darkGrey));
-            binding.auctions.setTextColor(getResources().getColor(R.color.white));
+//            binding.auctions.setTextColor(getResources().getColor(R.color.white));
             binding.imageViewAuctions.setTag(1);
             auctionMarkersVisibility(true);
-            binding.imageViewRent.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+//            binding.imageViewRent.
+//                    setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+//                            R.color.white));
             binding.rent.setTextColor(getResources().getColor(R.color.darkGrey));
             rentMarkersVisibility(false);
             binding.imageViewRent.setTag(0);
-            binding.imageViewSale.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+//            binding.imageViewSale.
+//                    setBackgroundTintList(ContextCompat.getColorStateList(getContext(),
+//                            R.color.white));
             binding.sale.setTextColor(getResources().getColor(R.color.darkGrey));
             saleMarkersVisibility(false);
             binding.imageViewSale.setTag(0);
@@ -435,7 +458,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void setRealEstateStatuses(AppCompatSpinner spinner) {
         List<String> listStatuses = new ArrayList<>();
-        RealEstateStatusesViewModel viewModelStatuses = ViewModelProviders.of(getActivity()).get(RealEstateStatusesViewModel.class);
+        RealEstateStatusesViewModel viewModelStatuses =
+                new ViewModelProvider(getActivity()).get(RealEstateStatusesViewModel.class);
         viewModelStatuses.getStatuses().observe(this, realEstateStatusesModelResponse -> {
             if (realEstateStatusesModelResponse.getKey().equals(SUCCESS)) {
                 listStatuses.clear();
@@ -452,7 +476,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void setRealEstateCategories(AppCompatSpinner spinner) {
         List<String> listCategories = new ArrayList<>();
-        RealEstateCategoriesViewModel viewModelCategories = ViewModelProviders.of(getActivity()).get(RealEstateCategoriesViewModel.class);
+        RealEstateCategoriesViewModel viewModelCategories =
+                new ViewModelProvider(getActivity()).get(RealEstateCategoriesViewModel.class);
         viewModelCategories.getCategories().observe(this, realEstateCategoriesModelResponse -> {
             if (realEstateCategoriesModelResponse.getKey().equals(SUCCESS)) {
                 listCategories.clear();
@@ -469,7 +494,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void setRegions(AppCompatSpinner spinner) {
         List<String> listRegions = new ArrayList<>();
-        RegionsViewModel viewModelRegions = ViewModelProviders.of(getActivity()).get(RegionsViewModel.class);
+        RegionsViewModel viewModelRegions =
+                new ViewModelProvider(getActivity()).get(RegionsViewModel.class);
         viewModelRegions.getRegions().observe(this, regionsModelResponse -> {
             if (regionsModelResponse.getKey().equals(SUCCESS)) {
                 listRegions.clear();
@@ -484,7 +510,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void setDistricts(AppCompatSpinner spinner) {
         List<String> listDistricts = new ArrayList<>();
-        DistrictsViewModel viewModelDistricts = ViewModelProviders.of(getActivity()).get(DistrictsViewModel.class);
+        DistrictsViewModel viewModelDistricts =
+                new ViewModelProvider(getActivity()).get(DistrictsViewModel.class);
         viewModelDistricts.getDistricts().observe(this, districtsModelResponse -> {
             if (districtsModelResponse.getKey().equals(SUCCESS)) {
                 listDistricts.clear();

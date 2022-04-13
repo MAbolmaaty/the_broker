@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -123,7 +123,7 @@ public class DetailsFragment extends Fragment {
         if (mLocale.equals("ar"))
             view.setRotation(-180);
 
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
         mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
             if (realEstateModelResponse.getRealEstate() != null){
                 if (realEstateModelResponse.getRealEstate().getId() != null){

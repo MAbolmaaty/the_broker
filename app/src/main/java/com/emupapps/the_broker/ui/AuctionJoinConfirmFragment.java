@@ -33,7 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.emupapps.the_broker.R;
@@ -106,15 +106,16 @@ public class AuctionJoinConfirmFragment extends Fragment {
         }
         mUserId = SharedPrefUtil.getInstance(getActivity()).read(USER_ID, null);
         if (mUserId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse -> mUserId = loginModelResponse.getUser().getId());
+
+//            viewModelLogin.getUser().observe(this, loginModelResponse -> mUserId =
+//                    loginModelResponse.getUser().getId());
         }
 
         mDialogSelectImage = new BottomSheetDialog(getActivity());
         mDialogSelectImage.setContentView(R.layout.dialog_select_image);
 
-        mViewModelAuctionJoin = ViewModelProviders.of(this).get(AuctionJoinViewModel.class);
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        mViewModelAuctionJoin = new ViewModelProvider(this).get(AuctionJoinViewModel.class);
+        mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
 
         mResult.setText(R.string.no_files);
 

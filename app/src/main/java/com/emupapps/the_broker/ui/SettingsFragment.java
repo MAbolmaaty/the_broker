@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.SettingsTabsAdapter;
+import com.emupapps.the_broker.databinding.FragmentSettingsBinding;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.google.android.material.tabs.TabLayout;
@@ -27,11 +28,7 @@ import static com.emupapps.the_broker.utils.Constants.LOCALE;
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends Fragment {
-
-    TabLayout mTabLayout;
-    ViewPager mViewPager;
-    ImageView mMenu;
-    TextView mTitle;
+    private FragmentSettingsBinding mBinding;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -41,18 +38,18 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        mBinding = FragmentSettingsBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
         String locale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE,
                 Locale.getDefault().getLanguage());
-        mMenu.setImageResource(R.drawable.ic_menu);
-        mTitle.setText(R.string.settings);
+//        mMenu.setImageResource(R.drawable.ic_menu);
+//        mTitle.setText(R.string.settings);
         SettingsTabsAdapter adapter = new SettingsTabsAdapter(getContext(), getChildFragmentManager(),
                 0);
-        mViewPager.setAdapter(adapter);
-        mTabLayout.setupWithViewPager(mViewPager);
-        if (locale.equals("ar"))
-            mViewPager.setRotation(180);
+        mBinding.viewPager.setAdapter(adapter);
+        mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
+//        if (locale.equals("ar"))
+//            mViewPager.setRotation(180);
 
         return view;
     }

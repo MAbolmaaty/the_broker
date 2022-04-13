@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,8 +63,9 @@ public class RealEstatesRentedFragment extends Fragment {
         if (locale.equals("ar"))
             view.setRotation(-180);
 
-        mViewModelRentedRealEstates = ViewModelProviders.of(this).get(RealEstatesRentedViewModel.class);
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+        mViewModelRentedRealEstates =
+                new ViewModelProvider(this).get(RealEstatesRentedViewModel.class);
+        mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
 
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
@@ -72,11 +73,10 @@ public class RealEstatesRentedFragment extends Fragment {
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null) {
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-                mUserId = loginModelResponse.getUser().getId();
-                loadRealEstates(mUserId);
-            });
+//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
+//                mUserId = loginModelResponse.getUser().getId();
+//                loadRealEstates(mUserId);
+//            });
         } else {
             loadRealEstates(mUserId);
         }

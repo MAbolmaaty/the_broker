@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,8 +43,6 @@ public class RealEstateRequestsUserFragment extends Fragment {
     TextView mTitle;
     ImageView mRequestsHistory;
     TextView mNoRequests;
-    View mTermination;
-    View mMaintenance;
     RecyclerView mRecyclerView;
     ProgressBar mProgress;
 
@@ -78,15 +76,15 @@ public class RealEstateRequestsUserFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);;
         if (mUserId == null){
-            LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-                mUserId = loginModelResponse.getUser().getId();
-                RealEstateViewModel viewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-                viewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse ->
-                        loadRequests(realEstateModelResponse.getRealEstate().getId()));
-            });
+//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
+//                mUserId = loginModelResponse.getUser().getId();
+//                RealEstateViewModel viewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+//                viewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse ->
+//                        loadRequests(realEstateModelResponse.getRealEstate().getId()));
+//            });
         } else {
-            mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+            mViewModelRealEstate =
+                    new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
             mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse ->
                     loadRequests(realEstateModelResponse.getRealEstate().getId()));
         }
@@ -122,7 +120,7 @@ public class RealEstateRequestsUserFragment extends Fragment {
         if (mToast != null)
             mToast.cancel();
         RealEstateRequestsUserViewModel viewModelRealEstateRequests =
-                ViewModelProviders.of(this).get(RealEstateRequestsUserViewModel.class);
+                new ViewModelProvider(this).get(RealEstateRequestsUserViewModel.class);
         viewModelRealEstateRequests.realEstateRequests(realEstateId);
         ArrayList<Request> listRequests = new ArrayList<>();
         viewModelRealEstateRequests.getRealEstateRequests().observe(this, realEstateRequestsUserModelResponse -> {
@@ -142,7 +140,7 @@ public class RealEstateRequestsUserFragment extends Fragment {
                         new RealEstateRequestsUserAdapter(getActivity(), listRequests,
                                 position -> {
                                     RequestSubmittedViewModel viewModelRequestSubmitted =
-                                            ViewModelProviders.of(getActivity())
+                                            new ViewModelProvider(getActivity())
                                             .get(RequestSubmittedViewModel.class);
                                     viewModelRequestSubmitted.setRequestId(listRequests.get(position).getId());
                                     if (listRequests.get(position).getDateExit() != null && !TextUtils.isEmpty(listRequests.get(position).getDateExit())){

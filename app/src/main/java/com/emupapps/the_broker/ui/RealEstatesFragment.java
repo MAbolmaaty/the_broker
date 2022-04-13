@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.RealEstatesTabsAdapter;
+import com.emupapps.the_broker.databinding.FragmentRealEstatesBinding;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.google.android.material.tabs.TabLayout;
@@ -30,10 +31,7 @@ import static com.emupapps.the_broker.utils.Constants.LOCALE;
  */
 public class RealEstatesFragment extends Fragment {
 
-    TabLayout mTabLayout;
-    ViewPager mViewPager;
-    ImageView mMenu;
-    TextView mTitle;
+    private FragmentRealEstatesBinding mBinding;
 
     public RealEstatesFragment() {
         // Required empty public constructor
@@ -43,17 +41,19 @@ public class RealEstatesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_real_estates, container, false);
-        String locale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
-        if (locale.equals("ar"))
-            mViewPager.setRotation(180);
+        mBinding = FragmentRealEstatesBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
-        mMenu.setImageResource(R.drawable.ic_menu);
-        mTitle.setText(R.string.real_estates);
+//        String locale = SharedPrefUtil.getInstance(getActivity()).
+//                read(LOCALE, Locale.getDefault().getLanguage());
+//        if (locale.equals("ar"))
+//            mViewPager.setRotation(180);
+
+//        mMenu.setImageResource(R.drawable.ic_menu);
+//        mTitle.setText(R.string.real_estates);
         RealEstatesTabsAdapter tabsAdapter = new RealEstatesTabsAdapter(getContext(), getChildFragmentManager(), 0);
-        mViewPager.setAdapter(tabsAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+        mBinding.viewPager.setAdapter(tabsAdapter);
+        mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
 
         return view;
     }

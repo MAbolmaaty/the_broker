@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.emupapps.the_broker.models.login.request.LoginModelRequest;
 import com.emupapps.the_broker.models.login.response.LoginModelResponse;
+import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
 import com.emupapps.the_broker.utils.web_service.RestClient;
 
 import org.json.JSONException;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,9 +24,7 @@ public class LoginRepository {
     private static final String TAG = LoginRepository.class.getSimpleName();
 
     private static LoginRepository instance;
-    private Call<LoginModelResponse> mCallLogin;
-    private MutableLiveData<Boolean> mLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
 
     public static LoginRepository getInstance() {
         if (instance == null) {
@@ -33,47 +33,25 @@ public class LoginRepository {
         return instance;
     }
 
-    public MutableLiveData<LoginModelResponse> getUser(String email, String password, String locale,
-                                                       String fcmToken, String deviceOS) {
-        mLoading.setValue(true);
-        MutableLiveData<LoginModelResponse> user = new MutableLiveData<>();
-        mCallLogin = RestClient.getInstance().getApiClient().login(new LoginModelRequest(email,
-                password, locale, fcmToken, deviceOS));
-        mCallLogin.enqueue(new Callback<LoginModelResponse>() {
+    public MutableLiveData<AuthenticationModelResponse> login(
+            MutableLiveData<AuthenticationModelResponse> authentication,
+            String identifier,
+            String password) {
+        Call<AuthenticationModelResponse> callLogin =
+                RestClient.getInstance().getApiClient().login(identifier, password);
+        callLogin.enqueue(new Callback<AuthenticationModelResponse>() {
             @Override
-            public void onResponse(Call<LoginModelResponse> call, Response<LoginModelResponse> response) {
-                mLoading.setValue(false);
-                mFailure.setValue(false);
-                if (response.body() != null) {
-                    user.setValue(response.body());
-                } else if (response.errorBody() != null){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
-                        String message = jsonObject.getString("message");
-                        String key = jsonObject.getString("key");
-                        user.setValue(new LoginModelResponse(message, key));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    mFailure.setValue(true);
-                }
+            public void onResponse(Call<AuthenticationModelResponse> call,
+                                   Response<AuthenticationModelResponse> response) {
+                authentication.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<LoginModelResponse> call, Throwable t) {
-                Log.d(TAG, "on failure");
-                mLoading.setValue(false);
+            public void onFailure(Call<AuthenticationModelResponse> call, Throwable t) {
                 mFailure.setValue(true);
             }
         });
-        return user;
-    }
-
-    public MutableLiveData<Boolean> loading() {
-        return mLoading;
+        return authentication;
     }
 
     public MutableLiveData<Boolean> failure(){return mFailure;}

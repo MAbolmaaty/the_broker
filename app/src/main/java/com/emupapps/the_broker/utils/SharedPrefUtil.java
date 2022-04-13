@@ -43,7 +43,6 @@ public class SharedPrefUtil {
      * @param preferenceValue The value to save in preference.
      */
     public void write(String preferenceName, boolean preferenceValue) {
-
         editor.putBoolean(preferenceName, preferenceValue);
         editor.apply();
     }
@@ -90,7 +89,6 @@ public class SharedPrefUtil {
      */
 
     public void write(String preferenceName, int preferenceValue) {
-
         editor.putInt(preferenceName, preferenceValue);
         editor.apply();
     }
@@ -103,7 +101,6 @@ public class SharedPrefUtil {
      */
 
     public int read(String preferenceName, int defaultValue) {
-
         return preferences.getInt(preferenceName, defaultValue);
     }
 
@@ -118,7 +115,4 @@ public class SharedPrefUtil {
             editor.apply();
         }
     }
-
-
-
 }

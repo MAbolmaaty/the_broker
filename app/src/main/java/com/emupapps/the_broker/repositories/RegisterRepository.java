@@ -1,16 +1,9 @@
 package com.emupapps.the_broker.repositories;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
-import com.emupapps.the_broker.models.register.RegisterModelResponse;
+import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
 import com.emupapps.the_broker.utils.web_service.RestClient;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -23,9 +16,7 @@ public class RegisterRepository {
     private static final String TAG = RegisterRepository.class.getSimpleName();
 
     private static RegisterRepository mInstance;
-    private Call<RegisterModelResponse> mCallRegister;
-    private MutableLiveData<Boolean> mLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
 
     public static RegisterRepository getInstance() {
         if (mInstance == null) {
@@ -34,51 +25,29 @@ public class RegisterRepository {
         return mInstance;
     }
 
-    public MutableLiveData<RegisterModelResponse> register(RequestBody data,
-                                                           MultipartBody.Part profilePicture) {
-
-        mLoading.setValue(true);
-        MutableLiveData<RegisterModelResponse> result = new MutableLiveData<>();
-        mCallRegister = RestClient.getInstance().getApiClient().register(data, profilePicture);
-        Log.d(TAG, "register start");
-        mCallRegister.enqueue(new Callback<RegisterModelResponse>() {
+    public MutableLiveData<AuthenticationModelResponse> register(
+            MutableLiveData<AuthenticationModelResponse> authentication,
+            RequestBody data,
+            MultipartBody.Part profilePicture) {
+        Call<AuthenticationModelResponse> callRegister =
+                RestClient.getInstance().getApiClient().register(data, profilePicture);
+        callRegister.enqueue(new Callback<AuthenticationModelResponse>() {
             @Override
-            public void onResponse(Call<RegisterModelResponse> call,
-                                   Response<RegisterModelResponse> response) {
-                Log.d(TAG, "onResponse");
-                Log.d(TAG, "response.code() : " + response.code());
-                mLoading.setValue(false);
-                mFailure.setValue(false);
-                if (response.body() != null) {
-                    result.setValue(response.body());
-                } else if (response.errorBody() != null){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
-                        String message = jsonObject.getString("message");
-                        String key = jsonObject.getString("key");
-                        //result.setValue(new RegisterModelResponse(message, key));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    mFailure.setValue(true);
-                }
+            public void onResponse(Call<AuthenticationModelResponse> call,
+                                   Response<AuthenticationModelResponse> response) {
+                authentication.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<RegisterModelResponse> call, Throwable t) {
-                Log.d(TAG, "on failure");
-                mLoading.setValue(false);
+            public void onFailure(Call<AuthenticationModelResponse> call, Throwable t) {
                 mFailure.setValue(true);
             }
         });
-        return result;
+
+        return authentication;
     }
 
-    public MutableLiveData<Boolean> loading(){
-        return mLoading;
+    public MutableLiveData<Boolean> failure() {
+        return mFailure;
     }
-    public MutableLiveData<Boolean> failure(){return mFailure;}
 }

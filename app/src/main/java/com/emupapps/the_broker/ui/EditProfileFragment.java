@@ -32,19 +32,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
-import com.emupapps.the_broker.models.info_user.UserInfoModelResponse;
+import com.emupapps.the_broker.databinding.FragmentEditProfileBinding;
 import com.emupapps.the_broker.utils.FilePath;
 import com.emupapps.the_broker.utils.FileUtils;
 import com.emupapps.the_broker.utils.ProgressRequestBody;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.emupapps.the_broker.viewmodels.InfoUpdateViewModel;
-import com.emupapps.the_broker.viewmodels.InfoUserViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
+import com.emupapps.the_broker.viewmodels.ProfileViewModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.hbb20.CountryCodePicker;
@@ -64,63 +62,25 @@ import static android.app.Activity.RESULT_OK;
 import static com.emupapps.the_broker.utils.Constants.ADDRESS;
 import static com.emupapps.the_broker.utils.Constants.BASE_URL;
 import static com.emupapps.the_broker.utils.Constants.BIRTH_DATE;
-import static com.emupapps.the_broker.utils.Constants.EMAIL;
+import static com.emupapps.the_broker.utils.Constants.EMAIL_ADDRESS;
 import static com.emupapps.the_broker.utils.Constants.LOCALE;
 import static com.emupapps.the_broker.utils.Constants.PHONE_CODE;
 import static com.emupapps.the_broker.utils.Constants.PHONE_NUMBER;
 import static com.emupapps.the_broker.utils.Constants.SUCCESS;
 import static com.emupapps.the_broker.utils.Constants.USERNAME;
 import static com.emupapps.the_broker.utils.Constants.USER_ID;
-import static com.emupapps.the_broker.utils.Constants.USER_IMAGE;
+import static com.emupapps.the_broker.utils.Constants.Profile_Picture;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class EditProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    private static final String TAG = InfoUserFragment.class.getSimpleName();
-
-    View mViewUserImage;
-
-    CircleImageView mUserImage;
-
-    ImageView mShadow;
-
-    ImageView mCamera;
-
-    EditText mUsername;
-
-    TextView mBirthDate;
-
-    ImageView mCalendar;
-
-    EditText mAddress;
-
-    EditText mPostcode;
-
-    TextView mEmail;
-
-    CountryCodePicker mCountryCodePicker;
-
-    EditText mPhoneNumber;
-
-    Button mSave;
-
-    ImageView mDelete;
-
-    ConstraintLayout mConstraintLayout;
-
-    ProgressBar mProgressBar;
-
-    TextView mPercentage;
-
-    ProgressBar mProgress;
-
-    ScrollView mScrollView;
+    private static final String TAG = EditProfileFragment.class.getSimpleName();
+    private FragmentEditProfileBinding mBinding;
 
     private boolean mUpload;
     BottomSheetDialog mDialogSelectImage;
-    private AlertDialog mDialogConfirmPassword;
     private File mFile;
     private Uri mUri;
     private Toast mToast;
@@ -132,9 +92,9 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
     private static final int REQUEST_PHOTO_GALLERY = 8008;
     private static final int TAKE_PHOTO_REQUEST_PERMISSION = 9008;
     private MultipartBody.Part mPartFile;
-    private InfoUserViewModel mViewModelInfoUser;
+    private ProfileViewModel mViewModelInfoUser;
 
-    public InfoUserFragment() {
+    public EditProfileFragment() {
         // Required empty public constructor
     }
 
@@ -142,8 +102,8 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
+        mBinding = FragmentEditProfileBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
 
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
         if (mLocale.equals("ar"))
@@ -152,8 +112,10 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
         mDialogSelectImage = new BottomSheetDialog(getActivity());
         mDialogSelectImage.setContentView(R.layout.dialog_select_image);
 
-        mViewModelUpdateInfo = ViewModelProviders.of(getActivity()).get(InfoUpdateViewModel.class);
-        mViewModelInfoUser = ViewModelProviders.of(getActivity()).get(InfoUserViewModel.class);
+        mViewModelUpdateInfo =
+                new ViewModelProvider(getActivity()).get(InfoUpdateViewModel.class);
+        mViewModelInfoUser =
+                new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
 
         mUserId = SharedPrefUtil.getInstance(getActivity()).read(USER_ID, null);
         if (mUserId == null) {
@@ -188,9 +150,9 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PHOTO_CAMERA && getContext() != null && resultCode == RESULT_OK) {
-            Glide.with(getContext()).load(mFile).into(mUserImage);
-            mUserImage.setVisibility(View.VISIBLE);
-            mCamera.setVisibility(View.INVISIBLE);
+            Glide.with(getContext()).load(mFile).into(mBinding.userImage);
+            mBinding.userImage.setVisibility(View.VISIBLE);
+            mBinding.camera.setVisibility(View.INVISIBLE);
             mUpload = false;
 
         } else if (requestCode == REQUEST_PHOTO_GALLERY && getContext() != null && resultCode == RESULT_OK) {
@@ -198,9 +160,9 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
             String selectedFilePath = FilePath.getPath(getContext(), mUri);
             if (selectedFilePath != null) {
                 mFile = new File(selectedFilePath);
-                Glide.with(getContext()).load(mFile).into(mUserImage);
-                mUserImage.setVisibility(View.VISIBLE);
-                mCamera.setVisibility(View.INVISIBLE);
+                Glide.with(getContext()).load(mFile).into(mBinding.userImage);
+                mBinding.userImage.setVisibility(View.VISIBLE);
+                mBinding.camera.setVisibility(View.INVISIBLE);
                 mUpload = false;
             }
         }
@@ -209,7 +171,7 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         mNewBirthDate = year + "/" + (monthOfYear + 1) + "/" + dayOfMonth;
-        mBirthDate.setText(mNewBirthDate);
+        mBinding.birthDate.setText(mNewBirthDate);
     }
 
 
@@ -225,24 +187,24 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
                 }
             }
         } else {
-            mShadow.setVisibility(View.VISIBLE);
-            mDelete.setVisibility(View.VISIBLE);
+            mBinding.shadow.setVisibility(View.VISIBLE);
+            mBinding.delete.setVisibility(View.VISIBLE);
         }
     }
 
 
     public void hideDelete() {
-        mShadow.setVisibility(View.GONE);
-        mDelete.setVisibility(View.GONE);
+        mBinding.shadow.setVisibility(View.GONE);
+        mBinding.delete.setVisibility(View.GONE);
     }
 
 
     public void delete() {
-        mUserImage.setVisibility(View.INVISIBLE);
+        mBinding.userImage.setVisibility(View.INVISIBLE);
         mUpload = true;
-        mShadow.setVisibility(View.INVISIBLE);
-        mDelete.setVisibility(View.INVISIBLE);
-        mCamera.setVisibility(View.VISIBLE);
+        mBinding.shadow.setVisibility(View.INVISIBLE);
+        mBinding.delete.setVisibility(View.INVISIBLE);
+        mBinding.camera.setVisibility(View.VISIBLE);
     }
 
 
@@ -261,12 +223,12 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
         if (mToast != null)
             mToast.cancel();
 
-        String newUsername = mUsername.getText().toString();
-        mNewBirthDate = mBirthDate.getText().toString();
-        String newAddress = mAddress.getText().toString();
-        String newEmail = mEmail.getText().toString();
-        String newCountryCode = "+" + mCountryCodePicker.getSelectedCountryCode();
-        String newPhoneNumber = mPhoneNumber.getText().toString();
+        String newUsername = mBinding.username.getText().toString();
+        mNewBirthDate = mBinding.birthDate.getText().toString();
+        String newAddress = mBinding.address.getText().toString();
+        String newEmail = mBinding.email.getText().toString();
+        String newCountryCode = "+" + mBinding.countryCodePicker.getSelectedCountryCode();
+        String newPhoneNumber = mBinding.phoneNumber.getText().toString();
 
         if (TextUtils.isEmpty(newUsername)) {
             newUsername = SharedPrefUtil.getInstance(getContext()).read(USERNAME, "");
@@ -277,7 +239,7 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
         }
 
         if (TextUtils.isEmpty(newEmail)) {
-            newEmail = SharedPrefUtil.getInstance(getContext()).read(EMAIL, "");
+            newEmail = SharedPrefUtil.getInstance(getContext()).read(EMAIL_ADDRESS, "");
         }
 
         if (TextUtils.isEmpty(newPhoneNumber)) {
@@ -292,7 +254,7 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
                 countryCodeRequest = RequestBody.create(MultipartBody.FORM, newCountryCode),
                 phoneNumberRequest = RequestBody.create(MultipartBody.FORM, newPhoneNumber),
                 localeRequest = RequestBody.create(MultipartBody.FORM, mLocale);
-        mProgress.setVisibility(View.VISIBLE);
+        mBinding.progress.setVisibility(View.VISIBLE);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
         AsyncTask.execute(() -> {
             if (mFile != null) {
@@ -311,55 +273,50 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
             getActivity().runOnUiThread(() -> {
                 mViewModelUpdateInfo.updateInfo(userIdRequest, usernameRequest, emailRequest, phoneNumberRequest,
                         countryCodeRequest, birthDateRequest, addressRequest, localeRequest, mPartFile);
-                mViewModelUpdateInfo.getResult().observe(InfoUserFragment.this, updateInfoModelResponse -> {
+                mViewModelUpdateInfo.getResult().observe(EditProfileFragment.this, updateInfoModelResponse -> {
                     if (updateInfoModelResponse.getKey().equals(SUCCESS)) {
-                        InfoUpdateViewModel viewModelInfoUpdate = ViewModelProviders.of(getActivity()).get(InfoUpdateViewModel.class);
+                        InfoUpdateViewModel viewModelInfoUpdate =
+                                new ViewModelProvider(getActivity()).
+                                        get(InfoUpdateViewModel.class);
                         mToast = Toast.makeText(getActivity(), updateInfoModelResponse.getMessage(), Toast.LENGTH_SHORT);
                         mToast.show();
                         String userId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
                         if (userId != null) {
-                            SharedPrefUtil.getInstance(getContext()).write(USER_IMAGE, updateInfoModelResponse.getResult().getPhoto());
+                            SharedPrefUtil.getInstance(getContext()).write(Profile_Picture, updateInfoModelResponse.getResult().getPhoto());
                             SharedPrefUtil.getInstance(getContext()).write(USERNAME, updateInfoModelResponse.getResult().getName());
                             SharedPrefUtil.getInstance(getContext()).write(BIRTH_DATE, updateInfoModelResponse.getResult().getBirthday());
                             SharedPrefUtil.getInstance(getContext()).write(ADDRESS, updateInfoModelResponse.getResult().getArea());
-                            SharedPrefUtil.getInstance(getContext()).write(EMAIL, updateInfoModelResponse.getResult().getEmail());
+
                             SharedPrefUtil.getInstance(getContext()).write(PHONE_NUMBER, updateInfoModelResponse.getResult().getPhone());
                             SharedPrefUtil.getInstance(getContext()).write(PHONE_CODE, updateInfoModelResponse.getResult().getCode());
                             viewModelInfoUpdate.infoUpdated(true);
                         } else {
                             mViewModelInfoUser.userInfo(mUserId);
-                            mViewModelInfoUser.getUserInfo().observe(InfoUserFragment.this, userInfoModelResponse -> {
-                                if (userInfoModelResponse.getKey().equals(SUCCESS)){
-                                    viewModelInfoUpdate.infoUpdated(true);
-                                }
-                            });
-                            mViewModelInfoUser.isLoading().observe(InfoUserFragment.this, loading -> {
-                                if (loading){
-                                    mProgress.setVisibility(View.VISIBLE);
-                                } else {
-                                    mProgress.setVisibility(View.INVISIBLE);
-                                }
-                            });
+//                            mViewModelInfoUser.getUserInfo().observe(EditProfileFragment.this, userInfoModelResponse -> {
+//                                if (userInfoModelResponse.getKey().equals(SUCCESS)){
+//                                    viewModelInfoUpdate.infoUpdated(true);
+//                                }
+//                            });
                         }
                     } else {
                         mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
                         mToast.show();
                     }
                 });
-                mViewModelUpdateInfo.isLoading().observe(InfoUserFragment.this, loading -> {
+                mViewModelUpdateInfo.isLoading().observe(EditProfileFragment.this, loading -> {
                     if (loading) {
                         if (mFile != null) {
-                            mProgressBar.setVisibility(View.VISIBLE);
-                            mPercentage.setVisibility(View.VISIBLE);
+                            mBinding.progress.setVisibility(View.VISIBLE);
+                            mBinding.percentage.setVisibility(View.VISIBLE);
                         }
-                        mProgress.setVisibility(View.VISIBLE);
+                        mBinding.progress.setVisibility(View.VISIBLE);
                     } else {
-                        mProgressBar.setVisibility(View.GONE);
-                        mPercentage.setVisibility(View.GONE);
-                        mProgress.setVisibility(View.GONE);
+                        mBinding.progress.setVisibility(View.GONE);
+                        mBinding.percentage.setVisibility(View.GONE);
+                        mBinding.progress.setVisibility(View.GONE);
                     }
                 });
-                mViewModelUpdateInfo.failure().observe(InfoUserFragment.this, failure -> {
+                mViewModelUpdateInfo.failure().observe(EditProfileFragment.this, failure -> {
                     if (failure) {
                         if (mToast != null)
                             mToast.cancel();
@@ -372,77 +329,76 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
 
     }
 
-    public static InfoUserFragment newInstance() {
-        return new InfoUserFragment();
+    public static EditProfileFragment newInstance() {
+        return new EditProfileFragment();
     }
 
     private void loadUserInfo(Context context) {
-        String userImage = SharedPrefUtil.getInstance(context).read(USER_IMAGE, null);
+        String userImage = SharedPrefUtil.getInstance(context).read(Profile_Picture, null);
         String username = SharedPrefUtil.getInstance(context).read(USERNAME, "");
         String birthDate = SharedPrefUtil.getInstance(context).read(BIRTH_DATE, "");
         String address = SharedPrefUtil.getInstance(context).read(ADDRESS, "");
-        String email = SharedPrefUtil.getInstance(context).read(EMAIL, "");
+        String email = SharedPrefUtil.getInstance(context).read(EMAIL_ADDRESS, "");
         String phoneCode = SharedPrefUtil.getInstance(context).read(PHONE_CODE, "");
         String phoneNumber = SharedPrefUtil.getInstance(context).read(PHONE_NUMBER, "");
 
         if (userImage != null && !TextUtils.isEmpty(userImage)) {
-            mUserImage.setVisibility(View.VISIBLE);
-            Glide.with(context).load(BASE_URL + userImage).into(mUserImage);
+            //mUserImage.setVisibility(View.VISIBLE);
+            //Glide.with(context).load(BASE_URL + userImage).into(mUserImage);
         } else {
-            mUserImage.setVisibility(View.INVISIBLE);
-            mCamera.setVisibility(View.VISIBLE);
+            //mUserImage.setVisibility(View.INVISIBLE);
+            //mCamera.setVisibility(View.VISIBLE);
         }
-        mUsername.setText(username);
-        mBirthDate.setText(birthDate);
-        mAddress.setText(address);
-        mEmail.setText(email);
-        if (phoneCode != null && phoneCode.length() > 0)
-            mCountryCodePicker.setCountryForPhoneCode(Integer.parseInt(phoneCode));
-        mPhoneNumber.setText(phoneNumber);
+        //mUsername.setText(username);
+//        mBirthDate.setText(birthDate);
+//        mAddress.setText(address);
+//        mEmail.setText(email);
+        //if (phoneCode != null && phoneCode.length() > 0)
+//            mCountryCodePicker.setCountryForPhoneCode(Integer.parseInt(phoneCode));
+//        mPhoneNumber.setText(phoneNumber);
     }
 
     private void loadUserInfo() {
-        LoginViewModel viewModelLogin = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-        viewModelLogin.getUser().observe(this, loginModelResponse -> {
-            mUserId = loginModelResponse.getUser().getId();
-            mViewModelInfoUser.userInfo(mUserId);
-            mViewModelInfoUser.getUserInfo().observe(InfoUserFragment.this, new Observer<UserInfoModelResponse>() {
-                @Override
-                public void onChanged(UserInfoModelResponse userInfoModelResponse) {
-                    String userImage = userInfoModelResponse.getUser().getPhoto();
-                    String username = userInfoModelResponse.getUser().getName();
-                    String birthDate = userInfoModelResponse.getUser().getBirthday();
-                    String address = userInfoModelResponse.getUser().getAddress();
-                    String email = userInfoModelResponse.getUser().getEmail();
-                    String phoneCode = userInfoModelResponse.getUser().getCode();
-                    String phoneNumber = userInfoModelResponse.getUser().getPhone();
+//        viewModelLogin.getUser().observe(this, loginModelResponse -> {
+//            mUserId = loginModelResponse.getUser().getId();
+//            mViewModelInfoUser.userInfo(mUserId);
+//            mViewModelInfoUser.getUserInfo().observe(EditProfileFragment.this, new Observer<UserInfoModelResponse>() {
+//                @Override
+//                public void onChanged(UserInfoModelResponse userInfoModelResponse) {
+//                    String userImage = userInfoModelResponse.getUser().getPhoto();
+//                    String username = userInfoModelResponse.getUser().getName();
+//                    String birthDate = userInfoModelResponse.getUser().getBirthday();
+//                    String address = userInfoModelResponse.getUser().getAddress();
+//                    String email = userInfoModelResponse.getUser().getEmail();
+//                    String phoneCode = userInfoModelResponse.getUser().getCode();
+//                    String phoneNumber = userInfoModelResponse.getUser().getPhone();
+//
+//                    if (userImage != null && !TextUtils.isEmpty(userImage)) {
+//                        mUserImage.setVisibility(View.VISIBLE);
+//                        Glide.with(EditProfileFragment.this).load(BASE_URL + userImage).into(mUserImage);
+//                    } else {
+//                        mUserImage.setVisibility(View.INVISIBLE);
+//                        mCamera.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    mUsername.setText(username);
+//                    mBirthDate.setText(birthDate);
+//                    mAddress.setText(address);
+//                    mEmail.setText(email);
+//                    if (phoneCode != null && phoneCode.length() > 0)
+//                        mCountryCodePicker.setCountryForPhoneCode(Integer.parseInt(phoneCode));
+//                    mPhoneNumber.setText(phoneNumber);
+//                }
+//            });
 
-                    if (userImage != null && !TextUtils.isEmpty(userImage)) {
-                        mUserImage.setVisibility(View.VISIBLE);
-                        Glide.with(InfoUserFragment.this).load(BASE_URL + userImage).into(mUserImage);
-                    } else {
-                        mUserImage.setVisibility(View.INVISIBLE);
-                        mCamera.setVisibility(View.VISIBLE);
-                    }
-
-                    mUsername.setText(username);
-                    mBirthDate.setText(birthDate);
-                    mAddress.setText(address);
-                    mEmail.setText(email);
-                    if (phoneCode != null && phoneCode.length() > 0)
-                        mCountryCodePicker.setCountryForPhoneCode(Integer.parseInt(phoneCode));
-                    mPhoneNumber.setText(phoneNumber);
-                }
-            });
-
-            mViewModelInfoUser.isLoading().observe(InfoUserFragment.this, loading -> {
-                if (loading){
-                    mProgress.setVisibility(View.VISIBLE);
-                } else {
-                    mProgress.setVisibility(View.INVISIBLE);
-                }
-            });
-        });
+//            mViewModelInfoUser.isLoading().observe(EditProfileFragment.this, loading -> {
+//                if (loading){
+//                    mProgress.setVisibility(View.VISIBLE);
+//                } else {
+//                    mProgress.setVisibility(View.INVISIBLE);
+//                }
+//            });
+        //});
     }
 
     private void takePhoto() {
@@ -506,12 +462,12 @@ public class InfoUserFragment extends Fragment implements DatePickerDialog.OnDat
     private MultipartBody.Part prepareFilePart(String partName) {
 
         RequestBody requestFile = new ProgressRequestBody(getContext(), mFile, (progressInPercent, totalBytes) -> getActivity().runOnUiThread(() -> {
-            mProgressBar.setProgress(progressInPercent);
+            //mProgressBar.setProgress(progressInPercent);
             if (progressInPercent == 100) {
-                mProgressBar.setVisibility(View.GONE);
-                mPercentage.setVisibility(View.GONE);
+                //mProgressBar.setVisibility(View.GONE);
+                //mPercentage.setVisibility(View.GONE);
             } else {
-                mPercentage.setText(progressInPercent + " %");
+                //mPercentage.setText(progressInPercent + " %");
             }
         }));
 

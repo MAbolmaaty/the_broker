@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
@@ -95,9 +95,12 @@ public class RequestModifyFragment extends Fragment implements DatePickerDialog.
             mBack.setImageResource(R.drawable.ic_arrow);
         }
 
-        mViewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-        mViewModelModifyRequest = ViewModelProviders.of(this).get(RequestModifyViewModel.class);
-        mViewModelSubmittedRequest = ViewModelProviders.of(getActivity()).get(RequestSubmittedViewModel.class);
+        mViewModelRealEstate =
+                new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+        mViewModelModifyRequest =
+                new ViewModelProvider(this).get(RequestModifyViewModel.class);
+        mViewModelSubmittedRequest =
+                new ViewModelProvider(getActivity()).get(RequestSubmittedViewModel.class);
 
         mViewModelRealEstate.getTypeRequest().observe(this, type -> {
             switch (type) {
