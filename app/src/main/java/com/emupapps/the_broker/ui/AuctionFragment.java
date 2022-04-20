@@ -26,7 +26,6 @@ import com.emupapps.the_broker.models.real_estate.RealEstate;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.emupapps.the_broker.viewmodels.AuctionBidViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 
 import java.text.DecimalFormat;
@@ -106,12 +105,12 @@ public class AuctionFragment extends Fragment {
         mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
         mViewModelAuctionBid = new ViewModelProvider(this).get(AuctionBidViewModel.class);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mBidsAdapter = new BidsAdapter(getContext(), mBidsList);
         mBids.setLayoutManager(layoutManager);
         mBids.setAdapter(mBidsAdapter);
         mBids.setHasFixedSize(true);
-
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null) {
 
@@ -120,7 +119,7 @@ public class AuctionFragment extends Fragment {
 //                bids(mUserId);
 //            });
         } else {
-            bids(mUserId);
+           // bids(mUserId);
         }
 
         return view;
@@ -167,57 +166,57 @@ public class AuctionFragment extends Fragment {
         }
     }
 
-    private void bids(String userId){
-        mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
-            RealEstate realEstate = realEstateModelResponse.getRealEstate();
-            if (realEstate.getOwnership().getOwner_id().equals(mUserId)){
-                mAuctionDetails.setVisibility(View.GONE);
-                mTextViewCurrentBid.setVisibility(View.GONE);
-                mViewCurrentBid.setVisibility(View.GONE);
-                mCurrentBid.setVisibility(View.GONE);
-                mViewHideCurrentBid.setVisibility(View.GONE);
-                mViewBid.setVisibility(View.GONE);
-                mBid.setVisibility(View.GONE);
-                mCurrency.setVisibility(View.GONE);
-                mBidAction.setVisibility(View.GONE);
-                mViewExpiration.setVisibility(View.GONE);
-                mTextViewExpiration.setVisibility(View.GONE);
-                mExpiration.setVisibility(View.GONE);
-                mViewMargin.setVisibility(View.GONE);
-            }
-            mRealEstateId = realEstate.getId();
-            if (realEstate.getAuction_date() != null) {
-                mExpiration.setText(realEstate.getAuction_date());
-            }
-            mBidsList.clear();
-            mBidAction.setText(getString(R.string.join));
-            mViewHideCurrentBid.setTranslationX(-mAnimateBy);
-            animateAuctionEdit(0, 0, false);
-            mBid.requestFocus();
-            for (Bid bid : realEstate.getBids()) {
-                if (bid.getApprove().equals(APPROVED)) {
-                    mBidsList.add(bid);
-                    if (Float.parseFloat(bid.getPrice()) > mMaxBid){
-                        mMaxBid = Float.parseFloat(bid.getPrice());
-                    }
-                    if (bid.getUser_id().equals(userId)){
-                        mCurrentBid.setText(getString(R.string.price_amount, bid.getPrice()));
-                        mBid.setText(bid.getPrice());
-                        mBidAction.setText(getString(R.string.edit));
-                        mViewHideCurrentBid.setTranslationX(0);
-                        animateAuctionEdit(-mAnimateBy, 0, false);
-                        mViewCurrentBid.setVisibility(View.VISIBLE);
-                        mCurrentBid.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-            if (mBidsList.size() == 0) {
-                mNoBids.setVisibility(View.VISIBLE);
-            }
-
-        });
-    }
+//    private void bids(String userId){
+//        mViewModelRealEstate.getRealEstateDetails().observe(this, realEstateModelResponse -> {
+//            RealEstate realEstate = realEstateModelResponse.getRealEstate();
+//            if (realEstate.getOwnership().getOwner_id().equals(mUserId)){
+//                mAuctionDetails.setVisibility(View.GONE);
+//                mTextViewCurrentBid.setVisibility(View.GONE);
+//                mViewCurrentBid.setVisibility(View.GONE);
+//                mCurrentBid.setVisibility(View.GONE);
+//                mViewHideCurrentBid.setVisibility(View.GONE);
+//                mViewBid.setVisibility(View.GONE);
+//                mBid.setVisibility(View.GONE);
+//                mCurrency.setVisibility(View.GONE);
+//                mBidAction.setVisibility(View.GONE);
+//                mViewExpiration.setVisibility(View.GONE);
+//                mTextViewExpiration.setVisibility(View.GONE);
+//                mExpiration.setVisibility(View.GONE);
+//                mViewMargin.setVisibility(View.GONE);
+//            }
+//            mRealEstateId = realEstate.getId();
+//            if (realEstate.getAuction_date() != null) {
+//                mExpiration.setText(realEstate.getAuction_date());
+//            }
+//            mBidsList.clear();
+//            mBidAction.setText(getString(R.string.join));
+//            mViewHideCurrentBid.setTranslationX(-mAnimateBy);
+//            animateAuctionEdit(0, 0, false);
+//            mBid.requestFocus();
+//            for (Bid bid : realEstate.getBids()) {
+//                if (bid.getApprove().equals(APPROVED)) {
+//                    mBidsList.add(bid);
+//                    if (Float.parseFloat(bid.getPrice()) > mMaxBid){
+//                        mMaxBid = Float.parseFloat(bid.getPrice());
+//                    }
+//                    if (bid.getUser_id().equals(userId)){
+//                        mCurrentBid.setText(getString(R.string.price_amount, bid.getPrice()));
+//                        mBid.setText(bid.getPrice());
+//                        mBidAction.setText(getString(R.string.edit));
+//                        mViewHideCurrentBid.setTranslationX(0);
+//                        animateAuctionEdit(-mAnimateBy, 0, false);
+//                        mViewCurrentBid.setVisibility(View.VISIBLE);
+//                        mCurrentBid.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
+//
+//            if (mBidsList.size() == 0) {
+//                mNoBids.setVisibility(View.VISIBLE);
+//            }
+//
+//        });
+//    }
 
     private void animateAuctionEdit(int position, long duration, boolean animate) {
         if (animate) {
@@ -260,7 +259,7 @@ public class AuctionFragment extends Fragment {
                 mCurrentBid.setText(getString(R.string.price_amount, decimalFormat.format(amountFloat)));
                 mBid.setText(decimalFormat.format(amountFloat));
                 SoftKeyboard.dismissKeyboardInActivity(getActivity());
-                loadBids();
+                //loadBids();
             } else {
                 mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
                 mToast.show();
@@ -287,35 +286,35 @@ public class AuctionFragment extends Fragment {
         return true;
     }
 
-    private void loadBids() {
-        mViewModelRealEstate.realEstate(mRealEstateId);
-        mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
-            mBidsList.clear();
-            for (Bid bid : realEstateModelResponse.getRealEstate().getBids()) {
-                if (bid.getApprove().equals(APPROVED)) {
-                    mBidsList.add(bid);
-                    if (Float.parseFloat(bid.getPrice()) > mMaxBid){
-                        mMaxBid = Float.parseFloat(bid.getPrice());
-                    }
-                }
-            }
-            if (mBidsList.size() > 0) {
-                mNoBids.setVisibility(View.INVISIBLE);
-                mBidsCount.setText(String.valueOf(mBidsList.size()));
-            }
-            mBidsAdapter.swapData(mBidsList);
-        });
-
-        mViewModelRealEstate.isLoading().observe(this, loading -> {
-            if (loading) {
-                mBids.setVisibility(View.INVISIBLE);
-                mProgressBar.setVisibility(View.VISIBLE);
-            } else {
-                mBids.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.INVISIBLE);
-            }
-        });
-    }
+//    private void loadBids() {
+//        mViewModelRealEstate.realEstate(mRealEstateId);
+//        mViewModelRealEstate.getRealEstateDetails().observe(this, realEstateModelResponse -> {
+//            mBidsList.clear();
+//            for (Bid bid : realEstateModelResponse.getRealEstate().getBids()) {
+//                if (bid.getApprove().equals(APPROVED)) {
+//                    mBidsList.add(bid);
+//                    if (Float.parseFloat(bid.getPrice()) > mMaxBid){
+//                        mMaxBid = Float.parseFloat(bid.getPrice());
+//                    }
+//                }
+//            }
+//            if (mBidsList.size() > 0) {
+//                mNoBids.setVisibility(View.INVISIBLE);
+//                mBidsCount.setText(String.valueOf(mBidsList.size()));
+//            }
+//            mBidsAdapter.swapData(mBidsList);
+//        });
+//
+//        mViewModelRealEstate.isLoading().observe(this, loading -> {
+//            if (loading) {
+//                mBids.setVisibility(View.INVISIBLE);
+//                mProgressBar.setVisibility(View.VISIBLE);
+//            } else {
+//                mBids.setVisibility(View.VISIBLE);
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//            }
+//        });
+//    }
 
     private void bidRejectAnimation() {
         mBidAction.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake50));

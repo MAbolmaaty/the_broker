@@ -30,30 +30,15 @@ public class SlidesAdapter extends SliderViewAdapter<SlidesAdapter.AdapterViewHo
 
     @Override
     public AdapterViewHolder onCreateViewHolder(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_slide, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_slide,
+                null);
         return new AdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(AdapterViewHolder viewHolder, int position) {
-        if (position == 2) {
-            viewHolder.mTitle.setTextColor(Color.BLACK);
-            viewHolder.mDescription.setTextColor(Color.BLACK);
-        } else {
-            viewHolder.mTitle.setTextColor(mContext.getResources().getColor(R.color.yellow));
-            viewHolder.mDescription.setTextColor(mContext.getResources().getColor(R.color.yellow));
-            viewHolder.mLogo.setVisibility(View.INVISIBLE);
-        }
-        if (mListSlides.get(position).getImage() != null) {
-            Glide.with(mContext).load(BASE_URL + mListSlides.get(position).getImage()).into(viewHolder.mBackground);
-            viewHolder.mLogo.setVisibility(View.INVISIBLE);
-        } else {
-            Glide.with(mContext).load(mListSlides.get(position).getLocal_image()).into(viewHolder.mBackground);
-        }
-
-        viewHolder.mTitle.setText(mListSlides.get(position).getTitle());
-        if (mListSlides.get(position).getDescription() != null)
-            viewHolder.mDescription.setText(Html.fromHtml(mListSlides.get(position).getDescription()));
+        Glide.with(mContext).load(mListSlides.get(position).getImage()).
+                into(viewHolder.mBackground);
     }
 
     @Override
@@ -64,12 +49,10 @@ public class SlidesAdapter extends SliderViewAdapter<SlidesAdapter.AdapterViewHo
     class AdapterViewHolder extends SliderViewAdapter.ViewHolder {
 
         ImageView mBackground;
-        TextView mTitle;
-        TextView mDescription;
-        ImageView mLogo;
 
         public AdapterViewHolder(View itemView) {
             super(itemView);
+            mBackground = itemView.findViewById(R.id.background);
         }
     }
 }

@@ -8,12 +8,27 @@
     android:orientation="vertical"
     tools:context=".ui.FavoritesFragment">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/favoritesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorites"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="@dimen/_8sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/favoritesOpenMenu"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:src="@drawable/ic_menu"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/favoritesTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/favoritesTitle"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -22,13 +37,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/favoritesTitle" />
 
     <TextView
         android:id="@+id/noRealEstates"
         style="@style/textView"
         android:text="@string/no_real_estates"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -5,24 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.NotificationsAdapter;
 import com.emupapps.the_broker.databinding.FragmentNotificationsBinding;
 import com.emupapps.the_broker.models.notifications.Notification;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.NotificationsViewModel;
 
 import java.util.ArrayList;
@@ -43,7 +36,6 @@ public class NotificationsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,18 +48,18 @@ public class NotificationsFragment extends Fragment {
                 new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
         mBinding.recyclerView.setLayoutManager(layoutManager);
         mBinding.recyclerView.setHasFixedSize(true);
-        String userId = SharedPrefUtil.getInstance(getActivity()).read(USER_ID, null);
-        if (userId == null) {
-//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-//                loadNotifications(loginModelResponse.getUser().getId());
-//            });
-        } else {
-            loadNotifications(userId);
-        }
+
+        mBinding.notificationsOpenMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
+
         return view;
     }
 
-    public void menu(){
+    private void openMenu(){
         sDrawerLayout.openDrawer(GravityCompat.START);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
     }

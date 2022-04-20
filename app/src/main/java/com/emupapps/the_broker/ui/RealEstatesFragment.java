@@ -37,7 +37,6 @@ public class RealEstatesFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,17 +54,19 @@ public class RealEstatesFragment extends Fragment {
         mBinding.viewPager.setAdapter(tabsAdapter);
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
 
+        mBinding.realEstatesOpenMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
+
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        sDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED, GravityCompat.START);
-    }
-
-    public void menu(){
+    private void openMenu(){
         sDrawerLayout.openDrawer(GravityCompat.START);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
+
     }
 }

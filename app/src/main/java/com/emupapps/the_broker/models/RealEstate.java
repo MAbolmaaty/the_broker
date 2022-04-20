@@ -12,7 +12,7 @@ public class RealEstate {
     private String published_at;
     private String createdAt;
     private String updatedAt;
-    private float status;
+    private int status;
     private String address;
     private String price;
     private String insuranceAmount;
@@ -22,7 +22,7 @@ public class RealEstate {
 
     public RealEstate(List<RealEstateImage> images, String _id, String title, String description,
                       String latitude, String longitude, String published_at, String createdAt,
-                      String updatedAt, float status, String address, String price,
+                      String updatedAt, int status, String address, String price,
                       String insuranceAmount, String ownerId, float realEstateStatus, String id) {
         this.images = images;
         this._id = _id;
@@ -78,7 +78,7 @@ public class RealEstate {
         return updatedAt;
     }
 
-    public float getStatus() {
+    public int getStatus() {
         return status;
     }
 

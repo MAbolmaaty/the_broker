@@ -2,6 +2,7 @@ package com.emupapps.the_broker.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.emupapps.the_broker.models.RealEstate;
 import com.emupapps.the_broker.models.real_estate.RealEstateModelResponse;
 import com.emupapps.the_broker.utils.web_service.RestClient;
 
@@ -14,9 +15,7 @@ public class RealEstateRepository {
     private static final String TAG = RealEstateRepository.class.getSimpleName();
 
     private static RealEstateRepository instance;
-    private Call<RealEstateModelResponse> mCallRealEstate;
-    private MutableLiveData<Boolean> mLoading = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
 
     public static RealEstateRepository getInstance(){
         if (instance == null){
@@ -25,31 +24,30 @@ public class RealEstateRepository {
         return instance;
     }
 
-    public MutableLiveData<RealEstateModelResponse> realEstate(String realEstateId){
-        mLoading.setValue(true);
-        MutableLiveData<RealEstateModelResponse> realEstateDetails = new MutableLiveData<>();
-        mCallRealEstate = RestClient.getInstance().getApiClient().getRealEstate(realEstateId);
-        mCallRealEstate.enqueue(new Callback<RealEstateModelResponse>() {
+    public MutableLiveData<RealEstate> realEstate(
+            MutableLiveData<RealEstate> realEstateDetails,
+            String realEstateId){
+
+        Call<RealEstate> callRealEstate = RestClient.getInstance().getApiClient().
+                getRealEstateDetails(realEstateId);
+
+        callRealEstate.enqueue(new Callback<RealEstate>() {
             @Override
-            public void onResponse(Call<RealEstateModelResponse> call, Response<RealEstateModelResponse> response) {
-                mLoading.setValue(false);
-                mFailure.setValue(false);
+            public void onResponse(Call<RealEstate> call,
+                                   Response<RealEstate> response) {
                 if (response.body() != null){
                     realEstateDetails.setValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<RealEstateModelResponse> call, Throwable t) {
-                mLoading.setValue(false);
+            public void onFailure(Call<RealEstate> call, Throwable t) {
                 mFailure.setValue(true);
             }
         });
+
         return realEstateDetails;
     }
 
-    public MutableLiveData<Boolean> loading(){
-        return mLoading;
-    }
     public MutableLiveData<Boolean> failure(){return mFailure;}
 }

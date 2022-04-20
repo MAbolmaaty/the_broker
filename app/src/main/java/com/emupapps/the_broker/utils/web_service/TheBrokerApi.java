@@ -17,9 +17,6 @@ import com.emupapps.the_broker.models.fav.request.FavModelRequest;
 import com.emupapps.the_broker.models.fav.response.FavModelResponse;
 import com.emupapps.the_broker.models.favorites.FavoritesModelResponse;
 import com.emupapps.the_broker.models.info_update.UpdateInfoModelResponse;
-import com.emupapps.the_broker.models.info_user.UserInfoModelResponse;
-import com.emupapps.the_broker.models.login.request.LoginModelRequest;
-import com.emupapps.the_broker.models.login.response.LoginModelResponse;
 import com.emupapps.the_broker.models.notifications.NotificationsModelResponse;
 import com.emupapps.the_broker.models.owner_contact.request.ContactOwnerModelRequest;
 import com.emupapps.the_broker.models.owner_contact.response.ContactOwnerModelResponse;
@@ -57,7 +54,6 @@ import com.emupapps.the_broker.models.request_termination.response.RequestTermin
 import com.emupapps.the_broker.models.requests_user.UserRequestsModelResponse;
 import com.emupapps.the_broker.models.search.request.SearchModelRequest;
 import com.emupapps.the_broker.models.search.response.SearchModelResponse;
-import com.emupapps.the_broker.models.slides.SlidesModelResponse;
 import com.emupapps.the_broker.models.unfavorite.request.UnFavoriteModelRequest;
 import com.emupapps.the_broker.models.unfavorite.response.UnFavoriteModelResponse;
 
@@ -72,10 +68,10 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
@@ -94,34 +90,14 @@ public interface TheBrokerApi {
     @GET("users/me")
     Call<ProfileModelResponse> profile(@Header("Authorization") String authorization);
 
-    @GET("api/GetServices")
-    Call<SlidesModelResponse> getSlides();
-
     @GET("real-estates")
     Call<List<RealEstate>> getRealEstates();
 
-    @FormUrlEncoded
-    @POST("api/ServiceAll")
-    Call<RealEstateStatusesModelResponse> getStatuses(@Field("lang") String locale);
-
-    @FormUrlEncoded
-    @POST("api/CategoryAll")
-    Call<RealEstateCategoriesModelResponse> getCategories(@Field("lang") String locale);
-
-    @FormUrlEncoded
-    @POST("api/AreaAll")
-    Call<RegionsModelResponse> getRegions(@Field("lang") String locale);
-
-    @FormUrlEncoded
-    @POST("api/Neighborhood")
-    Call<DistrictsModelResponse> getDistricts(@Field("lang") String locale);
+    @GET("real-estates/{realEstateId}")
+    Call<RealEstate> getRealEstateDetails(@Path("realEstateId") String realEstateId);
 
     @POST("api/AdvancedSearch")
     Call<SearchModelResponse> search(@Body SearchModelRequest body);
-
-    @FormUrlEncoded
-    @POST("api/GetOneAkarDetails")
-    Call<RealEstateModelResponse> getRealEstate(@Field("akar_id") String realEstateId);
 
     @POST("api/Fav")
     Call<FavModelResponse> favorite(@Body FavModelRequest body);
@@ -159,12 +135,6 @@ public interface TheBrokerApi {
     @POST("api/AuctionOffer")
     Call<AuctionBidModelResponse> bet(@Body AuctionBidModelRequest body);
 
-    @POST("api/Rules")
-    Call<PrivacyPolicyModelResponse> getPrivacyPolicies();
-
-    @POST("api/EmailCode")
-    Call<ConfirmEmailModelResponse> confirmEmail(@Body ConfirmEmailModelRequest body);
-
     @POST("api/ForgetPassword")
     Call<ForgetPasswordModelResponse> forgetPassword(@Body ForgetPasswordModelRequest body);
 
@@ -194,19 +164,6 @@ public interface TheBrokerApi {
                                              @Part("lang") RequestBody locale,
                                              @Part MultipartBody.Part profilePhoto);
 
-    @Multipart
-    @POST("api/UserDoc")
-    Call<AddDocumentModelResponse> addDocumentation(@Part MultipartBody.Part document,
-                                                    @Part("user_id") RequestBody userId);
-
-    @FormUrlEncoded
-    @POST("api/DeleteDoc")
-    Call<DeleteDocumentModelResponse> deleteDocument(@Field("doc_id") String document);
-
-    @Streaming
-    @GET()
-    Call<ResponseBody> download(@Url String url);
-
     @FormUrlEncoded
     @POST("api/OfferInsurance")
     Call<BankAccountModelResponse> getBankAccount(@Field("akar_id") String realEstateId);
@@ -216,21 +173,6 @@ public interface TheBrokerApi {
     Call<AuctionJoinModelResponse> joinAuction(@Part MultipartBody.Part file,
                                                @Part("user_id") RequestBody userId,
                                                @Part("akar_id") RequestBody realEstateId);
-
-    @POST("api/PaymentCard")
-    Call<PaymentCardAddModelResponse> addPaymentCard(@Body PaymentCardAddModelRequest body);
-
-    @FormUrlEncoded
-    @POST("api/GetPaymentCard")
-    Call<PaymentCardsModelResponse> paymentCards(@Field("user_id") String userId);
-
-    @FormUrlEncoded
-    @POST("api/DeletedPaymentCard")
-    Call<PaymentCardDeleteModelResponse> deletePaymentCard(@Field("doc_id") String cardId);
-
-    @FormUrlEncoded
-    @POST("api/PaymentCardMain")
-    Call<PaymentCardDefaultModelResponse> defaultPaymentCard(@Field("id") String cardId);
 
     @POST("api/EndTerminationOrder")
     Call<RequestTerminationModelResponse> terminateContract(@Body RequestTerminationModelRequest body);

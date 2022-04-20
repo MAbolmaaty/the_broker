@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.RealEstatesRentedAdapter;
+import com.emupapps.the_broker.databinding.FragmentRealEstatesRentedBinding;
 import com.emupapps.the_broker.models.real_estates_rented.RentedRealEstates;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.interfaces.RealEstateClickHandler;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstatesRentedViewModel;
 
@@ -37,10 +37,7 @@ import static com.emupapps.the_broker.utils.Constants.USER_ID;
  * A simple {@link Fragment} subclass.
  */
 public class RealEstatesRentedFragment extends Fragment {
-
-    RecyclerView mRecyclerView;
-    ProgressBar mProgressBar;
-    TextView mNoRealEstates;
+    private FragmentRealEstatesRentedBinding mBinding;
 
     private RealEstatesRentedViewModel mViewModelRentedRealEstates;
     private RealEstateViewModel mViewModelRealEstate;
@@ -56,9 +53,8 @@ public class RealEstatesRentedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_real_estates_rented, container,
-                false);
+        mBinding = FragmentRealEstatesRentedBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
         String locale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
         if (locale.equals("ar"))
             view.setRotation(-180);
@@ -69,7 +65,7 @@ public class RealEstatesRentedFragment extends Fragment {
 
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
+        //mRecyclerView.setLayoutManager(layoutManager);
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);
         if (mUserId == null) {
@@ -95,19 +91,19 @@ public class RealEstatesRentedFragment extends Fragment {
                 mRentedRealEstates.clear();
                 mRentedRealEstates.addAll(Arrays.asList(rentedRealEstatesModelResponse.getRentedRealEstates()));
                 if (mRentedRealEstates.size() < 1){
-                    mNoRealEstates.setVisibility(View.VISIBLE);
+                    mBinding.noRealEstates.setVisibility(View.VISIBLE);
                     return;
                 }
                 mAdapter = new RealEstatesRentedAdapter(getContext(), mRentedRealEstates, new RealEstateClickHandler() {
                     @Override
                     public void onClick(int position) {
-                        mViewModelRealEstate.setRealEstateId(mRentedRealEstates.get(position).getAkar_id());
+                        //mViewModelRealEstate.setRealEstateId(mRentedRealEstates.get(position).getAkar_id());
                         loadFragment(RealEstatesRentedFragment.this.getActivity().getSupportFragmentManager(),
                                 new RealEstateFragment(), true);
                     }
                 });
-                mRecyclerView.setAdapter(mAdapter);
-                mRecyclerView.setHasFixedSize(true);
+                //mRecyclerView.setAdapter(mAdapter);
+                //mRecyclerView.setHasFixedSize(true);
             } else {
                 mToast = Toast.makeText(getActivity(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
                 mToast.show();
@@ -115,9 +111,9 @@ public class RealEstatesRentedFragment extends Fragment {
         });
         mViewModelRentedRealEstates.isLoading().observe(this, loading -> {
             if (loading){
-                mProgressBar.setVisibility(View.VISIBLE);
+                //mProgressBar.setVisibility(View.VISIBLE);
             } else {
-                mProgressBar.setVisibility(View.INVISIBLE);
+                //mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
         mViewModelRentedRealEstates.failure().observe(this, failure -> {

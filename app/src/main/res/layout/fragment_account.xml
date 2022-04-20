@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.AccountFragment">
+
+    <TextView
+        android:id="@+id/accountTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/account"
+        android:textSize="@dimen/_16sdp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/accountBack"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:src="@drawable/ic_arrow_3_ar"
+        android:tint="@color/darkGrey"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/accountTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/accountTitle"/>
+
+    <TextView
+        android:id="@+id/accountUsernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountTitle"/>
+
+    <TextView
+        android:id="@+id/accountUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_14sdp"
+        tools:text="Em"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="@id/accountUsernameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/accountUsernameLabel"/>
+
+    <TextView
+        android:id="@+id/accountEmailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountUsername"/>
+
+    <TextView
+        android:id="@+id/accountEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_14sdp"
+        tools:text="em@em.com"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="@id/accountEmailLabel"
+        app:layout_constraintTop_toBottomOf="@+id/accountEmailLabel"/>
+
+    <TextView
+        android:id="@+id/accountLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:textSize="@dimen/_16sdp"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountEmail"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

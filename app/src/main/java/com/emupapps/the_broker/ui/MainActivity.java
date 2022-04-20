@@ -35,18 +35,13 @@ import com.bumptech.glide.Glide;
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.databinding.ActivityMainBinding;
 import com.emupapps.the_broker.models.ProfileModelResponse;
+import com.emupapps.the_broker.models.ProfilePicture;
 import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
 import com.emupapps.the_broker.models.search.request.SearchModelRequest;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.viewmodels.AuthenticationViewModel;
-import com.emupapps.the_broker.viewmodels.DistrictsViewModel;
 import com.emupapps.the_broker.viewmodels.ProfileViewModel;
-import com.emupapps.the_broker.viewmodels.RealEstateCategoriesViewModel;
-import com.emupapps.the_broker.viewmodels.RealEstateStatusesViewModel;
-import com.emupapps.the_broker.viewmodels.RealEstatesViewModel;
-import com.emupapps.the_broker.viewmodels.RegionsViewModel;
 import com.emupapps.the_broker.viewmodels.SearchViewModel;
-import com.emupapps.the_broker.viewmodels.SlidesViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
@@ -84,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Set App Language
-        String language = SharedPrefUtil.getInstance(this).read(LOCALE, Locale.getDefault().getLanguage());
+        String language = SharedPrefUtil.getInstance(this).
+                read(LOCALE, Locale.getDefault().getLanguage());
         Locale locale = new Locale(language);
         Resources resources = getResources();
         Configuration configuration = resources.getConfiguration();
@@ -164,27 +160,6 @@ public class MainActivity extends AppCompatActivity {
         setNavHeader();
         mViewModelSearch = new ViewModelProvider(this).get(SearchViewModel.class);
 
-        //Get RealEstates
-        RealEstatesViewModel viewModelRealEstates =
-                new ViewModelProvider(this).get(RealEstatesViewModel.class);
-        viewModelRealEstates.realEstates("1", "1", "0");
-        //Get Slides
-        SlidesViewModel viewModelSlides =
-                new ViewModelProvider(this).get(SlidesViewModel.class);
-        viewModelSlides.slides();
-        //Get Real Estate Statuses, Ex : sale, rent
-        RealEstateStatusesViewModel viewModelRealEstateStatuses =
-                new ViewModelProvider(this).get(RealEstateStatusesViewModel.class);
-        //Get Real Estate Categories, Ex : apartment, office
-        RealEstateCategoriesViewModel viewModelRealEstateCategories =
-                new ViewModelProvider(this).get(RealEstateCategoriesViewModel.class);
-        //Get Regions
-        RegionsViewModel viewModelRegions =
-                new ViewModelProvider(this).get(RegionsViewModel.class);
-        //Get Districts
-        DistrictsViewModel viewModelDistricts =
-                new ViewModelProvider(this).get(DistrictsViewModel.class);
-
         home();
 
         setNavigationItemSelected();
@@ -210,57 +185,66 @@ public class MainActivity extends AppCompatActivity {
             int itemId = menuItem.getItemId();
             switch (itemId) {
                 case R.id.nav_home:
-                    loadFragment(getSupportFragmentManager(), new HomeFragment(), false);
-                    return true;
-                case R.id.nav_realEstates:
-                    if (mAuthenticationViewModel.getResult().getValue() != null){
-                        loadFragment(getSupportFragmentManager(), new RealEstatesFragment(),
-                                false);
-                    } else {
-                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
-                                false);
-                    }
-                case R.id.nav_requests:
-                    if (mAuthenticationViewModel.getResult().getValue() != null){
-                        loadFragment(getSupportFragmentManager(), new RequestsFragment(),
-                                false);
-                    } else {
-                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
-                                false);
-                    }
-                case R.id.nav_messages:
-                    if (mAuthenticationViewModel.getResult().getValue() != null){
-                        loadFragment(getSupportFragmentManager(), new MessagesFragment(),
-                                false);
-                    } else {
-                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
-                                false);
-                    }
-                case R.id.nav_notifications:
-                    if (mAuthenticationViewModel.getResult().getValue() != null){
-                        loadFragment(getSupportFragmentManager(), new NotificationsFragment(),
-                                false);
-                    } else {
-                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
-                                false);
-                    }
-                case R.id.nav_favorites:
-                    if (mAuthenticationViewModel.getResult().getValue() != null){
-                        loadFragment(getSupportFragmentManager(), new FavoritesFragment(),
-                                false);
-                    } else {
-                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
-                                false);
-                    }
-                case R.id.nav_termsAndConditions:
-                    loadFragment(getSupportFragmentManager(), new TermsAndConditionsFragment(),
+                    loadFragment(getSupportFragmentManager(), new HomeFragment(),
                             false);
                     return true;
-                case R.id.nav_contactUs:
-                    loadFragment(getSupportFragmentManager(), new ContactUsFragment(), false);
-                    return true;
+                case R.id.nav_realEstates:
+                    if (mAuthenticationViewModel.getResult().getValue() != null) {
+                        loadFragment(getSupportFragmentManager(), new RealEstatesFragment(),
+                                false);
+                        return true;
+                    } else {
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                true);
+                        return false;
+                    }
+                case R.id.nav_requests:
+                    if (mAuthenticationViewModel.getResult().getValue() != null) {
+                        loadFragment(getSupportFragmentManager(), new RequestsFragment(),
+                                false);
+                        return true;
+                    } else {
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                true);
+                        return false;
+                    }
+                case R.id.nav_favorites:
+                    if (mAuthenticationViewModel.getResult().getValue() != null) {
+                        loadFragment(getSupportFragmentManager(), new FavoritesFragment(),
+                                false);
+                        return true;
+                    } else {
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                true);
+                        return false;
+                    }
+                case R.id.nav_notifications:
+                    if (mAuthenticationViewModel.getResult().getValue() != null) {
+                        loadFragment(getSupportFragmentManager(), new NotificationsFragment(),
+                                false);
+                        return true;
+                    } else {
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                true);
+                        return false;
+                    }
+                case R.id.nav_messages:
+                    if (mAuthenticationViewModel.getResult().getValue() != null) {
+                        loadFragment(getSupportFragmentManager(), new MessagesFragment(),
+                                false);
+                        return true;
+                    } else {
+                        loadFragment(getSupportFragmentManager(), new LoginFragment(),
+                                true);
+                        return false;
+                    }
                 case R.id.nav_settings:
-                    loadFragment(getSupportFragmentManager(), new SettingsFragment(), false);
+                    loadFragment(getSupportFragmentManager(),
+                            new SettingsFragment(), false);
+                    return true;
+                case R.id.nav_contactUs:
+                    loadFragment(getSupportFragmentManager(),
+                            new ContactUsFragment(), false);
                     return true;
             }
             return false;
@@ -270,27 +254,17 @@ public class MainActivity extends AppCompatActivity {
     private void handleSearchIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String address = intent.getStringExtra(SearchManager.QUERY);
-            mViewModelSearch.setParameters(new SearchModelRequest(null, null, null, null,
+            mViewModelSearch.setParameters(new SearchModelRequest(null, null,
+                    null, null,
                     address, null, null, null, null, null,
                     0, 0));
-            loadFragment(getSupportFragmentManager(), new SearchFragment(), false);
+            //loadFragment(getSupportFragmentManager(), new SearchFragment(), false);
         }
-    }
-
-    //Splash
-    private void viewSplash() {
-        loadFragment(getSupportFragmentManager(), new SplashFragment(), false);
     }
 
     private void home() {
         loadFragment(getSupportFragmentManager(),
                 new HomeFragment(), false);
-        String userId = SharedPrefUtil.getInstance(this).read(USER_ID, null);
-//        if (userId != null) {
-//            viewModelLogin.loggedIn(true);
-//        }else {
-//            viewModelLogin.loggedIn(false);
-//        }
     }
 
     public boolean isGooglePlayServicesAvailable() {
@@ -308,20 +282,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
-    }
-
-    private void logout() {
-        //mViewModelLogin.loggedIn(false);
-//        SharedPrefUtil.getInstance(this).write(REMEMBER_ME, false);
-//        SharedPrefUtil.getInstance(this).write(USER_ID, null);
-//        SharedPrefUtil.getInstance(this).write(USER_IMAGE, null);
-//        SharedPrefUtil.getInstance(this).write(USERNAME, null);
-//        SharedPrefUtil.getInstance(this).write(USER_TYPE, null);
-//        SharedPrefUtil.getInstance(this).write(BIRTH_DATE, null);
-//        SharedPrefUtil.getInstance(this).write(ADDRESS, null);
-//        SharedPrefUtil.getInstance(this).write(EMAIL, null);
-//        SharedPrefUtil.getInstance(this).write(PHONE_NUMBER, null);
-//        SharedPrefUtil.getInstance(this).write(PHONE_CODE, null);
     }
 
     private void setNavHeader() {
@@ -372,35 +332,44 @@ public class MainActivity extends AppCompatActivity {
                             profileViewModel.userInfo(authenticationModelResponse.getJwt());
                             profileViewModel.getResult().observe(MainActivity.this,
                                     new Observer<ProfileModelResponse>() {
-                                @Override
-                                public void onChanged(ProfileModelResponse profileModelResponse) {
-                                    username.setText(profileModelResponse.getUsername());
-                                    userEmail.setText(profileModelResponse.getEmail());
-                                    Glide.with(MainActivity.this)
-                                    .load(profileModelResponse.getProfilePicture().getUrl())
-                                    .into(userImage);
-                                    saveUser(authenticationModelResponse.getJwt(),
-                                            profileModelResponse.getId(),
-                                            profileModelResponse.getUsername(),
-                                            profileModelResponse.getEmail(),
-                                            profileModelResponse.getPhoneNumber(),
-                                            profileModelResponse.getProfilePicture().getUrl());
-                                }
-                            });
+                                        @Override
+                                        public void onChanged(ProfileModelResponse profileModelResponse) {
+                                            username.setText(profileModelResponse.getUsername());
+                                            userEmail.setText(profileModelResponse.getEmail());
+                                            if (profileModelResponse.getProfilePicture() != null) {
+                                                Glide.with(MainActivity.this)
+                                                        .load(profileModelResponse.
+                                                                getProfilePicture().getUrl())
+                                                        .into(userImage);
+                                            }
+                                            saveUser(authenticationModelResponse.getJwt(),
+                                                    profileModelResponse.getId(),
+                                                    profileModelResponse.getUsername(),
+                                                    profileModelResponse.getEmail(),
+                                                    profileModelResponse.getPhoneNumber(),
+                                                    profileModelResponse.getProfilePicture());
+                                        }
+                                    });
 
+                        } else {
+                            login.setVisibility(View.VISIBLE);
+                            register.setVisibility(View.VISIBLE);
+                            userImage.setVisibility(View.INVISIBLE);
+                            username.setVisibility(View.INVISIBLE);
+                            userEmail.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
 
-            userImage.setOnClickListener(v -> {
-                loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
-                sDrawerLayout.closeDrawer(GravityCompat.START, false);
-            });
+        userImage.setOnClickListener(v -> {
+//                loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
+//                sDrawerLayout.closeDrawer(GravityCompat.START, false);
+        });
 
-            username.setOnClickListener(v -> {
-                loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
-                sDrawerLayout.closeDrawer(GravityCompat.START, false);
-            });
+        username.setOnClickListener(v -> {
+//                loadFragment(getSupportFragmentManager(), new ProfileFragment(), true);
+//                sDrawerLayout.closeDrawer(GravityCompat.START, false);
+        });
     }
 
     private void setUserType(int type, TextView textView) {
@@ -429,7 +398,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Attaching Fragment
     public static void loadFragment(FragmentManager fragmentManager,
                                     Fragment fragment,
                                     boolean addToBackStack) {
@@ -459,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveUser(String jwt, String id, String username, String emailAddress,
-                          String phoneNumber, String profilePicture) {
+                          String phoneNumber, ProfilePicture profilePicture) {
         SharedPreferences sharedPreferences = getSharedPreferences(
                 getPackageName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -469,16 +437,18 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(USERNAME, username);
         editor.putString(EMAIL_ADDRESS, emailAddress);
         editor.putString(PHONE_NUMBER, phoneNumber);
-        editor.putString(Profile_Picture, profilePicture);
+        if (profilePicture != null) {
+            editor.putString(Profile_Picture, profilePicture.getUrl());
+        }
 
         editor.apply();
     }
 
-    private void fetchUser(){
+    private void fetchUser() {
         SharedPreferences sharedPreferences = getSharedPreferences(
                 getPackageName(), Context.MODE_PRIVATE);
         String jwt = sharedPreferences.getString(JWT, null);
-        if(jwt != null){
+        if (jwt != null) {
             mAuthenticationViewModel.setResult(jwt);
         }
     }

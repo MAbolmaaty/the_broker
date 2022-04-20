@@ -21,14 +21,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
-import com.emupapps.the_broker.models.login.response.LoginModelResponse;
 import com.emupapps.the_broker.models.request_ownership.response.RequestOwnershipModelResponse;
 import com.emupapps.the_broker.models.request_maintenance.response.RequestMaintenanceModelResponse;
 import com.emupapps.the_broker.models.request_rent.response.RequestRentModelResponse;
 import com.emupapps.the_broker.models.request_termination.response.RequestTerminationModelResponse;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.emupapps.the_broker.viewmodels.RequestMaintenanceViewModel;
 import com.emupapps.the_broker.viewmodels.RequestOwnershipViewModel;
@@ -132,28 +130,29 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
 //                }
 //            });
         } else {
-            mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
-                mRealEstateId = realEstateModelResponse.getRealEstate().getId();
+            mViewModelRealEstate.getRealEstateDetails().observe(RequestFragment.this, realEstateModelResponse -> {
+                //mRealEstateId = realEstateModelResponse.getRealEstate().getId();
                 mSend.setEnabled(true);
             });
         }
-        mViewModelRealEstate.getTypeRequest().observe(this, type -> {
-            switch (type) {
-                case REQUEST_OWNERSHIP:
-                    viewRequestOwnership();
-                    break;
-                case REQUEST_RENT:
-                    viewRequestRent();
-                    break;
-                case REQUEST_MAINTENANCE:
-                    viewRequestMaintenance();
-                    break;
-                case REQUEST_TERMINATION:
-                    viewRequestTermination();
-                    break;
+//        mViewModelRealEstate.getTypeRequest().observe(this, type -> {
+//            switch (type) {
+//                case REQUEST_OWNERSHIP:
+//                    viewRequestOwnership();
+//                    break;
+//                case REQUEST_RENT:
+//                    viewRequestRent();
+//                    break;
+//                case REQUEST_MAINTENANCE:
+//                    viewRequestMaintenance();
+//                    break;
+//                case REQUEST_TERMINATION:
+//                    viewRequestTermination();
+//                    break;
+//
+//            }
+//        });
 
-            }
-        });
         return view;
     }
 
@@ -272,8 +271,8 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
         addMethodsPayment(mSpinner4);
         mArrow4.setVisibility(View.VISIBLE);
         mSend.setVisibility(View.VISIBLE);
-        mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
-            mValue1.setText(realEstateModelResponse.getRealEstate().getTotal_amount());
+        mViewModelRealEstate.getRealEstateDetails().observe(RequestFragment.this, realEstateModelResponse -> {
+            //mValue1.setText(realEstateModelResponse.getRealEstate().getTotal_amount());
         });
     }
 
@@ -366,23 +365,23 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
 
         mSend.setVisibility(View.VISIBLE);
 
-        mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
-            if (realEstateModelResponse.getRealEstate().getPrice_for_month() != null) {
-                mValue1.setText(mPriceForMonth);
-            } else if (realEstateModelResponse.getRealEstate().getPrice_for_3month() != null) {
-                mValue1.setText(mPriceFor3Months);
-            } else if (realEstateModelResponse.getRealEstate().getPrice_for_6month() != null) {
-                mValue1.setText(mPriceFor6Months);
-            } else if (realEstateModelResponse.getRealEstate().getPrice_for_12month() != null) {
-                mValue1.setText(mPriceFor12Months);
-            }
+        mViewModelRealEstate.getRealEstateDetails().observe(RequestFragment.this, realEstateModelResponse -> {
+//            if (realEstateModelResponse.getRealEstate().getPrice_for_month() != null) {
+//                mValue1.setText(mPriceForMonth);
+//            } else if (realEstateModelResponse.getRealEstate().getPrice_for_3month() != null) {
+//                mValue1.setText(mPriceFor3Months);
+//            } else if (realEstateModelResponse.getRealEstate().getPrice_for_6month() != null) {
+//                mValue1.setText(mPriceFor6Months);
+//            } else if (realEstateModelResponse.getRealEstate().getPrice_for_12month() != null) {
+//                mValue1.setText(mPriceFor12Months);
+//            }
 
-            mPriceForMonth = realEstateModelResponse.getRealEstate().getPrice_for_month();
-            mPriceFor3Months = realEstateModelResponse.getRealEstate().getPrice_for_3month();
-            mPriceFor6Months = realEstateModelResponse.getRealEstate().getPrice_for_6month();
-            mPriceFor12Months = realEstateModelResponse.getRealEstate().getPrice_for_12month();
+//            mPriceForMonth = realEstateModelResponse.getRealEstate().getPrice_for_month();
+//            mPriceFor3Months = realEstateModelResponse.getRealEstate().getPrice_for_3month();
+//            mPriceFor6Months = realEstateModelResponse.getRealEstate().getPrice_for_6month();
+//            mPriceFor12Months = realEstateModelResponse.getRealEstate().getPrice_for_12month();
 
-            mValue2.setText(realEstateModelResponse.getRealEstate().getAmount_insurance());
+            //mValue2.setText(realEstateModelResponse.getRealEstate().getAmount_insurance());
 
         });
     }
@@ -513,8 +512,8 @@ public class RequestFragment extends Fragment implements DatePickerDialog.OnDate
         mValue6.setVisibility(View.VISIBLE);
 
         mSend.setVisibility(View.VISIBLE);
-        mViewModelRealEstate.getRealEstate().observe(RequestFragment.this, realEstateModelResponse -> {
-            mValue1.setText(realEstateModelResponse.getRealEstate().getAmount_insurance());
+        mViewModelRealEstate.getRealEstateDetails().observe(RequestFragment.this, realEstateModelResponse -> {
+            //mValue1.setText(realEstateModelResponse.getRealEstate().getAmount_insurance());
         });
     }
     private void addMethodsPayment(Spinner spinner) {

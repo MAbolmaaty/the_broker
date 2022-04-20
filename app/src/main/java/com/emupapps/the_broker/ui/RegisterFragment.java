@@ -83,7 +83,8 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
         View view = mBinding.getRoot();
-        mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
+        mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE,
+                Locale.getDefault().getLanguage());
         mBinding.countryCodePicker.setCountryForPhoneCode(+966);
         mAuthenticationViewModel = new ViewModelProvider(requireActivity()).
                 get(AuthenticationViewModel.class);

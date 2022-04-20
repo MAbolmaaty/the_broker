@@ -13,16 +13,14 @@ import java.util.List;
 // Leaking
 public class RealEstatesViewModel extends ViewModel {
 
-    private MutableLiveData<List<RealEstate>> mRealEstates;
+    private final MutableLiveData<List<RealEstate>> mRealEstates = new MutableLiveData<>();
     private MutableLiveData<String> realEstate = new MutableLiveData<>();
     private MutableLiveData<Boolean> mMapFragment = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mLoading;
     private MutableLiveData<Boolean> mFailure;
 
-    public void realEstates(String sale, String rent, String auction) {
+    public void realEstates() {
         RealEstatesRepository repositoryRealEstates = RealEstatesRepository.getInstance();
-        mRealEstates = repositoryRealEstates.getRealEstates();
-        mLoading = repositoryRealEstates.loading();
+        repositoryRealEstates.getRealEstates(mRealEstates);
         mFailure = repositoryRealEstates.failure();
     }
 
@@ -44,10 +42,6 @@ public class RealEstatesViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> isMapFragment(){
         return mMapFragment;
-    }
-
-    public LiveData<Boolean> isLoading(){
-        return mLoading;
     }
 
     public LiveData<Boolean> failure(){return mFailure;}

@@ -102,23 +102,23 @@ public class RequestModifyFragment extends Fragment implements DatePickerDialog.
         mViewModelSubmittedRequest =
                 new ViewModelProvider(getActivity()).get(RequestSubmittedViewModel.class);
 
-        mViewModelRealEstate.getTypeRequest().observe(this, type -> {
-            switch (type) {
-                case REQUEST_OWNERSHIP:
-                    viewRequestOwnership();
-                    break;
-                case REQUEST_RENT:
-                    viewRequestRent();
-                    break;
-                /*case REQUEST_MAINTENANCE:
-                    viewRequestMaintenance();
-                    break;
-                case REQUEST_TERMINATION:
-                    viewRequestTermination();
-                    break;*/
-
-            }
-        });
+//        mViewModelRealEstate.getTypeRequest().observe(this, type -> {
+//            switch (type) {
+//                case REQUEST_OWNERSHIP:
+//                    viewRequestOwnership();
+//                    break;
+//                case REQUEST_RENT:
+//                    viewRequestRent();
+//                    break;
+//                /*case REQUEST_MAINTENANCE:
+//                    viewRequestMaintenance();
+//                    break;
+//                case REQUEST_TERMINATION:
+//                    viewRequestTermination();
+//                    break;*/
+//
+//            }
+//        });
 
         return view;
     }

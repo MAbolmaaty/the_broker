@@ -292,4 +292,5 @@
     <string name="default_type">Real estate holder</string>
     <string name="could_not_upload_picture">couldn\'t upload your picture</string>
     <string name="enter_email_or_username">Enter email or username</string>
+    <string name="account">Account</string>
 </resources>

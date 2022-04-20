@@ -19,7 +19,6 @@ import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.RealEstateRequestsUserAdapter;
 import com.emupapps.the_broker.models.real_estate_requests_user.Request;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateRequestsUserViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.emupapps.the_broker.viewmodels.RequestSubmittedViewModel;
@@ -74,19 +73,19 @@ public class RealEstateRequestsUserHistoryFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         mUserId = SharedPrefUtil.getInstance(getContext()).read(USER_ID, null);;
-        if (mUserId == null){
-//            viewModelLogin.getUser().observe(this, loginModelResponse -> {
-//                mUserId = loginModelResponse.getUser().getId();
-//                RealEstateViewModel viewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
-//                viewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse ->
-//                        loadRequests(realEstateModelResponse.getRealEstate().getId()));
-//            });
-        } else {
-            mViewModelRealEstate =
-                    new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
-            mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse ->
-                    loadRequests(realEstateModelResponse.getRealEstate().getId()));
-        }
+//        if (mUserId == null){
+////            viewModelLogin.getUser().observe(this, loginModelResponse -> {
+////                mUserId = loginModelResponse.getUser().getId();
+////                RealEstateViewModel viewModelRealEstate = ViewModelProviders.of(getActivity()).get(RealEstateViewModel.class);
+////                viewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse ->
+////                        loadRequests(realEstateModelResponse.getRealEstate().getId()));
+////            });
+//        } else {
+//            mViewModelRealEstate =
+//                    new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
+//            mViewModelRealEstate.getRealEstateDetails().observe(this, realEstateModelResponse ->
+//                    //loadRequests(realEstateModelResponse.getRealEstate().getId()));
+//        }
         return view;
     }
 
@@ -122,12 +121,12 @@ public class RealEstateRequestsUserHistoryFragment extends Fragment {
                                                     .get(RequestSubmittedViewModel.class);
                                     viewModelRequestSubmitted.setRequestId(listRequests.get(position).getId());
                                     if (listRequests.get(position).getDateExit() != null && !TextUtils.isEmpty(listRequests.get(position).getDateExit())){
-                                        mViewModelRealEstate.setTypeRequest(REQUEST_TERMINATION);
+                                        //mViewModelRealEstate.setTypeRequest(REQUEST_TERMINATION);
                                         loadFragment(RealEstateRequestsUserHistoryFragment.this.getActivity().getSupportFragmentManager(),
                                                 new RequestSubmittedFragment(), true);
                                     } else if(listRequests.get(position).getMaintenance_type() != null
                                             && !TextUtils.isEmpty(listRequests.get(position).getMaintenance_type())){
-                                        mViewModelRealEstate.setTypeRequest(REQUEST_MAINTENANCE);
+                                        //mViewModelRealEstate.setTypeRequest(REQUEST_MAINTENANCE);
                                         loadFragment(RealEstateRequestsUserHistoryFragment.this.getActivity().getSupportFragmentManager(),
                                                 new RequestSubmittedFragment(), true);
                                     }

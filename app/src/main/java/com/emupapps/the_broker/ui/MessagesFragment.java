@@ -28,7 +28,6 @@ public class MessagesFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,10 +35,18 @@ public class MessagesFragment extends Fragment {
         View view = mBinding.getRoot();
 //        mMenu.setImageResource(R.drawable.ic_menu);
 //        mTitle.setText(R.string.messages);
+
+        mBinding.messagesOpenMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
+
         return view;
     }
 
-    public void menu(){
+    private void openMenu(){
         sDrawerLayout.openDrawer(GravityCompat.START);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
     }

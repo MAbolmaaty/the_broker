@@ -282,4 +282,5 @@
     <string name="default_type">مالك عقار</string>
     <string name="could_not_upload_picture">خطا فى ارسال الصورة الشخصية</string>
     <string name="enter_email_or_username">ادخل الايميل او اسم المستخدم</string>
+    <string name="account">الحساب الشخصي</string>
 </resources>

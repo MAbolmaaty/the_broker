@@ -124,83 +124,83 @@ public class DetailsFragment extends Fragment {
             view.setRotation(-180);
 
         mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
-        mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
-            if (realEstateModelResponse.getRealEstate() != null){
-                if (realEstateModelResponse.getRealEstate().getId() != null){
-                    showAdNumber();
-                    mAdNumber.setText(realEstateModelResponse.getRealEstate().getId());
-                }
-                if (realEstateModelResponse.getRealEstate().getYear_of_building() != null){
-                    showAge();
-                    mAge.setText(realEstateModelResponse.getRealEstate().getYear_of_building());
-                }
-                if (realEstateModelResponse.getRealEstate().getApartment_space() != null){
-                    showArea();
-                    mArea.setText(realEstateModelResponse.getRealEstate().getApartment_space());
-                }
-                if (realEstateModelResponse.getRealEstate().getRooms_num() != null){
-                    showRooms();
-                    mRooms.setText(realEstateModelResponse.getRealEstate().getRooms_num());
-                }
-                if (realEstateModelResponse.getRealEstate().getAmount_insurance() != null){
-                    if (realEstateModelResponse.getRealEstate().getService().equals(REAL_ESTATE_SALE)
-                    && !realEstateModelResponse.getRealEstate().getAuction().equals(AUCTIONABLE)){
-                    } else {
-                        showInsurance();
-                        mInsurance.setText(realEstateModelResponse.getRealEstate().getAmount_insurance());
-                    }
-                }
-                if (realEstateModelResponse.getRealEstate().getApartments_num() != null){
-                    showApartments();
-                    mApartments.setText(realEstateModelResponse.getRealEstate().getApartments_num());
-                }
-                if (realEstateModelResponse.getRealEstate().getElectrical_meter_num() != null){
-                    showElectricity();
-                    mElectricity.setText(realEstateModelResponse.getRealEstate().getElectrical_meter_num());
-                    if (realEstateModelResponse.getRealEstate().getElectricityStatus().equals(SHARED)){
-                        mElectricityStatus.setVisibility(View.VISIBLE);
-                        mElectricityStatus.setText(R.string.shared_acct);
-                    } else if (realEstateModelResponse.getRealEstate().getElectricityStatus().equals(PRIVATE)){
-                        mElectricityStatus.setVisibility(View.VISIBLE);
-                        mElectricityStatus.setText(R.string.private_acct);
-                    }
-                }
-                if (realEstateModelResponse.getRealEstate().getWater_meter_num() != null){
-                    showWater();
-                    mWater.setText(realEstateModelResponse.getRealEstate().getWater_meter_num());
-                    if (realEstateModelResponse.getRealEstate().getWaterStatus().equals(SHARED)){
-                        mWaterStatus.setVisibility(View.VISIBLE);
-                        mWaterStatus.setText(R.string.shared_acct);
-                    } else if (realEstateModelResponse.getRealEstate().getWaterStatus().equals(PRIVATE)){
-                        mWaterStatus.setVisibility(View.VISIBLE);
-                        mWaterStatus.setText(R.string.private_acct);
-                    }
-                }
-                if (realEstateModelResponse.getRealEstate().getBath_num() != null){
-                    showBathrooms();
-                    mBathrooms.setText(realEstateModelResponse.getRealEstate().getBath_num());
-                }
-                if (realEstateModelResponse.getRealEstate().getFloor_num() != null){
-                    showFloors();
-                    mFloors.setText(realEstateModelResponse.getRealEstate().getFloor_num());
-                }
-                if (realEstateModelResponse.getRealEstate().getOffices() != null){
-                    showOffices();
-                    mOffices.setText(realEstateModelResponse.getRealEstate().getOffices());
-                }
-                if (realEstateModelResponse.getRealEstate().getShops() != null){
-                    showShops();
-                    mShops.setText(realEstateModelResponse.getRealEstate().getShops());
-                }
-                if (realEstateModelResponse.getRealEstate().getHalls() != null){
-                    showHalls();
-                    mHalls.setText(realEstateModelResponse.getRealEstate().getHalls());
-                }
-                if (realEstateModelResponse.getRealEstate().getStreetWidth() != null){
-                    showStreetWidth();
-                    mStreetWidth.setText(realEstateModelResponse.getRealEstate().getStreetWidth());
-                }
-            }
+        mViewModelRealEstate.getRealEstateDetails().observe(this, realEstateModelResponse -> {
+//            if (realEstateModelResponse.getRealEstate() != null){
+//                if (realEstateModelResponse.getRealEstate().getId() != null){
+//                    showAdNumber();
+//                    mAdNumber.setText(realEstateModelResponse.getRealEstate().getId());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getYear_of_building() != null){
+//                    showAge();
+//                    mAge.setText(realEstateModelResponse.getRealEstate().getYear_of_building());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getApartment_space() != null){
+//                    showArea();
+//                    mArea.setText(realEstateModelResponse.getRealEstate().getApartment_space());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getRooms_num() != null){
+//                    showRooms();
+//                    mRooms.setText(realEstateModelResponse.getRealEstate().getRooms_num());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getAmount_insurance() != null){
+//                    if (realEstateModelResponse.getRealEstate().getService().equals(REAL_ESTATE_SALE)
+//                    && !realEstateModelResponse.getRealEstate().getAuction().equals(AUCTIONABLE)){
+//                    } else {
+//                        showInsurance();
+//                        mInsurance.setText(realEstateModelResponse.getRealEstate().getAmount_insurance());
+//                    }
+//                }
+//                if (realEstateModelResponse.getRealEstate().getApartments_num() != null){
+//                    showApartments();
+//                    mApartments.setText(realEstateModelResponse.getRealEstate().getApartments_num());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getElectrical_meter_num() != null){
+//                    showElectricity();
+//                    mElectricity.setText(realEstateModelResponse.getRealEstate().getElectrical_meter_num());
+//                    if (realEstateModelResponse.getRealEstate().getElectricityStatus().equals(SHARED)){
+//                        mElectricityStatus.setVisibility(View.VISIBLE);
+//                        mElectricityStatus.setText(R.string.shared_acct);
+//                    } else if (realEstateModelResponse.getRealEstate().getElectricityStatus().equals(PRIVATE)){
+//                        mElectricityStatus.setVisibility(View.VISIBLE);
+//                        mElectricityStatus.setText(R.string.private_acct);
+//                    }
+//                }
+//                if (realEstateModelResponse.getRealEstate().getWater_meter_num() != null){
+//                    showWater();
+//                    mWater.setText(realEstateModelResponse.getRealEstate().getWater_meter_num());
+//                    if (realEstateModelResponse.getRealEstate().getWaterStatus().equals(SHARED)){
+//                        mWaterStatus.setVisibility(View.VISIBLE);
+//                        mWaterStatus.setText(R.string.shared_acct);
+//                    } else if (realEstateModelResponse.getRealEstate().getWaterStatus().equals(PRIVATE)){
+//                        mWaterStatus.setVisibility(View.VISIBLE);
+//                        mWaterStatus.setText(R.string.private_acct);
+//                    }
+//                }
+//                if (realEstateModelResponse.getRealEstate().getBath_num() != null){
+//                    showBathrooms();
+//                    mBathrooms.setText(realEstateModelResponse.getRealEstate().getBath_num());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getFloor_num() != null){
+//                    showFloors();
+//                    mFloors.setText(realEstateModelResponse.getRealEstate().getFloor_num());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getOffices() != null){
+//                    showOffices();
+//                    mOffices.setText(realEstateModelResponse.getRealEstate().getOffices());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getShops() != null){
+//                    showShops();
+//                    mShops.setText(realEstateModelResponse.getRealEstate().getShops());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getHalls() != null){
+//                    showHalls();
+//                    mHalls.setText(realEstateModelResponse.getRealEstate().getHalls());
+//                }
+//                if (realEstateModelResponse.getRealEstate().getStreetWidth() != null){
+//                    showStreetWidth();
+//                    mStreetWidth.setText(realEstateModelResponse.getRealEstate().getStreetWidth());
+//                }
+//            }
         });
 
         return view;

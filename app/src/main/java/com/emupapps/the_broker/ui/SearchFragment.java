@@ -1,6 +1,11 @@
 package com.emupapps.the_broker.ui;
 
 
+import static com.emupapps.the_broker.ui.MainActivity.loadFragment;
+import static com.emupapps.the_broker.ui.MainActivity.sDrawerLayout;
+import static com.emupapps.the_broker.utils.Constants.LOCALE;
+import static com.emupapps.the_broker.utils.Constants.SUCCESS;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -10,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,17 +35,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.SearchAdapter;
-import com.emupapps.the_broker.models.real_estate_categories.Category;
-import com.emupapps.the_broker.models.real_estate_statuses.Status;
 import com.emupapps.the_broker.models.search.response.RealEstate;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
-import com.emupapps.the_broker.viewmodels.DistrictsViewModel;
-import com.emupapps.the_broker.viewmodels.RealEstateCategoriesViewModel;
-import com.emupapps.the_broker.viewmodels.RealEstateStatusesViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstatesViewModel;
-import com.emupapps.the_broker.viewmodels.RegionsViewModel;
 import com.emupapps.the_broker.viewmodels.SearchViewModel;
 import com.github.guilhe.views.SeekBarRangedView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -50,13 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import static com.emupapps.the_broker.ui.MainActivity.loadFragment;
-import static com.emupapps.the_broker.ui.MainActivity.sDrawerLayout;
-import static com.emupapps.the_broker.utils.Constants.LOCALE;
-import static com.emupapps.the_broker.utils.Constants.REAL_ESTATE_RENT;
-import static com.emupapps.the_broker.utils.Constants.REAL_ESTATE_SALE;
-import static com.emupapps.the_broker.utils.Constants.SUCCESS;
 
 
 /**
@@ -128,7 +119,7 @@ public class SearchFragment extends Fragment {
                     mListResults.clear();
                     mListResults.addAll(Arrays.asList(searchModelResponse.getRealEstates()));
                     mSearchAdapter = new SearchAdapter(SearchFragment.this.getContext(), mListResults, position -> {
-                        mViewModelRealEstate.setRealEstateId(mListResults.get(position).getId());
+                        //mViewModelRealEstate.setRealEstateId(mListResults.get(position).getId());
                         loadFragment(SearchFragment.this.getActivity().getSupportFragmentManager(),
                                 new RealEstateFragment(), true);
 
@@ -222,11 +213,6 @@ public class SearchFragment extends Fragment {
         title.setText(R.string.search_advanced);
         close.setImageResource(R.drawable.ic_close);
         close.setOnClickListener(v -> mDialogFilter.cancel());
-
-        setRealEstateStatuses(statuses);
-        setRealEstateCategories(categories);
-        setRegions(regions);
-        setDistricts(districts);
 
         if (mLocale.equals("ar")) {
             seekBarPrice.setRotation(180);
@@ -403,74 +389,6 @@ public class SearchFragment extends Fragment {
                 reset.animate().rotation(0).setDuration(0);
                 reset.setEnabled(true);
             }, 896);
-        });
-    }
-
-    private void setRealEstateStatuses(AppCompatSpinner spinner) {
-        List<String> listStatuses = new ArrayList<>();
-        RealEstateStatusesViewModel viewModelStatuses =
-                new ViewModelProvider(getActivity()).get(RealEstateStatusesViewModel.class);
-        viewModelStatuses.getStatuses().observe(this, realEstateStatusesModelResponse -> {
-            if (realEstateStatusesModelResponse.getKey().equals(SUCCESS)) {
-                listStatuses.clear();
-                listStatuses.add(getString(R.string.choose_status));
-                for (Status status : realEstateStatusesModelResponse.getStatuses()) {
-                    listStatuses.add(status.getName());
-                }
-                ArrayAdapter<String> adapter =
-                        new ArrayAdapter<>(getActivity(), R.layout.list_item_spinner, listStatuses);
-                spinner.setAdapter(adapter);
-            }
-        });
-    }
-
-    private void setRealEstateCategories(AppCompatSpinner spinner) {
-        List<String> listCategories = new ArrayList<>();
-        RealEstateCategoriesViewModel viewModelCategories =
-                new ViewModelProvider(getActivity()).get(RealEstateCategoriesViewModel.class);
-        viewModelCategories.getCategories().observe(this, realEstateCategoriesModelResponse -> {
-            if (realEstateCategoriesModelResponse.getKey().equals(SUCCESS)) {
-                listCategories.clear();
-                listCategories.add(getString(R.string.choose_category));
-                for (Category category : realEstateCategoriesModelResponse.getCategories()) {
-                    listCategories.add(category.getName());
-                }
-                ArrayAdapter<String> adapter =
-                        new ArrayAdapter<>(getActivity(), R.layout.list_item_spinner, listCategories);
-                spinner.setAdapter(adapter);
-            }
-        });
-    }
-
-    private void setRegions(AppCompatSpinner spinner) {
-        List<String> listRegions = new ArrayList<>();
-        RegionsViewModel viewModelRegions =
-                new ViewModelProvider(getActivity()).get(RegionsViewModel.class);
-        viewModelRegions.getRegions().observe(this, regionsModelResponse -> {
-            if (regionsModelResponse.getKey().equals(SUCCESS)) {
-                listRegions.clear();
-                listRegions.add(getString(R.string.choose_region));
-                listRegions.addAll(Arrays.asList(regionsModelResponse.getRegions()));
-                ArrayAdapter<String> adapter =
-                        new ArrayAdapter<>(getActivity(), R.layout.list_item_spinner, listRegions);
-                spinner.setAdapter(adapter);
-            }
-        });
-    }
-
-    private void setDistricts(AppCompatSpinner spinner) {
-        List<String> listDistricts = new ArrayList<>();
-        DistrictsViewModel viewModelDistricts =
-                new ViewModelProvider(getActivity()).get(DistrictsViewModel.class);
-        viewModelDistricts.getDistricts().observe(this, districtsModelResponse -> {
-            if (districtsModelResponse.getKey().equals(SUCCESS)) {
-                listDistricts.clear();
-                listDistricts.add(getString(R.string.choose_district));
-                listDistricts.addAll(Arrays.asList(districtsModelResponse.getDistricts()));
-                ArrayAdapter<String> adapter =
-                        new ArrayAdapter<>(getActivity(), R.layout.list_item_spinner, listDistricts);
-                spinner.setAdapter(adapter);
-            }
         });
     }
 }

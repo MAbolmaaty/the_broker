@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
+import com.emupapps.the_broker.databinding.FragmentDescriptionBinding;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 
@@ -23,10 +24,7 @@ import static com.emupapps.the_broker.utils.Constants.LOCALE;
  */
 public class DescriptionFragment extends Fragment {
 
-    TextView mTextViewDescription;
-    View mShimmer1;
-    View mShimmer2;
-    View mShimmer3;
+    private FragmentDescriptionBinding mBinding;
 
     private RealEstateViewModel mViewModelRealEstate;
     private String mLocale;
@@ -39,18 +37,16 @@ public class DescriptionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_description, container, false);
+        mBinding = FragmentDescriptionBinding.inflate(inflater, container, false);
+        View view = mBinding.getRoot();
         mLocale = SharedPrefUtil.getInstance(getActivity()).read(LOCALE, Locale.getDefault().getLanguage());
         if (mLocale.equals("ar"))
             view.setRotation(-180);
-        mViewModelRealEstate = new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
-        mViewModelRealEstate.getRealEstate().observe(this, realEstateModelResponse -> {
-            if (realEstateModelResponse.getRealEstate() != null){
-                mShimmer1.setVisibility(View.GONE);
-                mShimmer2.setVisibility(View.GONE);
-                mShimmer3.setVisibility(View.GONE);
-                mTextViewDescription.setText(realEstateModelResponse.getRealEstate().getDescribtion());
+        mViewModelRealEstate = new ViewModelProvider(requireActivity())
+                .get(RealEstateViewModel.class);
+        mViewModelRealEstate.getRealEstateDetails().observe(this, realEstate -> {
+            if (realEstate != null){
+                mBinding.description.setText(realEstate.getDescription());
             }
         });
 

@@ -90,29 +90,30 @@ public class RequestSubmittedFragment extends Fragment {
                 new ViewModelProvider(getActivity()).get(RequestSubmittedViewModel.class);
         mViewModelRealEstate =
                 new ViewModelProvider(getActivity()).get(RealEstateViewModel.class);
-        mViewModelRealEstate.getTypeRequest().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer type) {
-                mViewModelSubmittedRequest.getRequestId().observe(RequestSubmittedFragment.this, id -> {
-                    switch (type){
-                        case REQUEST_OWNERSHIP:
-                            loadRequestOwnership(id);
-                            break;
-                        case REQUEST_RENT:
-                            loadRequestRent(id);
-                            break;
-                        case REQUEST_MAINTENANCE:
-                            loadRequestMaintenance(id);
-                            break;
-                        case REQUEST_TERMINATION:
-                            loadRequestTermination(id);
-                            break;
-                        default:
-                            getActivity().onBackPressed();
-                    }
-                });
-            }
-        });
+//        mViewModelRealEstate.getTypeRequest().observe(this, new Observer<Integer>() {
+//            @Override
+//            public void onChanged(Integer type) {
+//                mViewModelSubmittedRequest.getRequestId().observe(RequestSubmittedFragment.this, id -> {
+//                    switch (type){
+//                        case REQUEST_OWNERSHIP:
+//                            loadRequestOwnership(id);
+//                            break;
+//                        case REQUEST_RENT:
+//                            loadRequestRent(id);
+//                            break;
+//                        case REQUEST_MAINTENANCE:
+//                            loadRequestMaintenance(id);
+//                            break;
+//                        case REQUEST_TERMINATION:
+//                            loadRequestTermination(id);
+//                            break;
+//                        default:
+//                            getActivity().onBackPressed();
+//                    }
+//                });
+//            }
+//        });
+
         return view;
     }
 
@@ -128,8 +129,8 @@ public class RequestSubmittedFragment extends Fragment {
     }
 
     public void debenture(){
-        loadFragment(RequestSubmittedFragment.this.getActivity().getSupportFragmentManager(),
-                new DebenturesRentFragment(), true);
+//        loadFragment(RequestSubmittedFragment.this.getActivity().getSupportFragmentManager(),
+//                new DebenturesRentFragment(), true);
     }
 
     private void loadRequestOwnership(String id){
@@ -147,10 +148,10 @@ public class RequestSubmittedFragment extends Fragment {
                         startDate = requestSubmittedModelResponse.getResult().getAttendees_date();
                     }
                     mValue2.setText(startDate);
-                    mViewModelRealEstate.getRealEstate().observe(RequestSubmittedFragment.this,
+                    mViewModelRealEstate.getRealEstateDetails().observe(RequestSubmittedFragment.this,
                             realEstateModelResponse -> {
-                                mValue3.setText(getString(R.string.price_amount,
-                                        realEstateModelResponse.getRealEstate().getTotal_amount()));
+                                //mValue3.setText(getString(R.string.price_amount,
+                                        //realEstateModelResponse.getRealEstate().getTotal_amount()));
                             });
                     mValue4.setText(setPaymentMethod(requestSubmittedModelResponse.getResult().getPay_way()));
                     mStatus.setText(setRequestStatus(requestSubmittedModelResponse.getResult().getStatus()));
@@ -207,19 +208,19 @@ public class RequestSubmittedFragment extends Fragment {
                     } else {
                         mValue3.setText(getString(R.string.months, requestSubmittedModelResponse.getResult().getDuration()));
                     }
-                    mViewModelRealEstate.getRealEstate().observe(RequestSubmittedFragment.this,
+                    mViewModelRealEstate.getRealEstateDetails().observe(RequestSubmittedFragment.this,
                             realEstateModelResponse -> {
-                        if (requestSubmittedModelResponse.getResult().getDuration().equals("1")) {
-                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_month()));
-                        } else if (requestSubmittedModelResponse.getResult().getDuration().equals("3")) {
-                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_3month()));
-                        } else if (requestSubmittedModelResponse.getResult().getDuration().equals("6")) {
-                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_6month()));
-                        } else if (requestSubmittedModelResponse.getResult().getDuration().equals("12")) {
-                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_12month()));
-                        }
-                        if (realEstateModelResponse.getRealEstate().getAmount_insurance() != null)
-                            mValue5.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getAmount_insurance()));
+//                        if (requestSubmittedModelResponse.getResult().getDuration().equals("1")) {
+//                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_month()));
+//                        } else if (requestSubmittedModelResponse.getResult().getDuration().equals("3")) {
+//                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_3month()));
+//                        } else if (requestSubmittedModelResponse.getResult().getDuration().equals("6")) {
+//                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_6month()));
+//                        } else if (requestSubmittedModelResponse.getResult().getDuration().equals("12")) {
+//                            mValue4.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getPrice_for_12month()));
+//                        }
+//                        if (realEstateModelResponse.getRealEstate().getAmount_insurance() != null)
+//                            mValue5.setText(getString(R.string.price_amount, realEstateModelResponse.getRealEstate().getAmount_insurance()));
                     });
                     mValue6.setText(setPaymentMethod(requestSubmittedModelResponse.getResult().getPay_way()));
                     mStatus.setText(setRequestStatus(requestSubmittedModelResponse.getResult().getStatus()));

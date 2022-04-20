@@ -20,7 +20,7 @@
         android:id="@+id/noRealEstates"
         style="@style/textView"
         android:text="@string/no_real_estates"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

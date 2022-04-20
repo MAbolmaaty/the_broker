@@ -35,5 +35,9 @@ public class AuthenticationViewModel extends ViewModel {
         mAuthentication.setValue(new AuthenticationModelResponse(jwt));
     }
 
+    public void logout(){
+        mAuthentication.setValue(null);
+    }
+
     public LiveData<Boolean> failure(){return mFailure;}
 }

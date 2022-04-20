@@ -19,7 +19,6 @@ public class RealEstatesRepository {
 
     private static RealEstatesRepository instance;
     private Call<List<RealEstate>> mCallRealEstates;
-    private MutableLiveData<Boolean> mLoading = new MutableLiveData<>();
     private MutableLiveData<Boolean> mFailure = new MutableLiveData<>();
 
     public static RealEstatesRepository getInstance(){
@@ -29,15 +28,13 @@ public class RealEstatesRepository {
         return instance;
     }
 
-    public MutableLiveData<List<RealEstate>> getRealEstates(){
-        mLoading.setValue(true);
-        MutableLiveData<List<RealEstate>> realEstates = new MutableLiveData<>();
-        mCallRealEstates = RestClient.getInstance().getApiClient().
-                getRealEstates();
+    public MutableLiveData<List<RealEstate>> getRealEstates(
+            MutableLiveData<List<RealEstate>> realEstates){
+
+        mCallRealEstates = RestClient.getInstance().getApiClient().getRealEstates();
         mCallRealEstates.enqueue(new Callback<List<RealEstate>>() {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-                mLoading.setValue(false);
                 mFailure.setValue(false);
                 if (response.body() != null){
                     realEstates.setValue(response.body());
@@ -46,15 +43,11 @@ public class RealEstatesRepository {
 
             @Override
             public void onFailure(Call<List<RealEstate>> call, Throwable t) {
-                mLoading.setValue(false);
                 mFailure.setValue(true);
             }
         });
         return realEstates;
     }
 
-    public MutableLiveData<Boolean> loading(){
-        return mLoading;
-    }
     public MutableLiveData<Boolean> failure(){return mFailure;}
 }

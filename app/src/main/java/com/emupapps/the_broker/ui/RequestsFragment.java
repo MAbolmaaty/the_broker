@@ -18,13 +18,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.adapters.RequestsUserAdapter;
 import com.emupapps.the_broker.databinding.FragmentRequestsBinding;
 import com.emupapps.the_broker.models.requests_user.Request;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.emupapps.the_broker.viewmodels.RequestsUserViewModel;
 
@@ -54,7 +52,6 @@ public class RequestsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,16 +77,18 @@ public class RequestsFragment extends Fragment {
         } else {
             loadRealEstates(mUserId);
         }
+
+        mBinding.requestsOpenMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
+
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        sDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED, GravityCompat.START);
-    }
-
-    public void menu(){
+    private void openMenu(){
         sDrawerLayout.openDrawer(GravityCompat.START);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
     }
@@ -108,7 +107,7 @@ public class RequestsFragment extends Fragment {
                     //mNoRequests.setVisibility(View.GONE);
                 }
                 mAdapterUserRequests = new RequestsUserAdapter(getContext(), mListRequests, position -> {
-                    mViewModelRealEstate.setRealEstateId(mListRequests.get(position).getAkar_id());
+                    //mViewModelRealEstate.setRealEstateId(mListRequests.get(position).getAkar_id());
                     loadFragment( RequestsFragment.this.getActivity().getSupportFragmentManager(),
                             new RealEstateFragment(), true);
                 });

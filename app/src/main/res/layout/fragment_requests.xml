@@ -8,19 +8,34 @@
     android:orientation="vertical"
     tools:context=".ui.RequestsFragment">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/requestsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/requests"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="@dimen/_8sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/requestsOpenMenu"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:src="@drawable/ic_menu"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/requestsTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/requestsTitle"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/requestsTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -29,7 +44,7 @@
         style="@style/textView"
         android:layout_gravity="center"
         android:text="@string/no_requests"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

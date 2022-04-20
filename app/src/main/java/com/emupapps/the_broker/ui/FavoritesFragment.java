@@ -24,7 +24,6 @@ import com.emupapps.the_broker.models.favorites.RealEstate;
 import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.emupapps.the_broker.viewmodels.FavoritesViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
 import com.emupapps.the_broker.viewmodels.RealEstateViewModel;
 import com.emupapps.the_broker.viewmodels.UnFavoriteViewModel;
 
@@ -60,7 +59,6 @@ public class FavoritesFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,7 +82,7 @@ public class FavoritesFragment extends Fragment {
         mBinding.recyclerView.setLayoutManager(layoutManager);
         mBinding.recyclerView.setHasFixedSize(true);
         mAdapter = new FavoritesAdapter(getContext(), mListFavorites, position -> {
-            mViewModelRealEstate.setRealEstateId(mListFavorites.get(position).getAkar_id());
+            //mViewModelRealEstate.setRealEstateId(mListFavorites.get(position).getAkar_id());
             loadFragment(FavoritesFragment.this.getActivity().getSupportFragmentManager(),
                     new RealEstateFragment(), true);
         }, position -> {
@@ -115,12 +113,20 @@ public class FavoritesFragment extends Fragment {
             getFavorites();
         }
 
+        mBinding.favoritesOpenMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
+
         return view;
     }
 
-    public void menu(){
+    private void openMenu(){
         sDrawerLayout.openDrawer(GravityCompat.START);
         SoftKeyboard.dismissKeyboardInActivity(getActivity());
+
     }
 
     private void getFavorites(){

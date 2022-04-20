@@ -24,24 +24,15 @@ import android.widget.Toast;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.emupapps.the_broker.R;
 import com.emupapps.the_broker.databinding.FragmentLoginBinding;
-import com.emupapps.the_broker.models.login.response.User;
 import com.emupapps.the_broker.models.register.AuthenticationModelResponse;
-import com.emupapps.the_broker.utils.SharedPrefUtil;
 import com.emupapps.the_broker.utils.SoftKeyboard;
 import com.emupapps.the_broker.viewmodels.AuthenticationViewModel;
-import com.emupapps.the_broker.viewmodels.LoginViewModel;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.util.Locale;
-
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +44,7 @@ public class LoginFragment extends Fragment {
     private AuthenticationViewModel mAuthenticationViewModel;
 
     public LoginFragment() {
-        // Required empty public constructor
+        sDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Override
@@ -77,13 +68,21 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        mBinding.register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(getActivity().getSupportFragmentManager(),
+                        new RegisterFragment(), false);
+            }
+        });
+
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        sDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+    public void onDetach() {
+        super.onDetach();
+        sDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     public void login() {
@@ -103,17 +102,11 @@ public class LoginFragment extends Fragment {
                 mBinding.progress.setVisibility(View.INVISIBLE);
                 if (authenticationModelResponse != null) {
                     getActivity().onBackPressed();
-                } else {
-                    Toast toast = Toast.makeText(getContext(),
-                            getString(R.string.something_went_wrong),
-                            Toast.LENGTH_SHORT
-                    );
-                    toast.show();
                 }
             }
         });
-        SoftKeyboard.dismissKeyboardInActivity(getContext());
 
+        SoftKeyboard.dismissKeyboardInActivity(getContext());
     }
 
     private boolean hasEmptyFields(String identifier, String password) {
@@ -133,5 +126,21 @@ public class LoginFragment extends Fragment {
         }
 
         return false;
+    }
+
+    private void loadFragment(FragmentManager fragmentManager,
+                              Fragment fragment,
+                              boolean addToBackStack) {
+        if (addToBackStack) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+        }
     }
 }
